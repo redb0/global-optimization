@@ -1,5 +1,6 @@
 class Parameters:
-    def __init__(self, abbreviation: str, name: str, p_type, allowable_values=None, default_value=None):
+    def __init__(self, abbreviation: str, name: str, p_type: type,
+                 allowable_values=None, default_value=None):
         # TODO: возможно добавить проверку возможных значений на тип
         self.name = name
         self.abbreviation = abbreviation
@@ -7,6 +8,21 @@ class Parameters:
         self.allowable_values = allowable_values
         self.selected_values = default_value
         self.default_value = default_value
+
+    # метод можно вызывать прямиком из класса, без создания экземпляра
+    @staticmethod
+    def get_list_key(list_obj):
+        """
+        Метод для создания списка из сокращенных обозначений параметров.
+        Статический метод. 
+        Пример вызова: Parameters.get_list_key(list_obj)
+        :param list_obj: список экземпляров класса Parameters.
+        :return: список сокращенных обозначений
+        """
+        list_key = []
+        for obj in list_obj:
+            list_key.append(obj.get_abbreviation())
+        return list_key
 
     def get_abbreviation(self) -> str:
         return self.abbreviation

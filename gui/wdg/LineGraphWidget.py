@@ -15,7 +15,7 @@ class LineGraphWidget(PossibleGraphWidget):
         self.btn_plot = None
         self.range_wdg = None
 
-    def get_widget(self, lower_limit=0, top_limit=1000, step_limit=1):
+    def get_widget(self, lower_limit=0, top_limit=1000, step_limit=1, print_error=None):
         w = QtWidgets.QWidget()
         grid = QtWidgets.QGridLayout()
         self.btn_delete = QtWidgets.QPushButton()
@@ -48,17 +48,25 @@ class LineGraphWidget(PossibleGraphWidget):
         label.setText(self.translate("MainWindow", p[0].get_name()))
 
         self.btn_delete.clicked.connect(self.delete_graph(w))
-        self.btn_plot.clicked.connect(lambda: self.plot())
+        self.btn_plot.clicked.connect(lambda: self.plot(print_error))
 
         return w
 
-    def plot(self):
-        range_param = [self.range_wdg.spin_box_1.value(),
-                       self.range_wdg.spin_box_2.value(),
-                       self.range_wdg.spin_box_3.value()]
-        self.line_graph_obj.add_param_range([self.line_graph_obj.get_parameters_obj()[0], range_param])
+    def plot(self, print_error):
+        down = self.range_wdg.spin_box_1.value()
+        high = self.range_wdg.spin_box_2.value()
+        step = self.range_wdg.spin_box_3.value()
+        if (down >= high) or (step <= 0) or (step >= (high - down)):
+            error = "Параметры итерирования заданы некорректно"
+            # print_error(error)
+            print(error)
+        else:
+            range_param = [down, high, step]
+            # TODO: уже забыл нафига в след строке надо self.line_graph_obj.get_parameters_obj()[0].
+            # понял, для того чтобы хранить парамметр и его диапозон
+            self.line_graph_obj.add_param_range([self.line_graph_obj.get_parameters_obj()[0], range_param])
 
-        print(self.line_graph_obj.get_param_range())
-        # print(self.line_graph_obj.get_max_range())
-        # print(self.line_graph_obj.get_step())
-        print(self.line_graph_obj)
+            print(self.line_graph_obj.get_param_range())
+            # print(self.line_graph_obj.get_max_range())
+            # print(self.line_graph_obj.get_step())
+            print(self.line_graph_obj)

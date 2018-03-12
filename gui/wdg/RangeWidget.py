@@ -1,8 +1,7 @@
 from PyQt5 import QtWidgets
 
-from gui.service import get_max_step
-
 from gui.window_choose_params import ParamsWindow
+from support_func import get_max_step
 
 
 class RangeWidget(QtWidgets.QWidget):

@@ -131,12 +131,21 @@ class UiMainWindow:
         v_box_2.addWidget(self.param_heat_map_2)
 
         self.list_graph = QtWidgets.QVBoxLayout()
+        # TODO: Сделать чтобы виджеты при добавлении не растягивались
+        # self.list_graph.addStretch(1)
+
+        scroll = QtWidgets.QScrollArea()
+        scroll.setWidgetResizable(True)
+        w = QtWidgets.QWidget()
+        w.setLayout(self.list_graph)
+        scroll.setWidget(w)
 
         # self.graph_form.addRow()
         self.graph_layout.addLayout(h_box_1)
         self.graph_layout.addLayout(h_box_2)
-        self.graph_layout.addLayout(self.list_graph)
-        self.graph_layout.addStretch(1)
+        self.graph_layout.addWidget(scroll)
+        # self.graph_layout.addLayout(self.list_graph)
+        # self.graph_layout.addStretch(1)
 
         self.retranslate(main_window)
 
@@ -227,7 +236,20 @@ class UiMainWindow:
         return f
 
     def delete_row(self, form, cb):
+        """
+        Удаление строки в форме.
+        
+        Возвращает функцию, 
+        удаляющую строку в форме, если строка содержит переданный чекбокс.
+        :param form: форма из которой необходимо удалить строку, QFormLayout 
+        :param cb: чекбокс, строку с которым необходимо удалить, QCheckBox
+        :return: функция, которая замыкается на аргументах form и cb и удаляет строку
+        """
         def f():
+            """
+            Функция-замыкание. Удаляет строку из формы.
+            :return: None
+            """
             idx = form.indexOf(cb)
             idx = (idx - 1) / 2 + 1
             form.removeRow(idx)

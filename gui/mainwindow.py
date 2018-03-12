@@ -59,16 +59,19 @@ class MainWindow(QMainWindow):
         # pass
 
     def add_linear_graph(self, alg):
+        # TODO: переименовать переменные, нихрена не понятно
         d = self.get_value_from_combobox(self.ui.param_linear_graph)
         p = alg_parameters.get_parameters(list(d.keys())[0])
         if p.allowable_values is not None:
             point_graph = PossibleGraph("POINT_GRAPH", [p], [], alg)
             point_graph_wdg = PointGraphWidget(point_graph)
             self.ui.list_graph.addWidget(point_graph_wdg.get_widget(parent=self))
+            # self.ui.list_graph.addStretch(1)
         else:
             line_graph = PossibleGraph("LINE_GRAPH", [p], [], alg)
             line_graph_wdg = LineGraphWidget(line_graph)
             self.ui.list_graph.addWidget(line_graph_wdg.get_widget(lower_limit=0, top_limit=1000, step_limit=1))
+            # self.ui.list_graph.addStretch(1)
         # print(self.window_choose)
 
     def get_value_from_combobox(self, combobox):

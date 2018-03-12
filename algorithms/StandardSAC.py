@@ -7,6 +7,11 @@ class StandardSAC(SAC):
         super().__init__()
         self.name = "Standard SAC"
         self.full_name = "Метод селективного усреднения"
+
+        self._relative_path = "algorithms_ex\\standard_sac.exe"  # пусть до exe-шника с алгоритмом на golang
+        self.config_file = "algorithms_exe\\standard_sac_config.json"
+        self.process = None
+
         self.parameters = [alg_parameters.get_MI(), alg_parameters.get_NP(), alg_parameters.get_KN()]
 
     def get_params_dict(self):

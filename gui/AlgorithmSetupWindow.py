@@ -2,6 +2,7 @@ from PyQt5 import QtWidgets, QtCore
 
 import alg_parameters
 from gui.AlgorithmSetupWindow_ui import UiAlgorithmSetupWindow
+from support_func import deprecated
 
 
 class AlgorithmSetupWindow(QtWidgets.QWidget):
@@ -14,8 +15,10 @@ class AlgorithmSetupWindow(QtWidgets.QWidget):
 
         # self.parent = parent
 
-        # self.ui.close_btn.clicked.connect(self.changeEvent)
-        self.ui.close_btn.clicked.connect(lambda: self.close_window())
+        # self.ui.close_btn.clicked.connect(self.changeEvent)  # удалить строку
+        # некорректно работает закрытие на крестик, если переопределить closeEvent, то так тоже будет работать
+        # self.ui.close_btn.clicked.connect(lambda: self.close_window())
+        self.ui.close_btn.clicked.connect(self.closeEvent)  # переопределение встроенного обработчика
         self.ui.apply_btn.clicked.connect(self.save_settings(settings_list))
 
     def save_settings(self, settings):
@@ -47,15 +50,19 @@ class AlgorithmSetupWindow(QtWidgets.QWidget):
             # print(self.parent().to_test_list[0].get_parameters())
         return f
 
+    @deprecated(message="Вызывает некорректное закрытие по крестику. После чего не открываются окна.")
     def close_window(self):
         self.parent().window_settings_alg = None
         self.close()
 
-    # def closeEvent(self, event):
-    #     if event:
-    #         event.accept()
-    #     else:
-    #         self.close()
+    def closeEvent(self, event):
+        self.parent().window_settings_alg = None
+        self.close()
+
+        # if event:
+        #     event.accept()
+        # else:
+        #     self.close()
 
 
 

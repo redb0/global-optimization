@@ -11,16 +11,16 @@ class LineGraph(Graph):
     # Ограничим возможный атрибуты класса с поомщью __slots__ (они наследуются),
     # как-то можно с помощью nametuple, но я фиг знает как это сделать в классе с методами
     # также если написать например x = [] сразу после класса будет общее поле для всех экземпляров
-    __slots__ = ["_title", "_algorithms", "_max_range", "_min_range", "_step", "_type_p"]
+    __slots__ = ("_title", "_algorithms", "_max_range", "_min_range", "_step", "_type_p")
 
-    def __init__(self, title, alg, max_range, min_range, step, type_p):
+    def __init__(self, title, alg, max_range, min_range, step):  # type_p
         super().__init__()
         self._title = title
         self._algorithms = alg
         self._min_range = min_range
         self._max_range = max_range
         self._step = step
-        self._type_p = type_p  # что тут храниться??? хз
+        # self._type_p = type_p  # что тут храниться??? хз
 
     # def get_widget(self):
     #     w = QtWidgets.QWidget()
@@ -47,11 +47,24 @@ class LineGraph(Graph):
 
     def plot(self):
         # TODO: сделать либо через наследование либо просто методом
-        pass
+        print(self._title)
+        print(self._algorithms)
+        print(self._min_range)
+        print(self._max_range)
+        print(self._step)
+
+        self.make_data()
 
     def make_data(self):
         # У x интервал типа (a, b]
         x = np.arange(self.min_range, self.max_range, self.step)
+        print(x)
+        for alg in self._algorithms:
+            y = []
+            for i in range(len(x)):
+                probability = alg.find_probability_estimate([0, 0], [0.1, 0.25, 0.5], r"C:\Projects_Python\GlobalOptimization2\examples_tf\func1.json", number_runs=3)
+                print(probability)
+
         # TODO: сделать в классе алгоритма метод run для запуска алгоритма в отдельном потоке
 
     # свойства
@@ -63,13 +76,13 @@ class LineGraph(Graph):
     def title(self, value: str) -> None:
         self._title = value
 
-    @property
-    def type(self):  # добавить возвращаемый тип
-        return self._type_p
+    # @property
+    # def type(self):  # добавить возвращаемый тип
+    #     return self._type_p
 
-    @type.setter
-    def type(self, value):  # добавить принимаемый тип
-        self._type_p = value
+    # @type.setter
+    # def type(self, value):  # добавить принимаемый тип
+    #     self._type_p = value
 
     @property
     def min_range(self) -> Num:

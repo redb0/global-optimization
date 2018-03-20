@@ -61,5 +61,5 @@ def write_json(file_name: str, data: dict) -> None:
     :param data: данные для записи в виде словаря со строковыми ключами
     :return: None
     """
-    with open(file_name, 'w') as f:
+    with open(file_name, 'w', encoding='utf-8') as f:
         json.dump(data, f)

@@ -43,7 +43,7 @@ class Parameters:
         return self.default_value
 
     def set_selected_values(self, values) -> None:
-        self.selected_values = values
+        self.selected_values = self.p_type(values)
 
 
 def get_MI():
@@ -78,7 +78,8 @@ def get_AG():
 
 
 def get_EC():
-    p = Parameters("EC", "Использование элитных зондов", bool, [True, False], default_value=True)
+    # bool, [True, False]
+    p = Parameters("EC", "Использование элитных зондов", int, [1, 0], default_value=True)
     return p
 
 
@@ -89,6 +90,11 @@ def get_RN():
 
 def get_RP():
     p = Parameters("RP", "Степень влияния расстояния", int, default_value=1)
+    return p
+
+
+def get_gamma():
+    p = Parameters("GA", "Коэффициент гамма", float, default_value=1)
     return p
 
 
@@ -112,6 +118,8 @@ def get_parameters(key: str):
         p = get_NP()
     elif key == "MI":
         p = get_MI()
+    elif key == "GA":
+        p = get_gamma()
 
     # if key == "RN":
     #     p = get_RN()

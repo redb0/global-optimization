@@ -8,7 +8,7 @@ class StandardSAC(SAC):
         self.name = "Standard SAC"
         self.full_name = "Метод селективного усреднения"
 
-        self._relative_path = "algorithms_ex\\standard_sac.exe"  # пусть до exe-шника с алгоритмом на golang
+        self._relative_path = "algorithms_exe\\standard_sac.exe"  # пусть до exe-шника с алгоритмом на golang
         self.config_file = "algorithms_exe\\standard_sac_config.json"
         self.process = None
 

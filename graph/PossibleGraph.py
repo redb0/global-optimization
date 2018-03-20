@@ -4,7 +4,7 @@ class PossibleGraph:
         # self.dimension = dimension
         self.parameters = parameters
         # self.types_params = types_params
-        self.params = params_range
+        self.range = params_range
         self.algorithms = algs
 
     def plot(self):
@@ -22,13 +22,13 @@ class PossibleGraph:
     def add_params(self, parameter, range_p):
         self.parameters.append(parameter)
         # self.types_params.append(type_p)
-        self.params.append(range_p)
+        self.range.append(range_p)
 
     def add_param_range(self, range_p):
-        self.params.append(range_p)
+        self.range.append(range_p)
 
     def add_parameter(self, parameter):
         self.parameters.append(parameter)
 
     def get_param_range(self):
-        return self.params
+        return self.range

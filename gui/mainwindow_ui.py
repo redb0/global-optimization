@@ -223,7 +223,16 @@ class UiMainWindow:
         # delete_btn.setDisabled(True)
 
     def get_index_active_checkbox(self, form):
+        """
+        Метод получения списка индексов активных чекбоксов.
+        :param form: форма из которой необходимо получить активные чекбоксы.
+        :return: Функция-замыкание.
+        """
         def f():
+            """
+            Функция-замыкание. Замыкается на объекте-форме.
+            :return: список индексов активных чекбоксов.
+            """
             idx = []
             for i in range(form.count()):
                 item = form.itemAt(i).widget()
@@ -256,6 +265,13 @@ class UiMainWindow:
         return f
 
     def open_settings_alg_window(self, settings_list, alg_name, parent=None):
+        """
+        Метод для открытия окна с начтройками алгоритма.
+        :param settings_list: список настроек для конкретного алгоритма
+        :param alg_name: название алгоритма
+        :param parent: родительский объект (окно)
+        :return: 
+        """
         def f():
             if parent.window_settings_alg is None:
                 parent.window_settings_alg = AlgorithmSetupWindow(settings_list, alg_name, parent=parent)

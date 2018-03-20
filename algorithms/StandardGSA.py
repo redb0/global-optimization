@@ -10,6 +10,7 @@ from support_func import write_json
 
 
 class StandardGSA(GSA):
+    """Класс для стандартного алгоритма GSA."""
     def __init__(self):
         super().__init__()
         self.name = "Standard GSA"
@@ -37,7 +38,6 @@ class StandardGSA(GSA):
         Метод для запуска алгоритма.
         
         :param file_test_func: 
-        :param params: 
         :param result_file_name: имя файла в виде строки (*.json), куда будет сохранен результат
         :return: 
         """
@@ -113,12 +113,26 @@ class StandardGSA(GSA):
                         number_successful_starts[j] = number_successful_starts[j] + 1
         return number_successful_starts
 
-    def lies_in_interval(self, x, left, right):
+    def lies_in_interval(self, x, left, right) -> bool:
+        """
+        Функция проверки значения x на принадлежность отрезку [left, right].
+        :param x: значение
+        :param left: левая граница отрезка
+        :param right: правая граница отрезка
+        :return: True - если точка лежит в интервале, иначе - False.
+        """
         if (x >= left) and (x <= right):
             return True
         return False
 
-    def lies_in_epsilon(self, x, c, e):
+    def lies_in_epsilon(self, x, c, e) -> bool:
+        """
+        Функция проверки значения x на принадлежность отрезку выда [c - e, c + e].
+        :param x: значение
+        :param c: значение попадание в epsilon-окрестность которо необходимо проверить
+        :param e: epsilon-окрестность вокруг значения c
+        :return: True - если точка лежит в интервале, иначе - False.
+        """
         if (x >= (c - e)) and (x <= (c + e)):
             return True
         return False
@@ -139,7 +153,14 @@ class StandardGSA(GSA):
             d.update({p.abbreviation: p.name})
         return d
 
-    def get_params_dict_2(self, **kwargs):
+    def get_params_dict_2(self, **kwargs) -> dict:
+        """
+        Преобразование списка с параметрами в словарь для передачи в алгоритм.
+        К словарю можно присоеденить переданные именные аргументы.
+        Возвращается словать вида: {"Сокращенное название": значение параметра}
+        :param kwargs: именные аргументы для включения в словарь
+        :return: словарь с параметрами для передачи в алгоритм и записи в json.
+        """
         d = {}
         for p in self.parameters:
             d.update({p.abbreviation: p.selected_values})

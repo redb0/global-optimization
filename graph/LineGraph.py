@@ -56,6 +56,12 @@ class LineGraph(Graph):
         self.make_data()
 
     def make_data(self):
+        """
+        Метод генерации данных для графика.
+        Производится пуски алгоритмов и расчет оценки вероятности по результатам number_runs прогонов.
+        Итерирование идет по выбранному параметру.
+        :return: 
+        """
         # У x интервал типа (a, b]
         x = np.arange(self.min_range, self.max_range, self.step)
         print(x)

@@ -1,6 +1,6 @@
 from PyQt5 import QtWidgets, QtCore
 
-import alg_parameters
+import Parameters
 from gui.AlgorithmSetupWindow_ui import UiAlgorithmSetupWindow
 from support_func import deprecated
 
@@ -28,19 +28,19 @@ class AlgorithmSetupWindow(QtWidgets.QWidget):
                 if type(item) == QtWidgets.QSpinBox:
                     name = self.ui.form.itemAt(i - 1).widget().text()
                     value = item.value()
-                    s = alg_parameters.get_param_on_name(settings, name)
+                    s = Parameters.get_param_on_name(settings, name)
                     s.set_selected_values(value)
                     # print(s.get_selected_values())
                 elif type(item) == QtWidgets.QDoubleSpinBox:
                     name = self.ui.form.itemAt(i - 1).widget().text()
                     value = round(item.value(), 2)
-                    s = alg_parameters.get_param_on_name(settings, name)
+                    s = Parameters.get_param_on_name(settings, name)
                     s.set_selected_values(value)
                     # print(s.get_selected_values())
                 elif type(item) == QtWidgets.QComboBox:
                     name = self.ui.form.itemAt(i - 1).widget().text()
                     value = item.currentText()
-                    s = alg_parameters.get_param_on_name(settings, name)
+                    s = Parameters.get_param_on_name(settings, name)
                     s.set_selected_values(value)
                     # print(s.get_selected_values())
             for p in self.parent().to_test_list[0].get_parameters():

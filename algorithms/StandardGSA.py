@@ -4,9 +4,10 @@ import subprocess
 from time import time
 from typing import Union
 
+import support_func
 from algorithms.GSA import GSA
-import alg_parameters
-from support_func import write_json
+import Parameters
+from support_func import write_json, lies_in_epsilon, to_dict
 
 
 class StandardGSA(GSA):
@@ -23,15 +24,10 @@ class StandardGSA(GSA):
         self._start_time = None
 
         # TODO: возможно тут нужен кортеж как неизменяемый тип
-        self.parameters = [alg_parameters.get_MI(), alg_parameters.get_NP(), alg_parameters.get_KN(),
-                           alg_parameters.get_IG(), alg_parameters.get_G0(), alg_parameters.get_AG(),
-                           alg_parameters.get_EC(), alg_parameters.get_RN(), alg_parameters.get_RP(),
-                           alg_parameters.get_gamma()]
-
-    # def get_param_obj(self, key):
-    #     for p in self.parameters:
-    #         if key == p.abbreviation:
-    #             return p
+        self.parameters = [Parameters.get_MI(), Parameters.get_NP(), Parameters.get_KN(),
+                           Parameters.get_IG(), Parameters.get_G0(), Parameters.get_AG(),
+                           Parameters.get_EC(), Parameters.get_RN(), Parameters.get_RP(),
+                           Parameters.get_gamma()]
 
     def run(self, result_file_name: str, file_test_func: str):
         """
@@ -55,8 +51,8 @@ class StandardGSA(GSA):
         if self._process is None:
             args = [abs_path_exe, abs_path_config, file_test_func, abs_path_result]
             # записать параметры алгоритма в файл config
-            print(self.get_params_dict_2(min_flag=1))
-            write_json(abs_path_config, self.get_params_dict_2(min_flag=1))  # может написать тут или во внешней функции?
+            print(to_dict(self.parameters, min_flag=1))
+            write_json(abs_path_config, to_dict(self.parameters, min_flag=1))  # может написать тут или во внешней функции?
 
             self._start_time = time()
             self._process = subprocess.Popen(args, shell=True, stdout=subprocess.PIPE)  # bufsize=1, universal_newlines=True
@@ -85,8 +81,11 @@ class StandardGSA(GSA):
             data = json.load(f)
         return data
 
-    def find_probability_estimate(self, extremum: list, epsilon: Union[list, float, int], file_test_func: str, number_runs=100):
-        # number_successful_starts = 0
+    def find_probability_estimate(self, extremum: list, epsilon: Union[list, float, int],
+                                  file_test_func: str, number_runs=100, file_path=""):
+        # extremum - из тестовой функции
+        # epsilon - из настроек
+
         if (type(epsilon) == float) or (type(epsilon) == int):
             number_successful_starts = 0
         elif type(epsilon) == list:
@@ -94,6 +93,17 @@ class StandardGSA(GSA):
             for _ in epsilon:
                 number_successful_starts.append(0)
 
+        # TODO: добавить возможность в настройках указывать путь до папки куда сохранять верузльтат
+        script_path = os.path.dirname(os.path.abspath(__file__))
+        script_path = script_path.replace('\\\\', '\\')
+        name_file = self.name.replace(' ', '') + "_" + \
+            self.parameters[0].get_abbreviation() + "=" + str(self.parameters[0].get_selected_values()) + "_" + \
+            self.parameters[1].get_abbreviation() + "=" + str(self.parameters[1].get_selected_values()) + "_" + \
+            self.parameters[2].get_abbreviation() + "=" + str(self.parameters[2].get_selected_values()) + "_" + \
+            self.parameters[3].get_abbreviation() + "=" + str(self.parameters[3].get_selected_values()) + ".json"  # "StandardGSA_MI=500_NP=100_KN=0.0_IG=1.json"
+        abs_path_file = os.path.join(script_path, "..\\algorithms_exe\\result\\", name_file)  #
+        print(name_file)
+        in_file = []
         for i in range(number_runs):
             print("Прогон ", i + 1, " ...")
             path_res = self.run(self.result_file_name, file_test_func)  #TODO: доделать здесь
@@ -101,41 +111,28 @@ class StandardGSA(GSA):
             print(t)
             # func_value, coordinate, best_func_value, best_coordinates = res
             res_dict = self.get_result(path_res)
+
+            # if i == 0:
+            #     support_func.create_json_file(abs_path_file)
+            #     support_func.write_in_json(abs_path_file, res_dict)
+            # else:
+            #     support_func.add_in_json(abs_path_file, res_dict)
+
             print(res_dict)
+            in_file.append(res_dict)
+            x_best = res_dict["x_best"]
             if (type(epsilon) == float) or (type(epsilon) == int):
-                mask = [self.lies_in_epsilon(res_dict["x_best"][k], extremum[k], epsilon) for k in range(len(res_dict["x_best"]))]
+                mask = [lies_in_epsilon(x_best[k], extremum[k], epsilon) for k in range(len(x_best))]
                 if all(mask):
                     number_successful_starts = number_successful_starts + 1
             elif type(epsilon) == list:
                 for j in range(len(epsilon)):
-                    mask = [self.lies_in_epsilon(res_dict["x_best"][k], extremum[k], epsilon[j]) for k in range(len(res_dict["x_best"]))]
+                    mask = [lies_in_epsilon(x_best[k], extremum[k], epsilon[j]) for k in range(len(x_best))]
                     if all(mask):
                         number_successful_starts[j] = number_successful_starts[j] + 1
+        support_func.write_in_json(abs_path_file, in_file)
+
         return number_successful_starts
-
-    def lies_in_interval(self, x, left, right) -> bool:
-        """
-        Функция проверки значения x на принадлежность отрезку [left, right].
-        :param x: значение
-        :param left: левая граница отрезка
-        :param right: правая граница отрезка
-        :return: True - если точка лежит в интервале, иначе - False.
-        """
-        if (x >= left) and (x <= right):
-            return True
-        return False
-
-    def lies_in_epsilon(self, x, c, e) -> bool:
-        """
-        Функция проверки значения x на принадлежность отрезку выда [c - e, c + e].
-        :param x: значение
-        :param c: значение попадание в epsilon-окрестность которо необходимо проверить
-        :param e: epsilon-окрестность вокруг значения c
-        :return: True - если точка лежит в интервале, иначе - False.
-        """
-        if (x >= (c - e)) and (x <= (c + e)):
-            return True
-        return False
 
     def get_abbreviation_params(self):
         # abr = {i.get_abbreviation() for i in self.parameters}
@@ -147,25 +144,15 @@ class StandardGSA(GSA):
             if abr == p.abbreviation:
                 return p.name
 
-    def get_params_dict(self):
+    def get_params_dict(self) -> dict:
+        """
+        Метод преобразует список параметров в словарь 
+        с ключами - сокращенным обозначением и значениями - полным названием параметра
+        :return: словарь
+        """
         d = {}
         for p in self.parameters:
             d.update({p.abbreviation: p.name})
-        return d
-
-    def get_params_dict_2(self, **kwargs) -> dict:
-        """
-        Преобразование списка с параметрами в словарь для передачи в алгоритм.
-        К словарю можно присоеденить переданные именные аргументы.
-        Возвращается словать вида: {"Сокращенное название": значение параметра}
-        :param kwargs: именные аргументы для включения в словарь
-        :return: словарь с параметрами для передачи в алгоритм и записи в json.
-        """
-        d = {}
-        for p in self.parameters:
-            d.update({p.abbreviation: p.selected_values})
-        for name in kwargs.keys():
-            d.update({name: kwargs.get(name)})
         return d
 
     def set_params_value(self, list_p, **kwargs):
@@ -176,21 +163,29 @@ class StandardGSA(GSA):
         :return: 
         """
         for k in kwargs.keys():
-            obj = alg_parameters.get_param_from_list(list_p, k)
+            obj = Parameters.get_param_from_list(list_p, k)
             if obj is not None:
                 obj.set_selected_values(kwargs.get(k))
             else:
                 print("Параметра не существует")
 
-    # def get_parameters(self):
-    #     return self.parameters
+    def set_parameter(self, key: str, value) -> None:
+        """
+        Метод для установки значения параметра по сокращенному обозначению.
+        :param key: сокращенное обозначение параметра в виде строки
+        :param value: значение
+        :return: -
+        """
+        for p in self.parameters:
+            if p.get_abbreviation() == key:
+                p.set_selected_values(value)
 
 
 def main():
     s = StandardGSA()
     x = s.get_abbreviation_params()
     print(x)
-    x1 = alg_parameters.Parameters.get_list_key(s.get_parameters())
+    x1 = Parameters.Parameters.get_list_key(s.get_parameters())
     print(x1)
     res = "res.json"
     d = {'MI': 1, 'NP': 2, 'KN': 3, 'IG': 4, 'G0': 5, 'AG': 6, 'EC': 7, 'RN': 8, 'RP': 10}

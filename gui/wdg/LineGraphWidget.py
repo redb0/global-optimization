@@ -33,7 +33,7 @@ class LineGraphWidget(PossibleGraphWidget):
         #                                  step_limit=step_limit)
         #     grid.addWidget(self.range_wdg, 1 + i, 1 + i, 1 + i, 3)
 
-        self.range_wdg = RangeWidget(p[0].get_type(),
+        self.range_wdg = RangeWidget(p.get_type(),
                                      lower_limit=lower_limit,
                                      top_limit=top_limit,
                                      step_limit=step_limit)
@@ -46,7 +46,7 @@ class LineGraphWidget(PossibleGraphWidget):
         # self.list_graph.addWidget(w)
         self.btn_delete.setText(self.translate("MainWindow", "Удалить"))
         self.btn_plot.setText(self.translate("MainWindow", "Построить"))
-        label.setText(self.translate("MainWindow", p[0].get_name()))
+        label.setText(self.translate("MainWindow", p.get_name()))
 
         self.btn_delete.clicked.connect(self.delete_graph(w))
         self.btn_plot.clicked.connect(lambda: self.plot(print_error, get_alg))
@@ -67,14 +67,15 @@ class LineGraphWidget(PossibleGraphWidget):
             range_param = [down, high, step]
             # TODO: уже забыл нафига в след строке надо self.line_graph_obj.get_parameters_obj()[0].
             # понял, для того чтобы хранить парамметр и его диапозон
-            self.line_graph_obj.add_param_range([self.line_graph_obj.get_parameters_obj()[0], range_param])
-            self.line_graph_obj.add_params(self.line_graph_obj.get_parameters_obj()[0], range_param)
+            self.line_graph_obj.add_param_range([self.line_graph_obj.get_parameters_obj(), range_param])
+            # self.line_graph_obj.add_params(self.line_graph_obj.get_parameters_obj(), range_param)
 
-            line_graph = LineGraph.LineGraph("title", algorithms, high, down, step)
+            line_graph = LineGraph.LineGraph("title", algorithms, self.line_graph_obj.get_parameters_obj(),
+                                             high, down, step)
             line_graph.plot()
 
             print(self.line_graph_obj)
             print(self.line_graph_obj.get_param_range())
             # print(self.line_graph_obj.get_max_range())
             # print(self.line_graph_obj.get_step())
-            print(self.line_graph_obj)
+            # print(self.line_graph_obj)

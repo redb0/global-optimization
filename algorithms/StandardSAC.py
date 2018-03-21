@@ -1,4 +1,4 @@
-import alg_parameters
+import Parameters
 from algorithms.SAC import SAC
 
 
@@ -12,7 +12,7 @@ class StandardSAC(SAC):
         self.config_file = "algorithms_exe\\standard_sac_config.json"
         self.process = None
 
-        self.parameters = [alg_parameters.get_MI(), alg_parameters.get_NP(), alg_parameters.get_KN()]
+        self.parameters = [Parameters.get_MI(), Parameters.get_NP(), Parameters.get_KN()]
 
     def get_params_dict(self):
         d = {}

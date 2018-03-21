@@ -2,7 +2,7 @@ class PossibleGraph:
     def __init__(self, type_graph: str, parameters, params_range, algs):
         self.type_graph = type_graph
         # self.dimension = dimension
-        self.parameters = parameters
+        self.parameter = parameters
         # self.types_params = types_params
         self.range = params_range
         self.algorithms = algs
@@ -17,10 +17,10 @@ class PossibleGraph:
     #     return self.types_params
 
     def get_parameters_obj(self):
-        return self.parameters
+        return self.parameter
 
     def add_params(self, parameter, range_p):
-        self.parameters.append(parameter)
+        self.parameter.append(parameter)
         # self.types_params.append(type_p)
         self.range.append(range_p)
 
@@ -28,7 +28,7 @@ class PossibleGraph:
         self.range.append(range_p)
 
     def add_parameter(self, parameter):
-        self.parameters.append(parameter)
+        self.parameter.append(parameter)
 
     def get_param_range(self):
         return self.range

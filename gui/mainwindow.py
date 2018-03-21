@@ -1,7 +1,7 @@
 import copy
 from PyQt5.QtWidgets import QMainWindow, QPushButton, QMessageBox, QCheckBox
 
-import alg_parameters
+import Parameters
 from algorithms.StandardGSA import StandardGSA
 from algorithms.StandardSAC import StandardSAC
 from graph.PossibleGraph import PossibleGraph
@@ -32,7 +32,6 @@ class MainWindow(QMainWindow):
         self.fill_combobox_2(self.active_alg_1, self.ui.combobox_alg)
         self.ui.add_new_alg_btn.clicked.connect(lambda: self.add_alg())
 
-
         self.active_alg = {"StandardGSA": None, "StandardSAC": None}
         self.window_settings_alg = None
 
@@ -40,13 +39,6 @@ class MainWindow(QMainWindow):
         self.possible_graphics = []
 
         self.change_status_activity_buttons(self.ui.alg_form, True)
-
-        # for i in range(self.ui.alg_form.count()):
-        #     item = self.ui.alg_form.itemAt(i)
-        #     if type(item.widget()) == QCheckBox:
-        #         item.widget().stateChanged.connect(self.check_cb)
-        #         item.widget().stateChanged.connect(self.ui.alg_form.itemAt(i+1).widget().setEnabled)
-        #         # TODO: добавить коннект к кнопкам создание окна с изменением параметров
 
         self.ui.add_linear_graph_btn.clicked.connect(lambda: self.add_linear_graph(self.to_test_list))
         # self.ui.add_heat_map_btn.clicked.connect(self.ui.add_heat_map)
@@ -62,14 +54,15 @@ class MainWindow(QMainWindow):
         print("--------->", alg)
         # TODO: переименовать переменные, нихрена не понятно
         d = self.get_value_from_combobox(self.ui.param_linear_graph)
-        p = alg_parameters.get_parameters(list(d.keys())[0])
+        p = Parameters.get_parameters(list(d.keys())[0])
+        print("Параметр для построения графика: ", list(d.keys())[0])
         if p.allowable_values is not None:
             point_graph = PossibleGraph("POINT_GRAPH", [p], [], alg)
             point_graph_wdg = PointGraphWidget(point_graph)
             self.ui.list_graph.addWidget(point_graph_wdg.get_widget(parent=self))
             # self.ui.list_graph.addStretch(1)
         else:
-            line_graph = PossibleGraph("LINE_GRAPH", [p], [], [])
+            line_graph = PossibleGraph("LINE_GRAPH", p, [], [])
             line_graph_wdg = LineGraphWidget(line_graph)
             self.ui.list_graph.addWidget(line_graph_wdg.get_widget(lower_limit=0, top_limit=1000,
                                                                    step_limit=1, get_alg=self.get_active_algorithm,
@@ -192,7 +185,6 @@ class MainWindow(QMainWindow):
 
     def get_active_algorithm(self):
         return self.to_test_list
-
 
     def change_status_activity_buttons(self, layout, flag):
         for i in range(layout.count()):

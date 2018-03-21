@@ -1,6 +1,10 @@
 import json
+import os
 from functools import wraps
 import warnings
+from typing import List, Union
+
+from Parameters import Parameters
 
 
 def get_max_step(sb, w):
@@ -63,3 +67,88 @@ def write_json(file_name: str, data: dict) -> None:
     """
     with open(file_name, 'w', encoding='utf-8') as f:
         json.dump(data, f)
+
+
+def add_in_json(file: str, data: dict) -> None:
+    # TODO: добавить документацию
+    # data_from_file = {}
+    with open(file, 'r', encoding='utf-8') as f:
+        # Установить указатель в начало файла
+        f.seek(0, 0)
+        data_from_file = json.load(f)
+    # if os.path.isfile(file):
+    #     with open(file, 'r', encoding='utf-8') as f:
+    #         # Установить указатель в начало файла
+    #         f.seek(0, 0)
+    #         data_from_file = json.load(f)
+    # elif not os.path.isfile(file):
+    #     f = open(file, 'a+')
+    #     f.close()
+    #     # with open(file, 'a+', encoding='utf-8') as f:  # тут нихрена не создается файл
+    #     #     pass
+
+    data_from_file.update(data)
+    with open(file, 'w', encoding='utf-8') as f:
+        json.dump(data_from_file, f)
+
+
+def create_json_file(file: str):
+    """Функция создания пустого json-файла"""
+    with open(file, 'w', encoding='utf-8') as f:
+        pass
+        # Установить указатель в начало файла
+        # f.seek(0, 0)
+
+
+def write_in_json(file_name: str, data: Union[list, dict]) -> None:
+    """
+    Запись данных в json файл
+    :param file_name: путь до файла в виде строки
+    :param data: данные, в виде списка либо словаря
+    :return: 
+    """
+    with open(file_name, 'w', encoding='utf-8') as f:
+        json.dump(data, f)
+
+
+def lies_in_interval(x, left, right) -> bool:
+    """
+    Функция проверки значения x на принадлежность отрезку [left, right].
+    :param x: значение
+    :param left: левая граница отрезка
+    :param right: правая граница отрезка
+    :return: True - если точка лежит в интервале, иначе - False.
+    """
+    if (x >= left) and (x <= right):
+        return True
+    return False
+
+
+def lies_in_epsilon(x, c, e) -> bool:
+    """
+    Функция проверки значения x на принадлежность отрезку выда [c - e, c + e].
+    :param x: значение
+    :param c: значение попадание в epsilon-окрестность которо необходимо проверить
+    :param e: epsilon-окрестность вокруг значения c
+    :return: True - если точка лежит в интервале, иначе - False.
+    """
+    if (x >= (c - e)) and (x <= (c + e)):
+        return True
+    return False
+
+
+def to_dict(parameters: List[Parameters], **kwargs) -> dict:
+    """
+    Преобразование списка с параметрами в словарь для передачи в алгоритм.
+    К словарю можно присоеденить переданные именные аргументы.
+    Возвращается словать вида: {"Сокращенное название": значение параметра}
+    :param parameters: список параметров, который нужно преобразовать
+    :param kwargs: именные аргументы для включения в словарь
+    :return: словарь с параметрами для передачи в алгоритм и записи в json.
+    """
+    d = {}
+    for p in parameters:
+        d.update({p.abbreviation: p.selected_values})
+    for name in kwargs.keys():
+        d.update({name: kwargs.get(name)})
+    return d

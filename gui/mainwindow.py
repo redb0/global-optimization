@@ -1,7 +1,8 @@
 import copy
 from PyQt5.QtWidgets import QMainWindow, QPushButton, QMessageBox, QCheckBox
 
-import Parameters
+import AlgorithmParameter
+from Settings import Settings
 from algorithms.StandardGSA import StandardGSA
 from algorithms.StandardSAC import StandardSAC
 from graph.PossibleGraph import PossibleGraph
@@ -23,6 +24,8 @@ class MainWindow(QMainWindow):
         super().__init__(parent)
         self.ui = UiMainWindow()
 
+        self.settings = Settings()
+
         self.active_alg_1 = [StandardGSA(), StandardSAC()]
         self.to_test_list = []
 
@@ -34,6 +37,7 @@ class MainWindow(QMainWindow):
 
         self.active_alg = {"StandardGSA": None, "StandardSAC": None}
         self.window_settings_alg = None
+        self.window_common_settings = None
 
         self.window_choose = None
         self.possible_graphics = []
@@ -54,7 +58,7 @@ class MainWindow(QMainWindow):
         print("--------->", alg)
         # TODO: переименовать переменные, нихрена не понятно
         d = self.get_value_from_combobox(self.ui.param_linear_graph)
-        p = Parameters.get_parameters(list(d.keys())[0])
+        p = AlgorithmParameter.get_parameters(list(d.keys())[0])
         print("Параметр для построения графика: ", list(d.keys())[0])
         if p.allowable_values is not None:
             point_graph = PossibleGraph("POINT_GRAPH", [p], [], alg)

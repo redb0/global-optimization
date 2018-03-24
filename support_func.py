@@ -4,7 +4,7 @@ from functools import wraps
 import warnings
 from typing import List, Union
 
-from Parameters import Parameters
+from AlgorithmParameter import AlgorithmParameter
 
 
 def get_max_step(sb, w):
@@ -58,7 +58,7 @@ def deprecated(message=None):
     return decorator
 
 
-def write_json(file_name: str, data: dict) -> None:
+def write_json(file_name: str, data: Union[list, dict]) -> None:
     """
     Функция записи данных в json файл.
     :param file_name: имя файла в виде строки, куда будет производиться запись 
@@ -67,6 +67,12 @@ def write_json(file_name: str, data: dict) -> None:
     """
     with open(file_name, 'w', encoding='utf-8') as f:
         json.dump(data, f)
+
+
+def read_json(file_name: str):
+    with open(file_name, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    return data
 
 
 def add_in_json(file: str, data: dict) -> None:
@@ -100,15 +106,15 @@ def create_json_file(file: str):
         # f.seek(0, 0)
 
 
-def write_in_json(file_name: str, data: Union[list, dict]) -> None:
-    """
-    Запись данных в json файл
-    :param file_name: путь до файла в виде строки
-    :param data: данные, в виде списка либо словаря
-    :return: 
-    """
-    with open(file_name, 'w', encoding='utf-8') as f:
-        json.dump(data, f)
+# def write_in_json(file_name: str, data: Union[list, dict]) -> None:
+#     """
+#     Запись данных в json файл
+#     :param file_name: путь до файла в виде строки
+#     :param data: данные, в виде списка либо словаря
+#     :return:
+#     """
+#     with open(file_name, 'w', encoding='utf-8') as f:
+#         json.dump(data, f)
 
 
 def lies_in_interval(x, left, right) -> bool:
@@ -137,7 +143,7 @@ def lies_in_epsilon(x, c, e) -> bool:
     return False
 
 
-def to_dict(parameters: List[Parameters], **kwargs) -> dict:
+def to_dict(parameters: List[AlgorithmParameter], **kwargs) -> dict:
     """
     Преобразование списка с параметрами в словарь для передачи в алгоритм.
     К словарю можно присоеденить переданные именные аргументы.

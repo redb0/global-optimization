@@ -1,4 +1,3 @@
-import json
 import os
 import subprocess
 from time import time
@@ -6,7 +5,7 @@ from typing import Union
 
 import support_func
 from algorithms.GSA import GSA
-import Parameters
+import AlgorithmParameter
 from support_func import write_json, lies_in_epsilon, to_dict
 
 
@@ -24,10 +23,10 @@ class StandardGSA(GSA):
         self._start_time = None
 
         # TODO: возможно тут нужен кортеж как неизменяемый тип
-        self.parameters = [Parameters.get_MI(), Parameters.get_NP(), Parameters.get_KN(),
-                           Parameters.get_IG(), Parameters.get_G0(), Parameters.get_AG(),
-                           Parameters.get_EC(), Parameters.get_RN(), Parameters.get_RP(),
-                           Parameters.get_gamma()]
+        self.parameters = [AlgorithmParameter.get_MI(), AlgorithmParameter.get_NP(), AlgorithmParameter.get_KN(),
+                           AlgorithmParameter.get_IG(), AlgorithmParameter.get_G0(), AlgorithmParameter.get_AG(),
+                           AlgorithmParameter.get_EC(), AlgorithmParameter.get_RN(), AlgorithmParameter.get_RP(),
+                           AlgorithmParameter.get_gamma()]
 
     def run(self, result_file_name: str, file_test_func: str):
         """
@@ -39,15 +38,10 @@ class StandardGSA(GSA):
         """
         # os.path.dirname(__file__) - возвращает путь до папки, где лежит файл
         # os.path.realpath(__file__) - возвращает путь к файлу, вместе с его названием
-        script_path = os.path.dirname(os.path.abspath(__file__))
-        script_path = script_path.replace('\\\\', '\\')
-        # print(script_path)
+        script_path = os.path.dirname(os.path.abspath(__file__)).replace('\\\\', '\\')
         abs_path_exe = os.path.join(script_path, self._relative_path)  # путь до exe-шника
         abs_path_config = os.path.join(script_path, self.config_file)  # путь до конфиг файла
         abs_path_result = os.path.join(script_path, result_file_name)  # пусть куда положить результат
-        # print(abs_path_exe)
-        # print(abs_path_config)
-        # print(abs_path_result)
         if self._process is None:
             args = [abs_path_exe, abs_path_config, file_test_func, abs_path_result]
             # записать параметры алгоритма в файл config
@@ -76,13 +70,13 @@ class StandardGSA(GSA):
             self._process = None  # сбросить процесс, так как он завершен
             return return_code, run_time
 
-    def get_result(self, file_path):
-        with open(file_path, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-        return data
+    # def get_result(self, file_path):
+    #     with open(file_path, 'r', encoding='utf-8') as f:
+    #         data = json.load(f)
+    #     return data
 
     def find_probability_estimate(self, extremum: list, epsilon: Union[list, float, int],
-                                  file_test_func: str, number_runs=100, file_path=""):
+                                  file_test_func: str, number_runs=100, file_path="") -> float:
         # extremum - из тестовой функции
         # epsilon - из настроек
 
@@ -110,7 +104,7 @@ class StandardGSA(GSA):
             t = self.wait_process()
             print(t)
             # func_value, coordinate, best_func_value, best_coordinates = res
-            res_dict = self.get_result(path_res)
+            res_dict = support_func.read_json(path_res)
 
             # if i == 0:
             #     support_func.create_json_file(abs_path_file)
@@ -118,7 +112,7 @@ class StandardGSA(GSA):
             # else:
             #     support_func.add_in_json(abs_path_file, res_dict)
 
-            print(res_dict)
+            # print(res_dict)
             in_file.append(res_dict)
             x_best = res_dict["x_best"]
             if (type(epsilon) == float) or (type(epsilon) == int):
@@ -130,9 +124,9 @@ class StandardGSA(GSA):
                     mask = [lies_in_epsilon(x_best[k], extremum[k], epsilon[j]) for k in range(len(x_best))]
                     if all(mask):
                         number_successful_starts[j] = number_successful_starts[j] + 1
-        support_func.write_in_json(abs_path_file, in_file)
+        support_func.write_json(abs_path_file, in_file)
 
-        return number_successful_starts
+        return number_successful_starts / number_runs
 
     def get_abbreviation_params(self):
         # abr = {i.get_abbreviation() for i in self.parameters}
@@ -163,7 +157,7 @@ class StandardGSA(GSA):
         :return: 
         """
         for k in kwargs.keys():
-            obj = Parameters.get_param_from_list(list_p, k)
+            obj = AlgorithmParameter.get_param_from_list(list_p, k)
             if obj is not None:
                 obj.set_selected_values(kwargs.get(k))
             else:
@@ -185,7 +179,7 @@ def main():
     s = StandardGSA()
     x = s.get_abbreviation_params()
     print(x)
-    x1 = Parameters.Parameters.get_list_key(s.get_parameters())
+    x1 = AlgorithmParameter.AlgorithmParameter.get_list_key(s.get_parameters())
     print(x1)
     res = "res.json"
     d = {'MI': 1, 'NP': 2, 'KN': 3, 'IG': 4, 'G0': 5, 'AG': 6, 'EC': 7, 'RN': 8, 'RP': 10}

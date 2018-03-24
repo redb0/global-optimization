@@ -1,4 +1,4 @@
-class Parameters:
+class AlgorithmParameter:
     def __init__(self, abbreviation: str, name: str, p_type: type,
                  allowable_values=None, default_value=None):
         # TODO: возможно добавить проверку возможных значений на тип
@@ -47,54 +47,54 @@ class Parameters:
 
 
 def get_MI():
-    p = Parameters("MI", "Количество итераций", int, default_value=500)
+    p = AlgorithmParameter("MI", "Количество итераций", int, default_value=500)
     return p
 
 
 def get_NP():
-    p = Parameters("NP", "Количество точек", int, default_value=200)
+    p = AlgorithmParameter("NP", "Количество точек", int, default_value=200)
     return p
 
 
 def get_KN():
-    p = Parameters("KN", "Коэффициент помехи", float, default_value=0.0)
+    p = AlgorithmParameter("KN", "Коэффициент помехи", float, default_value=0.0)
     return p
 
 
 def get_IG():
-    p = Parameters("IG", "Индекс функции изменения гравитационной постоянной", int, [1, 2, 3, 4], default_value=1)
+    p = AlgorithmParameter("IG", "Индекс функции изменения гравитационной постоянной", int, [1, 2, 3, 4], default_value=1)
     # TODO: добавить варианты тестовых функций
     return p
 
 
 def get_G0():
-    p = Parameters("G0", "Начальное значение гравитационной постоянной", float, default_value=100)
+    p = AlgorithmParameter("G0", "Начальное значение гравитационной постоянной", float, default_value=100)
     return p
 
 
 def get_AG():
-    p = Parameters("AG", "Коэффициент альфа", float, default_value=20)
+    p = AlgorithmParameter("AG", "Коэффициент альфа", float, default_value=20)
     return p
 
 
 def get_EC():
     # bool, [True, False]
-    p = Parameters("EC", "Использование элитных зондов", int, [1, 0], default_value=True)
+    p = AlgorithmParameter("EC", "Использование элитных зондов", int, [1, 0], default_value=True)
     return p
 
 
 def get_RN():
-    p = Parameters("RN", "Норма линейного пространства", int, [1, 2], default_value=2)
+    p = AlgorithmParameter("RN", "Норма линейного пространства", int, [1, 2], default_value=2)
     return p
 
 
 def get_RP():
-    p = Parameters("RP", "Степень влияния расстояния", int, default_value=1)
+    p = AlgorithmParameter("RP", "Степень влияния расстояния", int, default_value=1)
     return p
 
 
 def get_gamma():
-    p = Parameters("GA", "Коэффициент гамма", float, default_value=1)
+    p = AlgorithmParameter("GA", "Коэффициент гамма", float, default_value=1)
     return p
 
 

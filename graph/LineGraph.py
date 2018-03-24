@@ -1,5 +1,6 @@
 import numpy as np
-from typing import Union
+from typing import Union, List, Tuple
+import matplotlib.pyplot as plt
 
 from graph.Graph import Graph
 
@@ -38,10 +39,30 @@ class LineGraph(Graph):
         print(self._min_range)
         print(self._max_range)
         print(self._step)
+        # легенда - сверху риссунка, либо отключена.
 
-        self.make_data()
+        x, data = self.make_data()
 
-    def make_data(self):
+        plt.subplot()
+
+        for i in range(len(data)):
+            # TODO: сделать label для одинаковых алгоритмов
+            plt.plot(data[i], label=self._algorithms[i].get_name())
+
+        # bbox_to_anchor - точка к которой закреплена легенда
+        # loc - положение относительно точки.
+        # 1 - слева, снизу
+        # 2 - спара, снизу
+        # 3 - справа, сверху
+        # 4 - слева, сверху
+        # borderaxespad=0. - ширина пространства между границами рисунка и легенды
+        # ncol=2, количество столбцов для расположения подписей
+        plt.legend(bbox_to_anchor=(0., 1.02), loc=3,
+                   ncol=2, borderaxespad=0.)
+
+        plt.show()
+
+    def make_data(self) -> Tuple[np.array, List[List[Union[int, float]]]]:
         """
         Метод генерации данных для графика.
         Производится пуски алгоритмов и расчет оценки вероятности по результатам number_runs прогонов.

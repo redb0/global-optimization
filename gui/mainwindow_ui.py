@@ -1,6 +1,7 @@
 from PyQt5 import QtWidgets, QtCore
 
 from gui.AlgorithmSetupWindow import AlgorithmSetupWindow
+from gui.settings_window import SettingsWindow
 
 
 class UiMainWindow:
@@ -147,6 +148,7 @@ class UiMainWindow:
         # self.graph_layout.addLayout(self.list_graph)
         # self.graph_layout.addStretch(1)
 
+        self.actionSettings.triggered.connect(self.open_common_settings_window(main_window))
         self.retranslate(main_window)
 
     def retranslate(self, main_window):
@@ -277,4 +279,10 @@ class UiMainWindow:
                 parent.window_settings_alg = AlgorithmSetupWindow(settings_list, alg_name, parent=parent)
                 parent.window_settings_alg.show()
         return f
-        pass
+
+    def open_common_settings_window(self, parent=None):
+        def f():
+            if parent.window_common_settings is None:
+                parent.window_common_settings = SettingsWindow(parent=parent)
+                parent.window_common_settings.show()
+        return f

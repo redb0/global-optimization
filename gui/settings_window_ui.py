@@ -19,10 +19,14 @@ class UiSettingsWindow:
 
         self.min_flag_label = QLabel()
         self.min_flag = QSpinBox()
+        self.min_flag.setMinimum(0)
+        self.min_flag.setMaximum(1)
         self.min_flag.setValue(1)
 
         self.number_runs_label = QLabel()
         self.number_runs = QSpinBox()
+        self.number_runs.setMinimum(0)
+        self.number_runs.setMaximum(5000)
         self.number_runs.setValue(100)
 
         self.epsilon_label = QLabel()
@@ -31,6 +35,7 @@ class UiSettingsWindow:
 
         self.abs_path_test_func_label = QLabel()
         self.abs_path_test_func_te = QLineEdit()
+        self.abs_path_test_func_te.setReadOnly(True)
         self.open_file_btn = QPushButton()
         wgt = QWidget()
         h_box_1 = QHBoxLayout()
@@ -65,6 +70,7 @@ class UiSettingsWindow:
         self.epsilon_label.setText(self.translate("SettingsWindow", "Размер epsilon-окрестности"))
         self.abs_path_test_func_label.setText(self.translate("SettingsWindow", "Тестовая функция"))
         self.legend_position_label.setText(self.translate("SettingsWindow", "Положение легенда на графике"))
+        self.legend_position_te.setText(self.translate("SettingsWindow", "top"))
 
         self.save_btn.setText(self.translate("SettingsWindow", "Сохранить"))
         self.reset_btn.setText(self.translate("SettingsWindow", "Сбросить"))

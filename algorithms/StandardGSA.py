@@ -22,13 +22,13 @@ class StandardGSA(GSA):
         self._process = None
         self._start_time = None
 
-        # TODO: возможно тут нужен кортеж как неизменяемый тип
         self.parameters = [AlgorithmParameter.get_MI(), AlgorithmParameter.get_NP(), AlgorithmParameter.get_KN(),
                            AlgorithmParameter.get_IG(), AlgorithmParameter.get_G0(), AlgorithmParameter.get_AG(),
                            AlgorithmParameter.get_EC(), AlgorithmParameter.get_RN(), AlgorithmParameter.get_RP(),
                            AlgorithmParameter.get_gamma()]
 
     def run(self, result_file_name: str, file_test_func: str):
+        # TODO: сделать передачу в exe-шник через командную строку. и убрать этот показатель из json-файла.
         """
         Метод для запуска алгоритма.
         
@@ -79,7 +79,7 @@ class StandardGSA(GSA):
                                   file_test_func: str, number_runs=100, file_path="") -> float:
         # extremum - из тестовой функции
         # epsilon - из настроек
-
+        # TODO: сделать epsilon всегда одинарным списком.
         if (type(epsilon) == float) or (type(epsilon) == int):
             number_successful_starts = 0
         elif type(epsilon) == list:

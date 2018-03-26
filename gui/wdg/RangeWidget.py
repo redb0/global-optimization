@@ -100,44 +100,6 @@ class RangeWidget(QtWidgets.QWidget):
         return self.spin_box_3.value()
 
 
-# def delete_graph(self, w):
-#     i = self.list_graph.indexOf(w)
-#     return lambda: self.list_graph.takeAt(self.list_graph.indexOf(w))
-
-# def add_layout_range(t, min_val, max_val, h=1):
-#     # TODO: создать класс, экземпляяр которого будет составным виджетом, передавать - мин, макс, шаг, название
-#     grid = QtWidgets.QGridLayout()
-#     if t == int:
-#         spin_box_1 = QtWidgets.QSpinBox()
-#         spin_box_1.setMinimum(min_val)
-#         spin_box_1.setMaximum(max_val)
-#         spin_box_2 = QtWidgets.QSpinBox()
-#         spin_box_1.valueChanged.connect(spin_box_2.setMinimum)
-#         spin_box_2.setMaximum(max_val)
-#         spin_box_3 = QtWidgets.QSpinBox()
-#         spin_box_3.setMinimum(0)
-#         spin_box_1.valueChanged.connect(get_max_step(spin_box_2, spin_box_3))
-#         spin_box_2.valueChanged.connect(get_max_step(spin_box_1, spin_box_3))
-#         spin_box_3.setSingleStep(h)
-#     if t == float:
-#         spin_box_1 = QtWidgets.QDoubleSpinBox()
-#         spin_box_1.setMinimum(min_val)
-#         spin_box_1.setMaximum(max_val)
-#         spin_box_2 = QtWidgets.QDoubleSpinBox()
-#         spin_box_1.valueChanged.connect(spin_box_2.setMinimum)
-#         spin_box_2.setMaximum(max_val)
-#         spin_box_3 = QtWidgets.QDoubleSpinBox()
-#         spin_box_1.valueChanged.connect(get_max_step(spin_box_2, spin_box_3))
-#         spin_box_2.valueChanged.connect(get_max_step(spin_box_1, spin_box_3))
-#         spin_box_3.setSingleStep(h)
-#     grid.addWidget(spin_box_1, 0, 1)
-#     grid.addWidget(spin_box_2, 0, 2)
-#     grid.addWidget(spin_box_3, 0, 3)
-#     w = QtWidgets.QWidget()
-#     w.setLayout(grid)
-#     return w
-
-
 def window_choose_params(self, parameters, parent=None):
     def f():
         if parent.window_choose is None:
@@ -145,7 +107,7 @@ def window_choose_params(self, parameters, parent=None):
             self.window_choose.show()
 
     return f
-    # TODO: сделать открытие дочернего окна для выбора параметров
+    # TODO: переделать в pop up
 
 
 # def add_linear_graph(graph_obj, min_val, max_val, h=1):

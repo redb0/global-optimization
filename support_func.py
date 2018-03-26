@@ -1,5 +1,4 @@
 import json
-import os
 from functools import wraps
 import warnings
 from typing import List, Union
@@ -76,23 +75,18 @@ def read_json(file_name: str):
 
 
 def add_in_json(file: str, data: dict) -> None:
-    # TODO: добавить документацию
-    # data_from_file = {}
+    """
+    Функция добавления данных в json-файл.
+    Добавление происходит путем считывания данных в словарь, 
+    добавления данных к словарю и запись его в файл.
+    :param file: путь до файла, str.
+    :param data: данные для дозаписи в виде словаря (dict).
+    :return: -
+    """
     with open(file, 'r', encoding='utf-8') as f:
         # Установить указатель в начало файла
         f.seek(0, 0)
         data_from_file = json.load(f)
-    # if os.path.isfile(file):
-    #     with open(file, 'r', encoding='utf-8') as f:
-    #         # Установить указатель в начало файла
-    #         f.seek(0, 0)
-    #         data_from_file = json.load(f)
-    # elif not os.path.isfile(file):
-    #     f = open(file, 'a+')
-    #     f.close()
-    #     # with open(file, 'a+', encoding='utf-8') as f:  # тут нихрена не создается файл
-    #     #     pass
-
     data_from_file.update(data)
     with open(file, 'w', encoding='utf-8') as f:
         json.dump(data_from_file, f)
@@ -104,17 +98,6 @@ def create_json_file(file: str):
         pass
         # Установить указатель в начало файла
         # f.seek(0, 0)
-
-
-# def write_in_json(file_name: str, data: Union[list, dict]) -> None:
-#     """
-#     Запись данных в json файл
-#     :param file_name: путь до файла в виде строки
-#     :param data: данные, в виде списка либо словаря
-#     :return:
-#     """
-#     with open(file_name, 'w', encoding='utf-8') as f:
-#         json.dump(data, f)
 
 
 def lies_in_interval(x, left, right) -> bool:

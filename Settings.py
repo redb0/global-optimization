@@ -1,3 +1,4 @@
+import json
 import os
 
 from typing import Union, List
@@ -6,12 +7,12 @@ from Parameter import Parameter
 
 
 class Settings:
-    # TODO: возможно сделать один класс "настройка", для хранения:
-    # TODO: названия, типа, значения по умолчанию, текущего значения, допустимых значений.
+    # TODO: добавить путь до папки куда сохранять результаты вычислений в json.
     _min_flag = Parameter("Тип задачи (1 - минимизация, 0 - максимизация)", int, 1, allowable_values=[0, 1])
     _number_of_runs = Parameter("Количество пусков алгоритма", int, 100)
     _epsilon = Parameter("Размер epsilon-окрестности", [float, list], 0.5)
     _abs_path_test_func = Parameter("Тестовая функция", str, "")  # путь до файла с тестовой функцийей
+    _real_extrema = Parameter("Координаты глобального экстремума", list, [0, 0])
     _legend_position = Parameter("Положение легенда на графике", str, "top",
                                  allowable_values=["top", "left", "bottom", "right"])
 
@@ -76,6 +77,9 @@ class Settings:
         else:
             if os.path.isfile(value):
                 self.__class__._abs_path_test_func.present_value = value
+                with open(self.__class__._abs_path_test_func.present_value, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                self.__class__._real_extrema.present_value = data['real_extrema']
             else:
                 print("Значение не является путем.")
                 self.__class__._abs_path_test_func.set_default_value()
@@ -91,6 +95,36 @@ class Settings:
         else:
             print("Некорректное расположение легенды. Установлено значение по умолчанию (top)")
             self.__class__._legend_position.set_default_value()
+
+    @property
+    def real_extrema(self) -> List[Union[int, float]]:
+        return self.__class__._real_extrema.present_value
+
+    # @real_extrema.setter
+    # def real_extrema(self, value: List[Union[int, float]]):
+    #     if self.__class__._abs_path_test_func.present_value != "":
+    #         with open(self.__class__._abs_path_test_func.present_value, 'r', encoding='utf-8') as f:
+    #             data = json.load(f)
+
+
+def set_all_default_values(cls):
+    print('------------------------')
+    print(Settings._min_flag.present_value)
+    print(Settings._epsilon.present_value)
+    print(Settings._abs_path_test_func.present_value)
+    print(Settings._legend_position.present_value)
+    print(Settings._number_of_runs.present_value)
+    d = cls.__dict__
+    for p in d.keys():
+        obj = d.get(p)
+        if type(obj) == Parameter:
+            obj.set_default_value()
+    print('------------------------')
+    print(Settings._min_flag.present_value)
+    print(Settings._epsilon.present_value)
+    print(Settings._abs_path_test_func.present_value)
+    print(Settings._legend_position.present_value)
+    print(Settings._number_of_runs.present_value)
 
 
 def get_attributes(cls):

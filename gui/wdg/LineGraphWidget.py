@@ -1,4 +1,5 @@
 from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QMessageBox
 
 from gui.wdg.PossibleGraphWidget import PossibleGraphWidget
 from gui.wdg.RangeWidget import RangeWidget
@@ -72,10 +73,14 @@ class LineGraphWidget(PossibleGraphWidget):
 
             line_graph = LineGraph.LineGraph("title", algorithms, self.line_graph_obj.get_parameters_obj(),
                                              high, down, step)
-            line_graph.plot()
+            line_graph.plot(print_error=print_error)
 
             print(self.line_graph_obj)
             print(self.line_graph_obj.get_param_range())
             # print(self.line_graph_obj.get_max_range())
             # print(self.line_graph_obj.get_step())
             # print(self.line_graph_obj)
+
+    def print_error(self, text):
+        QMessageBox.information(self, 'Внимание!', text,
+                                QMessageBox.Cancel, QMessageBox.Cancel)

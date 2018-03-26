@@ -45,4 +45,4 @@ class PointGraphWidget(PossibleGraphWidget):
                 self.window_choose.show()
 
         return f
-        # TODO: сделать открытие дочернего окна для выбора параметров
+        # TODO: переделать в pop up

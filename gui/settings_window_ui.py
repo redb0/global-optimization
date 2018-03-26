@@ -3,9 +3,12 @@ from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QPushButton, QFormLayout, 
 
 
 class UiSettingsWindow:
+    """Класс графического интерфейса окна общих настроек."""
     def __init__(self):
         self.save_btn = None
         self.reset_btn = None
+
+        self.form = None
 
     def setup_ui(self, window, settings):
         main_layout = QVBoxLayout()
@@ -17,6 +20,7 @@ class UiSettingsWindow:
         h_box = QHBoxLayout()
         self.form = QFormLayout()
 
+        # TODO: вставить значеняия по умолчанию
         self.min_flag_label = QLabel()
         self.min_flag = QSpinBox()
         self.min_flag.setMinimum(0)
@@ -44,6 +48,7 @@ class UiSettingsWindow:
         wgt.setLayout(h_box_1)
 
         self.legend_position_label = QLabel()
+        # TODO: сделать радиокнопку с двумя флагами: сверху и справа
         self.legend_position_te = QLineEdit()
 
         self.form.addRow(self.min_flag_label, self.min_flag)

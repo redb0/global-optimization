@@ -211,6 +211,7 @@ class MainWindow(QMainWindow):
         self.ui.add_row_in_form(self.ui.alg_form, a.get_parameters(), name, "Параметризировать", cb_handler, self)
 
     def print_error(self, text: str) -> None:
+        """Вывод сообщения об ошибке на экран"""
         QMessageBox.information(self, 'Внимание!', text,
                                 QMessageBox.Cancel, QMessageBox.Cancel)
 

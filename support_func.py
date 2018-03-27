@@ -1,4 +1,5 @@
 import json
+import random
 from functools import wraps
 import warnings
 from typing import List, Union
@@ -100,6 +101,29 @@ def create_json_file(file: str):
         # f.seek(0, 0)
 
 
+def overwrite_field_json(file_path: str, field_name: str, value) -> str:
+    """
+    Функция перезаписи значения поле в json-файле.
+    Перезапись происходит путем считывания всего файла, 
+    поиска нужного поля и исправления его значения, и записи новых данных.
+    :param file_path  : путь до файла, который необходимо изменить.
+    :param field_name : имя поля, значение которого необходимо поменять.
+    :param value      : новое значение поля.
+    :return: пустая строка, если ошибок нет, в противном случае строка с текстом ошибки.
+    """
+    error = ""
+    with open(file_path, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    if field_name in list(data.keys()):
+        data[field_name] = value
+        with open(file_path, 'w', encoding='utf-8') as f:
+            json.dump(data, f)
+        return error
+    else:
+        error = "Поле с именем " + field_name + " в файле: " + file_path + " не существует."
+        return error
+
+
 def lies_in_interval(x, left, right) -> bool:
     """
     Функция проверки значения x на принадлежность отрезку [left, right].
@@ -141,3 +165,12 @@ def to_dict(parameters: List[AlgorithmParameter], **kwargs) -> dict:
     for name in kwargs.keys():
         d.update({name: kwargs.get(name)})
     return d
+
+
+def generate_rand_int_list(len_list=10):
+    numbers = list(range(len_list))
+    for i in range(len_list):
+        x = random.randrange(0, len_list)
+        numbers[i], numbers[x] = numbers[x], numbers[i]
+    return numbers
+

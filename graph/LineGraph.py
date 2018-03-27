@@ -5,6 +5,7 @@ import os
 
 from Settings import Settings
 from graph.Graph import Graph
+from support_func import generate_rand_int_list
 
 
 Num = Union[int, float]
@@ -27,7 +28,7 @@ class LineGraph(Graph):
     __slots__ = ("_title", "_algorithms", "_param", "_max_range", "_min_range", "_step", "_settings")  # "_type_p"
 
     def __init__(self, title, alg, param, max_range, min_range, step):
-        super().__init__(width=5, height=5, dpi=100, fontsize=14)
+        super().__init__(width=5, height=5, dpi=100, fontsize=12)
         self._title = title
         self._algorithms = alg
         self._param = param
@@ -37,6 +38,15 @@ class LineGraph(Graph):
         self._settings = Settings()
 
     def plot(self, print_error=None, file_name="line_graph_1.png"):
+        """
+        Метод построения и вывода линейного графика.
+        :param print_error: 
+        :param file_name: 
+        :return: 
+        """
+        markers = ['o', 'x', 'v', '^', '<',
+                   '>', 's', 'p', '*', 'h',
+                   'H', '+', 'D', 'd', '|', '_']
         x, data, err = self.make_data()
         if err != "":
             if print_error is not None:
@@ -45,9 +55,17 @@ class LineGraph(Graph):
             else:
                 return None
 
+        # markers_list = []
+        if len(data) > len(markers):
+            markers_list = markers.append(markers[:(len(data) - len(markers))])
+        else:
+            markers_list = markers
+        markers_idx = generate_rand_int_list(len(data))
+
         for i in range(len(data)):
             # TODO: сделать label для одинаковых алгоритмов
-            self.axes.plot(x, data[i], label=self._algorithms[i].get_name())
+            self.axes.plot(x, data[i], label=self._algorithms[i].get_name(),  # self._algorithms[i].get_name()
+                           linewidth=1.5, marker=markers_list[markers_idx[i]])
 
         # bbox_to_anchor - точка к которой закреплена легенда
         # loc - положение относительно точки.
@@ -58,8 +76,8 @@ class LineGraph(Graph):
         # borderaxespad=0. - ширина пространства между границами рисунка и легенды
         # ncol=2, количество столбцов для расположения подписей
         title = "Зависимость оценки вороятности от " + self._param.get_name()
-        xlabel = "Оценка вероятности"
-        ylabel = self._param.get_name()
+        xlabel = self._param.get_name()
+        ylabel = "Оценка вероятности"
         self.set_labels(xlabel=xlabel, ylabel=ylabel, title=title, legend_title="")
         if self._settings.legend_position == "top":
             plt.legend(bbox_to_anchor=(0., 1.02), loc=3,
@@ -86,12 +104,14 @@ class LineGraph(Graph):
         """
         # У x интервал типа (a, b]
         x = np.arange(self.min_range, self.max_range, self.step)
+        x_name = self._param.get_abbreviation()
         y = []
         print(x)
         for alg in self._algorithms:
             y1 = []
+            stock_value = alg.get_value_param_on_abbreviation(x_name)
             for i in range(len(x)):
-                alg.set_parameter(self._param.get_abbreviation(), x[i])
+                alg.set_parameter(x_name, x[i])
                 if os.path.isfile(self._settings.abs_path_test_func):
                     probability = alg.find_probability_estimate(self._settings.real_extrema,
                                                                 self._settings.epsilon,
@@ -101,6 +121,7 @@ class LineGraph(Graph):
                     return np.array([]), [], "Не выбрана тестовая функция."
                 print(probability)
                 y1.append(probability)
+            alg.set_parameter(x_name, stock_value)
             y.append(y1)
         print(y)
         return x, y, ""

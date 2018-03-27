@@ -4,6 +4,7 @@ from time import time
 from typing import Union
 
 import support_func
+from Settings import Settings
 from algorithms.GSA import GSA
 import AlgorithmParameter
 from support_func import write_json, lies_in_epsilon, to_dict
@@ -26,14 +27,15 @@ class StandardGSA(GSA):
                            AlgorithmParameter.get_IG(), AlgorithmParameter.get_G0(), AlgorithmParameter.get_AG(),
                            AlgorithmParameter.get_EC(), AlgorithmParameter.get_RN(), AlgorithmParameter.get_RP(),
                            AlgorithmParameter.get_gamma()]
+        self.settings = Settings()
 
     def run(self, result_file_name: str, file_test_func: str):
         # TODO: сделать передачу в exe-шник через командную строку. и убрать этот показатель из json-файла.
         """
         Метод для запуска алгоритма.
         
-        :param file_test_func: 
-        :param result_file_name: имя файла в виде строки (*.json), куда будет сохранен результат
+        :param file_test_func: json-файл с информацией о тестовой функции.
+        :param result_file_name: имя файла в виде строки (*.json), куда будет сохранен результат.
         :return: 
         """
         # os.path.dirname(__file__) - возвращает путь до папки, где лежит файл
@@ -45,8 +47,8 @@ class StandardGSA(GSA):
         if self._process is None:
             args = [abs_path_exe, abs_path_config, file_test_func, abs_path_result]
             # записать параметры алгоритма в файл config
-            print(to_dict(self.parameters, min_flag=1))
-            write_json(abs_path_config, to_dict(self.parameters, min_flag=1))  # может написать тут или во внешней функции?
+            print(to_dict(self.parameters, min_flag=self.settings.min_flag))
+            write_json(abs_path_config, to_dict(self.parameters, min_flag=self.settings.min_flag))  # может написать тут или во внешней функции?
 
             self._start_time = time()
             self._process = subprocess.Popen(args, shell=True, stdout=subprocess.PIPE)  # bufsize=1, universal_newlines=True
@@ -137,6 +139,11 @@ class StandardGSA(GSA):
         for p in self.parameters:
             if abr == p.abbreviation:
                 return p.name
+
+    def get_value_param_on_abbreviation(self, abr: str):
+        for p in self.parameters:
+            if abr == p.abbreviation:
+                return p.get_selected_values()
 
     def get_params_dict(self) -> dict:
         """

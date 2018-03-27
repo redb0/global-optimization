@@ -8,6 +8,8 @@ from Parameter import Parameter
 
 class Settings:
     # TODO: добавить путь до папки куда сохранять результаты вычислений в json.
+    # TODO: добавить считывание реального экстремума и окно для него в настройках
+    # TODO: добавить поле для установки размера шрифта на графике
     _min_flag = Parameter("Тип задачи (1 - минимизация, 0 - максимизация)", int, 1, allowable_values=[0, 1])
     _number_of_runs = Parameter("Количество пусков алгоритма", int, 100)
     _epsilon = Parameter("Размер epsilon-окрестности", [float, list], 0.5)
@@ -108,23 +110,11 @@ class Settings:
 
 
 def set_all_default_values(cls):
-    print('------------------------')
-    print(Settings._min_flag.present_value)
-    print(Settings._epsilon.present_value)
-    print(Settings._abs_path_test_func.present_value)
-    print(Settings._legend_position.present_value)
-    print(Settings._number_of_runs.present_value)
     d = cls.__dict__
     for p in d.keys():
         obj = d.get(p)
         if type(obj) == Parameter:
             obj.set_default_value()
-    print('------------------------')
-    print(Settings._min_flag.present_value)
-    print(Settings._epsilon.present_value)
-    print(Settings._abs_path_test_func.present_value)
-    print(Settings._legend_position.present_value)
-    print(Settings._number_of_runs.present_value)
 
 
 def get_attributes(cls):

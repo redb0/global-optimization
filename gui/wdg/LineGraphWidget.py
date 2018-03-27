@@ -77,10 +77,8 @@ class LineGraphWidget(PossibleGraphWidget):
 
             print(self.line_graph_obj)
             print(self.line_graph_obj.get_param_range())
-            # print(self.line_graph_obj.get_max_range())
-            # print(self.line_graph_obj.get_step())
-            # print(self.line_graph_obj)
 
-    def print_error(self, text):
-        QMessageBox.information(self, 'Внимание!', text,
-                                QMessageBox.Cancel, QMessageBox.Cancel)
+    # def print_error(self, text: str) -> None:
+    #     """Вывод сообщения об ошибке на экран"""
+    #     QMessageBox.information(self, 'Внимание!', text,
+    #                             QMessageBox.Cancel, QMessageBox.Cancel)

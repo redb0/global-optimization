@@ -2,9 +2,12 @@ import json
 import random
 from functools import wraps
 import warnings
+
+from PyQt5.QtWidgets import QComboBox
 from typing import List, Union
 
 from AlgorithmParameter import AlgorithmParameter
+from algorithms.Algorithm import Algorithm
 
 
 def get_max_step(sb, w):
@@ -173,4 +176,34 @@ def generate_rand_int_list(len_list=10):
         x = random.randrange(0, len_list)
         numbers[i], numbers[x] = numbers[x], numbers[i]
     return numbers
+
+
+def fill_combobox_list(cmb: QComboBox, data: list) -> None:
+    """
+    Функция заполнения нескольких комбобоксов данными, содержащимися в list.
+    :param cmb: QComboBox, которые нужно заполнить
+    :param data: 
+    :return: 
+    """
+    cmb.clear()
+    for k in data:
+        cmb.addItem(str(k))
+
+
+def fill_combobox_list_alg(data: List[Algorithm], *args: QComboBox) -> None:
+    """
+    Функция заполнения нескольких комбобоксов названиями алгоритмов и экземплярами их классов.
+    :param data: список содержащий экземпляры наследников Algorithm.
+    :param args: QComboBox, которые нужно заполнить
+    :return: 
+    """
+    for cmb in args:
+        cmb.clear()
+        for k in data:
+            cmb.addItem(k.get_full_name(), k)
+
+
+def clear_combobox(*args: QComboBox) -> None:
+    for cmb in args:
+        cmb.clear()
 

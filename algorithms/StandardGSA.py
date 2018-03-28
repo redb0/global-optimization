@@ -29,7 +29,6 @@ class StandardGSA(GSA):
         self.settings = Settings()
 
     def run(self, result_file_name: str, file_test_func: str) -> str:
-        # TODO: сделать передачу в exe-шник через командную строку. и убрать этот показатель из json-файла.
         """
         Метод для запуска алгоритма.
         
@@ -72,11 +71,6 @@ class StandardGSA(GSA):
             self._process = None  # сбросить процесс, так как он завершен
             return return_code, run_time
 
-    # def get_result(self, file_path):
-    #     with open(file_path, 'r', encoding='utf-8') as f:
-    #         data = json.load(f)
-    #     return data
-
     def find_probability_estimate(self, extremum: list, epsilon: Union[list, float, int],
                                   file_test_func: str, number_runs=100, file_path="") -> float:
         # extremum - из тестовой функции
@@ -101,14 +95,7 @@ class StandardGSA(GSA):
             path_res = self.run(self.result_file_name, file_test_func)  #TODO: доделать здесь
             t = self.wait_process()
             print(t)
-            # func_value, coordinate, best_func_value, best_coordinates = res
             res_dict = read_json(path_res)
-
-            # if i == 0:
-            #     support_func.create_json_file(abs_path_file)
-            #     support_func.write_in_json(abs_path_file, res_dict)
-            # else:
-            #     support_func.add_in_json(abs_path_file, res_dict)
 
             # print(res_dict)
             in_file.append(res_dict)
@@ -127,7 +114,6 @@ class StandardGSA(GSA):
         return number_successful_starts / number_runs
 
     def get_abbreviation_params(self):
-        # abr = {i.get_abbreviation() for i in self.parameters}
         abr = [i.get_abbreviation() for i in self.parameters]
         return abr
 

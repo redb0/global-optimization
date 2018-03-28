@@ -82,29 +82,11 @@ class UiMainWindow:
         main_layout.addLayout(self.graph_layout)
         # main_layout.addLayout(self.graph_settings)
 
-        # TODO: Добавляются кнопки и чекбосксы для алгоритмов 1
         self.alg_title = QtWidgets.QLabel()
-        # self.standard_gsa_cb = QtWidgets.QCheckBox()
-        # self.standard_gsa_params_btn = QtWidgets.QPushButton()
-        # self.standard_gsa_params_btn.setMaximumWidth(120)
-        # self.standard_sac_cb = QtWidgets.QCheckBox()
-        # self.standard_sac_params_btn = QtWidgets.QPushButton()
-        # self.standard_sac_params_btn.setMaximumWidth(120)
-        # self.params_btn = [self.standard_gsa_params_btn, self.standard_sac_params_btn]
 
-        # TODO: Добавляются кнопки и чекбосксы для алгоритмов 2
         self.alg_form = QtWidgets.QFormLayout()
         self.alg_form.addRow(self.alg_title)
 
-        # for alg in alg_list:
-        #     TODO: можно вычислять выбранный алгоритм по номеру в массиве будет такой же как в alg_list, переданный сюда
-            # cb = QtWidgets.QCheckBox()
-            # btn = QtWidgets.QPushButton()
-            # btn.setMaximumWidth(120)
-            # self.alg_form.addRow(cb, btn)
-
-        # self.alg_form.addRow(self.standard_gsa_cb, self.standard_gsa_params_btn)
-        # self.alg_form.addRow(self.standard_sac_cb, self.standard_sac_params_btn)
         self.alg_layout.addLayout(self.alg_form)
 
         self.add_new_alg_btn = QtWidgets.QPushButton()
@@ -178,18 +160,12 @@ class UiMainWindow:
         self.actionSettings.setText(self.translate("MainWindow", "Настройки"))
         # self.actionOpenDocker.setText(self.translate("MainWindow", "Показать докеры"))
 
-        # TODO: Добавляются кнопки и чекбосксы для алгоритмов 3
         self.alg_title.setText(self.translate("MainWindow", "Алгоритмы"))
-        # self.standard_gsa_cb.setText(self.translate("MainWindow", "Гравитационный поиск"))
-        # self.standard_sac_cb.setText(self.translate("MainWindow", "Метод селективного усреднения"))
 
         self.add_linear_graph_btn.setText(self.translate("MainWindow", "Добавить линейный график"))
         self.add_heat_map_btn.setText(self.translate("MainWindow", "Добавить тепловую карту"))
 
         self.add_new_alg_btn.setText(self.translate("MainWindow", "Добавить алгоритм"))
-
-        # for btn in self.params_btn:
-        #     btn.setText(self.translate("MainWindow", "Параметризировать"))
 
     def translate(self, s, s_1: str):
         return QtCore.QCoreApplication.translate(s, s_1)

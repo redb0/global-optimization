@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtWidgets
 
-# import alg_parameters
+from support_func import fill_combobox_list
 
 
 class UiAlgorithmSetupWindow:
@@ -29,7 +29,7 @@ class UiAlgorithmSetupWindow:
 
             if (s.get_allowable_values() is not None) or (s.get_type() == bool):
                 combobox = QtWidgets.QComboBox()
-                self.fill_combobox(combobox, s.get_allowable_values())
+                fill_combobox_list(combobox, s.get_allowable_values())
                 self.form.addRow(label, combobox)
             else:
                 if s.get_type() == int:
@@ -53,31 +53,6 @@ class UiAlgorithmSetupWindow:
         main_layout.addLayout(h_box)
 
         self.retranslate(window)
-
-    # def save_settings(self, settings):
-    #
-    #     for i in range(self.form.count()):
-    #         item = self.form.itemAt(i).widget()
-    #         if type(item) == QtWidgets.QSpinBox:
-    #             name = self.form.itemAt(i - 1).widget().text()
-    #             value = item.value()
-    #             s = alg_parameters.get_param_on_name(settings, name)
-    #             s.set_selected_values(value)
-    #         elif type(item) == QtWidgets.QDoubleSpinBox:
-    #             name = self.form.itemAt(i - 1).widget().text()
-    #             value = item.value()
-    #             s = alg_parameters.get_param_on_name(settings, name)
-    #             s.set_selected_values(value)
-    #         elif type(item) == QtWidgets.QComboBox:
-    #             name = self.form.itemAt(i - 1).widget().text()
-    #             value = item.currentText()
-    #             s = alg_parameters.get_param_on_name(settings, name)
-    #             s.set_selected_values(value)
-
-    def fill_combobox(self, cmb, data):
-        cmb.clear()
-        for k in data:
-            cmb.addItem(str(k))
 
     def retranslate(self, window):
         window.setWindowTitle(self.translate("SetupAlgWindow", "Параметры алгоритма"))

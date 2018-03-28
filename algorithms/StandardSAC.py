@@ -14,21 +14,12 @@ class StandardSAC(SAC):
         super().__init__()
         self.name = "Standard SAC"
         self.full_name = "Метод селективного усреднения"
-
         self._relative_path = "..\\algorithms_exe\\standard_sac.exe"  # пусть до exe-шника с алгоритмом на golang
         self.config_file = "..\\algorithms_exe\\standard_sac_config.json"
         self.result_file_name = "..\\algorithms_exe\\result\\standard_sac_res.json"
         self._process = None
         self._start_time = None
 
-        # MaxIterations int `json: "MI"` +
-        # NumberPoints int `json: "NP"` +
-        # IndexNF int `json: "NF"`
-        # SFactor float64 `json: "SF"` +
-        # Q float64 `json: "KQ"` +
-        # MinFlag int `json: "min_flag"`
-        # Gamma float64 `json: "GA"` +
-        # KNoise float64 `json: "KN"` +
         self.parameters = [AlgorithmParameter.get_MI(), AlgorithmParameter.get_NP(), AlgorithmParameter.get_KN(),
                            AlgorithmParameter.get_gamma(), AlgorithmParameter.get_SF(), AlgorithmParameter.get_KQ(),
                            AlgorithmParameter.get_NF()]
@@ -42,7 +33,6 @@ class StandardSAC(SAC):
         return d
 
     def run(self, result_file_name: str, file_test_func: str) -> str:
-        # TODO: сделать передачу в exe-шник через командную строку. и убрать этот показатель из json-файла.
         """
         Метод для запуска алгоритма.
 
@@ -61,7 +51,7 @@ class StandardSAC(SAC):
             # записать параметры алгоритма в файл config
             print(to_dict(self.parameters, min_flag=self.settings.min_flag))
             write_json(abs_path_config, to_dict(self.parameters,
-                                                min_flag=self.settings.min_flag))  # может написать тут или во внешней функции?
+                                                min_flag=self.settings.min_flag))
 
             self._start_time = time()
             self._process = subprocess.Popen(args, shell=True,
@@ -117,7 +107,6 @@ class StandardSAC(SAC):
             path_res = self.run(self.result_file_name, file_test_func)  # TODO: доделать здесь
             t = self.wait_process()
             print(t)
-            # func_value, coordinate, best_func_value, best_coordinates = res
             res_dict = read_json(path_res)
 
             in_file.append(res_dict)
@@ -136,7 +125,6 @@ class StandardSAC(SAC):
         return number_successful_starts / number_runs
 
     def get_abbreviation_params(self):
-        # abr = {i.get_abbreviation() for i in self.parameters}
         abr = [i.get_abbreviation() for i in self.parameters]
         return abr
 
@@ -176,6 +164,11 @@ class StandardSAC(SAC):
                 p.set_selected_values(value)
 
     def get_identifier_name(self) -> str:
+        """
+        Метод построения уникального имени. Для использования в качестве имени файла или подписи к графику.
+        Имя складывается из сокращенного названия алгоритма и его параметров.
+        :return: имя в виде строки. Напримен "s_sac_MI=500_NP=200_KN=0.0_"
+        """
         name = ("s_sac_" +
                 self.parameters[0].get_abbreviation() + "=" + str(self.parameters[0].get_selected_values()) + "_" +
                 self.parameters[1].get_abbreviation() + "=" + str(self.parameters[1].get_selected_values()) + "_" +

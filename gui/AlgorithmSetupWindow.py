@@ -13,11 +13,6 @@ class AlgorithmSetupWindow(QtWidgets.QWidget):
         self.ui = UiAlgorithmSetupWindow()
         self.ui.setup_ui(self, settings_list, alg_name)
 
-        # self.parent = parent
-
-        # self.ui.close_btn.clicked.connect(self.changeEvent)  # удалить строку
-        # некорректно работает закрытие на крестик, если переопределить closeEvent, то так тоже будет работать
-        # self.ui.close_btn.clicked.connect(lambda: self.close_window())
         self.ui.close_btn.clicked.connect(self.closeEvent)  # переопределение встроенного обработчика
         self.ui.apply_btn.clicked.connect(self.save_settings(settings_list))
 
@@ -58,11 +53,3 @@ class AlgorithmSetupWindow(QtWidgets.QWidget):
     def closeEvent(self, event):
         self.parent().window_settings_alg = None
         self.close()
-
-        # if event:
-        #     event.accept()
-        # else:
-        #     self.close()
-
-
-

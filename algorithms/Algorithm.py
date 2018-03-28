@@ -24,6 +24,7 @@ class Algorithm:
         return self.parameters
 
     def get_identifier_name(self) -> str:
+        """Метод генерации уникального имени"""
         pass
 
     # def get_name_params(self) -> List[str]:

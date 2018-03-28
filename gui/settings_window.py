@@ -26,13 +26,6 @@ class SettingsWindow(QWidget):
 
     def save_settings(self):
         """Сохранение общих настроек. Действие по клику на кнопку "Сохранить"."""
-        print('------------------------')
-        print(Settings._min_flag.present_value)
-        print(Settings._epsilon.present_value)
-        print(Settings._abs_path_test_func.present_value)
-        print(Settings._legend_position.present_value)
-        print(Settings._number_of_runs.present_value)
-
         # TODO: возможно стоит перенести вывод ошибок прямо в Settings и отказаться от property
         if self.ui.min_flag.value() in [0, 1]:
             self.settings.min_flag = self.ui.min_flag.value()
@@ -54,12 +47,6 @@ class SettingsWindow(QWidget):
             self.settings.legend_position = self.ui.legend_position_te.text()
         else:
             self.print_error("Некорректное расположение легенды. Установлено значение по умолчанию (top)")
-        print('------------------------')
-        print(Settings._min_flag.present_value)
-        print(Settings._epsilon.present_value)
-        print(Settings._abs_path_test_func.present_value)
-        print(Settings._legend_position.present_value)
-        print(Settings._number_of_runs.present_value)
 
     def reset(self) -> None:
         """
@@ -90,7 +77,7 @@ class SettingsWindow(QWidget):
             self.ui.abs_path_test_func_te.setText(file_name)
             # print(file_name)
 
-    def print_error(self, text):
+    def print_error(self, text: str) -> None:
         QMessageBox.information(self, 'Внимание!', text,
                                 QMessageBox.Cancel, QMessageBox.Cancel)
 

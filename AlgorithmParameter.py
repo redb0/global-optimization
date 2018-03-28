@@ -98,6 +98,21 @@ def get_gamma():
     return p
 
 
+def get_SF():
+    p = AlgorithmParameter("SF", "Коэффициент селективности", float, default_value=1)
+    return p
+
+
+def get_KQ():
+    p = AlgorithmParameter("KQ", "Коэффициент q", float, default_value=1)
+    return p
+
+
+def get_NF():
+    p = AlgorithmParameter("NF", "Индекс ядерной функции", int, default_value=1)
+    return p
+
+
 def get_parameters(key: str):
     p = None
     if key == "RP":
@@ -120,6 +135,8 @@ def get_parameters(key: str):
         p = get_MI()
     elif key == "GA":
         p = get_gamma()
+    elif key == "SF":
+        p = get_SF()
 
     # if key == "RN":
     #     p = get_RN()

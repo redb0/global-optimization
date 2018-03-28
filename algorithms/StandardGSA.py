@@ -3,11 +3,10 @@ import subprocess
 from time import time
 from typing import Union
 
-import support_func
 from Settings import Settings
 from algorithms.GSA import GSA
 import AlgorithmParameter
-from support_func import write_json, lies_in_epsilon, to_dict
+from support_func import write_json, lies_in_epsilon, to_dict, read_json
 
 
 class StandardGSA(GSA):
@@ -29,7 +28,7 @@ class StandardGSA(GSA):
                            AlgorithmParameter.get_gamma()]
         self.settings = Settings()
 
-    def run(self, result_file_name: str, file_test_func: str):
+    def run(self, result_file_name: str, file_test_func: str) -> str:
         # TODO: сделать передачу в exe-шник через командную строку. и убрать этот показатель из json-файла.
         """
         Метод для запуска алгоритма.
@@ -58,6 +57,7 @@ class StandardGSA(GSA):
             return abs_path_result
         else:
             print("Уже запущен какой-то процесс")
+            return ""
 
     def wait_process(self):
         """
@@ -92,11 +92,7 @@ class StandardGSA(GSA):
         # TODO: добавить возможность в настройках указывать путь до папки куда сохранять верузльтат
         script_path = os.path.dirname(os.path.abspath(__file__))
         script_path = script_path.replace('\\\\', '\\')
-        name_file = self.name.replace(' ', '') + "_" + \
-            self.parameters[0].get_abbreviation() + "=" + str(self.parameters[0].get_selected_values()) + "_" + \
-            self.parameters[1].get_abbreviation() + "=" + str(self.parameters[1].get_selected_values()) + "_" + \
-            self.parameters[2].get_abbreviation() + "=" + str(self.parameters[2].get_selected_values()) + "_" + \
-            self.parameters[3].get_abbreviation() + "=" + str(self.parameters[3].get_selected_values()) + ".json"  # "StandardGSA_MI=500_NP=100_KN=0.0_IG=1.json"
+        name_file = self.get_identifier_name() + ".json"  # "s_gsa_MI=500_NP=100_KN=0.0_IG=1.json"
         abs_path_file = os.path.join(script_path, "..\\algorithms_exe\\result\\", name_file)  #
         print(name_file)
         in_file = []
@@ -106,7 +102,7 @@ class StandardGSA(GSA):
             t = self.wait_process()
             print(t)
             # func_value, coordinate, best_func_value, best_coordinates = res
-            res_dict = support_func.read_json(path_res)
+            res_dict = read_json(path_res)
 
             # if i == 0:
             #     support_func.create_json_file(abs_path_file)
@@ -126,7 +122,7 @@ class StandardGSA(GSA):
                     mask = [lies_in_epsilon(x_best[k], extremum[k], epsilon[j]) for k in range(len(x_best))]
                     if all(mask):
                         number_successful_starts[j] = number_successful_starts[j] + 1
-        support_func.write_json(abs_path_file, in_file)
+        write_json(abs_path_file, in_file)
 
         return number_successful_starts / number_runs
 
@@ -180,6 +176,19 @@ class StandardGSA(GSA):
         for p in self.parameters:
             if p.get_abbreviation() == key:
                 p.set_selected_values(value)
+
+    def get_identifier_name(self) -> str:
+        name = ("s_gsa_" +
+                self.parameters[0].get_abbreviation() + "=" + str(self.parameters[0].get_selected_values()) + "_" +
+                self.parameters[1].get_abbreviation() + "=" + str(self.parameters[1].get_selected_values()) + "_" +
+                self.parameters[2].get_abbreviation() + "=" + str(self.parameters[2].get_selected_values()) + "_" +
+                self.parameters[3].get_abbreviation() + "=" + str(self.parameters[3].get_selected_values()) + "_" +
+                self.parameters[4].get_abbreviation() + "=" + str(self.parameters[4].get_selected_values()) + "_" +
+                self.parameters[5].get_abbreviation() + "=" + str(self.parameters[5].get_selected_values()) + "_" +
+                self.parameters[6].get_abbreviation() + "=" + str(self.parameters[6].get_selected_values()) + "_" +
+                self.parameters[8].get_abbreviation() + "=" + str(self.parameters[8].get_selected_values()) + "_" +
+                self.parameters[9].get_abbreviation() + "=" + str(self.parameters[9].get_selected_values()))
+        return name
 
 
 def main():

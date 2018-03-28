@@ -28,7 +28,7 @@ class LineGraph(Graph):
     __slots__ = ("_title", "_algorithms", "_param", "_max_range", "_min_range", "_step", "_settings")  # "_type_p"
 
     def __init__(self, title, alg, param, max_range, min_range, step):
-        super().__init__(width=5, height=5, dpi=100, fontsize=12)
+        super().__init__(width=5, height=6, dpi=100, fontsize=12)
         self._title = title
         self._algorithms = alg
         self._param = param
@@ -64,7 +64,7 @@ class LineGraph(Graph):
 
         for i in range(len(data)):
             # TODO: сделать label для одинаковых алгоритмов
-            self.axes.plot(x, data[i], label=self._algorithms[i].get_name(),  # self._algorithms[i].get_name()
+            self.axes.plot(x, data[i], label=self._algorithms[i].get_identifier_name(),  # self._algorithms[i].get_name()
                            linewidth=1.5, marker=markers_list[markers_idx[i]])
 
         # bbox_to_anchor - точка к которой закреплена легенда
@@ -81,7 +81,7 @@ class LineGraph(Graph):
         self.set_labels(xlabel=xlabel, ylabel=ylabel, title=title, legend_title="")
         if self._settings.legend_position == "top":
             plt.legend(bbox_to_anchor=(0., 1.02), loc=3,
-                       ncol=2, borderaxespad=0.)
+                       ncol=1, borderaxespad=0.)
         # elif self._settings.legend_position == "bottom":
         #     plt.legend(bbox_to_anchor=(0., -0.02), loc=4,
         #                ncol=2, borderaxespad=0.)

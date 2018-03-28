@@ -1,5 +1,4 @@
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QMessageBox
 
 from gui.wdg.PossibleGraphWidget import PossibleGraphWidget
 from gui.wdg.RangeWidget import RangeWidget

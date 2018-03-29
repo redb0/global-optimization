@@ -4,6 +4,7 @@ from gui.window_choose_params_ui import UiParamsWindow
 
 
 class ParamsWindow(QtWidgets.QWidget):
+    # TODO: возможно заменить на pop up
     def __init__(self, parameter, parent=None):
         super().__init__(parent, QtCore.Qt.Window)
         self.ui = UiParamsWindow()

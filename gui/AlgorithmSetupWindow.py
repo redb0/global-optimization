@@ -6,6 +6,7 @@ from support_func import deprecated
 
 
 class AlgorithmSetupWindow(QtWidgets.QWidget):
+    """Окно настроек алгоритма"""
     def __init__(self, settings_list, alg_name, parent=None):
         # TODO: сделать чтобы при повторном открытии окна параметры оставались такие как установлены ранее
         super().__init__(parent, QtCore.Qt.Window)

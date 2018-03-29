@@ -10,6 +10,7 @@ from support_func import to_dict, write_json, read_json, lies_in_epsilon
 
 
 class StandardSAC(SAC):
+    """Стандартный алгорит селективного усреднения координат (без модификаций)"""
     def __init__(self):
         super().__init__()
         self.name = "Standard SAC"

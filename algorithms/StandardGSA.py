@@ -10,13 +10,13 @@ from support_func import write_json, lies_in_epsilon, to_dict, read_json
 
 
 class StandardGSA(GSA):
-    """Класс для стандартного алгоритма GSA."""
+    """Стандартный алгоритм гравитационного поиска (без модификаций)."""
     def __init__(self):
         super().__init__()
         self.name = "Standard GSA"
         self.full_name = "Гравитационный поиск"
 
-        self._relative_path = "..\\algorithms_exe\\StandardGSA.exe"  # пусть до exe-шника с алгоритмом на golang
+        self._relative_path = "..\\algorithms_exe\\standard_gsa.exe"  # пусть до exe-шника с алгоритмом на golang
         self.config_file = "..\\algorithms_exe\\standard_gsa_config.json"
         self.result_file_name = "..\\algorithms_exe\\result\\standard_gsa_res.json"
         self._process = None
@@ -177,15 +177,15 @@ class StandardGSA(GSA):
         return name
 
 
-def main():
-    s = StandardGSA()
-    x = s.get_abbreviation_params()
-    print(x)
-    x1 = AlgorithmParameter.AlgorithmParameter.get_list_key(s.get_parameters())
-    print(x1)
-    res = "res.json"
-    d = {'MI': 1, 'NP': 2, 'KN': 3, 'IG': 4, 'G0': 5, 'AG': 6, 'EC': 7, 'RN': 8, 'RP': 10}
-    s.run(d, res)
+# def main():
+#     s = StandardGSA()
+#     x = s.get_abbreviation_params()
+#     print(x)
+#     x1 = AlgorithmParameter.AlgorithmParameter.get_list_key(s.get_parameters())
+#     print(x1)
+#     res = "res.json"
+#     d = {'MI': 1, 'NP': 2, 'KN': 3, 'IG': 4, 'G0': 5, 'AG': 6, 'EC': 7, 'RN': 8, 'RP': 10}
+#     s.run(d, res)
 
 
 if __name__ == '__main__':

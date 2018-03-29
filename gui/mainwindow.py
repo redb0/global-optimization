@@ -1,5 +1,5 @@
 import copy
-from PyQt5.QtWidgets import QMainWindow, QPushButton, QMessageBox, QCheckBox, QComboBox
+from PyQt5.QtWidgets import QMainWindow, QPushButton, QMessageBox
 
 import AlgorithmParameter
 from Settings import Settings
@@ -10,17 +10,15 @@ from graph.PossibleGraph import PossibleGraph
 from gui.mainwindow_ui import UiMainWindow
 
 
-# TODO: сделать чтобы при выборе нескольких алгоритмов выводились общие параметры в комбобоксы \/???
-# TODO: сделать видеты для показа возмоных графиков
 # TODO: сделать видет для линейного графика, если у показателя диапазон - линейный график, если значения, то точечный
 # TODO: сделать классы для потенциальных графиков - линейный, точечный, тепловая карта
-# TODO: сделать окно для ввода параметров отдельных алгоритмов
 from gui.wdg.LineGraphWidget import LineGraphWidget
 from gui.wdg.PointGraphWidget import PointGraphWidget
 from support_func import fill_combobox_list_alg
 
 
 class MainWindow(QMainWindow):
+    """Главное окно программы"""
     def __init__(self, parent=None):
         super().__init__(parent)
         self.ui = UiMainWindow()
@@ -81,24 +79,6 @@ class MainWindow(QMainWindow):
         print(d)
         return d
 
-    # def check_cb(self):
-    #     """Удалить или переработать"""
-    #     if self.ui.standard_gsa_cb.checkState():
-    #         self.active_alg["StandardGSA"] = StandardGSA()
-    #         # self.ui.standard_gsa_params_btn.setDisabled(False)
-    #     else:
-    #         self.active_alg["StandardGSA"] = None
-    #         # self.ui.standard_gsa_params_btn.setDisabled(True)
-    #     if self.ui.standard_sac_cb.checkState():
-    #         self.active_alg["StandardSAC"] = StandardSAC()
-    #     else:
-    #         self.active_alg["StandardSAC"] = None
-    #     data = self.get_params()
-    #     print(data)
-    #     data = self.get_common_params(*data)
-    #
-    #     self.fill_combobox(data, self.ui.param_linear_graph, self.ui.param_heat_map_1, self.ui.param_heat_map_2)
-
     def add_parameters_in_combobox(self, get_idx_active_cb):
         def f():
             """
@@ -155,15 +135,6 @@ class MainWindow(QMainWindow):
         # TODO: перенести в общие
         sets = [set(x) for x in args]
         return list(sets[0].intersection(*sets[1:]))
-
-    # def get_active_alg(self):
-    #     # TODO: Добавляются кнопки и чекбосксы для алгоритмов 4
-    #     self.active_alg = []
-    #     if self.ui.standard_gsa_cb.checkState():
-    #         self.active_alg.append("StandardGSA")
-    #     if self.ui.standard_sac_cb.checkState():
-    #         self.active_alg.append("StandardSAC")
-    #     return self.active_alg
 
     def get_active_algorithm(self):
         return self.to_test_list

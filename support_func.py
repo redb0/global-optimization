@@ -204,6 +204,7 @@ def fill_combobox_list_alg(data: List[Algorithm], *args: QComboBox) -> None:
 
 
 def clear_combobox(*args: QComboBox) -> None:
+    """Очистака комбобоксов"""
     for cmb in args:
         cmb.clear()
 

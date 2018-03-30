@@ -113,6 +113,16 @@ def get_NF():
     return p
 
 
+def get_EndNP():
+    p = AlgorithmParameter("EndNP", "Конечное количество точек", int, default_value=10)
+    return p
+
+
+def get_ILCNP():
+    p = AlgorithmParameter("ILCNP", "Индекс закона изменения количества точек", int,
+                           default_value=1, allowable_values=[1, 2, 3, 4, 5, 6, 7])
+    return p
+
 def get_parameters(key: str):
     p = None
     if key == "RP":

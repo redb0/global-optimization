@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QMainWindow, QPushButton, QMessageBox
 
 import AlgorithmParameter
 from Settings import Settings
+from algorithms.NoiseResistanceGSA import NoiseResistanceGSA
 from algorithms.StandardGSA import StandardGSA
 from algorithms.StandardSAC import StandardSAC
 from graph.PossibleGraph import PossibleGraph
@@ -25,7 +26,7 @@ class MainWindow(QMainWindow):
 
         self.settings = Settings()
 
-        self.active_alg_1 = [StandardGSA(), StandardSAC()]
+        self.active_alg_1 = [StandardGSA(), StandardSAC(), NoiseResistanceGSA()]
         self.to_test_list = []
 
         self.ui.setup_ui(self, self.active_alg_1)

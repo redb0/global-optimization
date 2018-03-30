@@ -1,37 +1,38 @@
 import os
-import subprocess
 from time import time
+import subprocess
 from typing import Union
 
+import AlgorithmParameter
 from Settings import Settings
 from algorithms.GSA import GSA
-import AlgorithmParameter
-from support_func import write_json, lies_in_epsilon, to_dict, read_json
+from support_func import to_dict, write_json, read_json, lies_in_epsilon
 
 
-class StandardGSA(GSA):
-    """Стандартный алгоритм гравитационного поиска (без модификаций)."""
+class NoiseResistanceGSA(GSA):
+    """Алгоритм гравитационного поиска модифицированный для лучшей работы в условиях воздействия помех."""
     def __init__(self):
         super().__init__()
-        self.name = "Standard GSA"
-        self.full_name = "Гравитационный поиск"
+        self.name = "Noise Resistance GSA"
+        self.full_name = "Помехоустойчивый алгоритм гравитационного поиска"
 
-        self._relative_path = "..\\algorithms_exe\\standard_gsa.exe"  # пусть до exe-шника с алгоритмом на golang
-        self.config_file = "..\\algorithms_exe\\standard_gsa_config.json"
-        self.result_file_name = "..\\algorithms_exe\\result\\standard_gsa_res.json"
+        self._relative_path = "..\\algorithms_exe\\nr_gsa.exe"  # пусть до exe-шника с алгоритмом на golang
+        self.config_file = "..\\algorithms_exe\\nr_gsa_config.json"
+        self.result_file = "..\\algorithms_exe\\result\\nr_gsa_res.json"
         self._process = None
         self._start_time = None
 
         self.parameters = [AlgorithmParameter.get_MI(), AlgorithmParameter.get_NP(), AlgorithmParameter.get_KN(),
                            AlgorithmParameter.get_IG(), AlgorithmParameter.get_G0(), AlgorithmParameter.get_AG(),
                            AlgorithmParameter.get_EC(), AlgorithmParameter.get_RN(), AlgorithmParameter.get_RP(),
-                           AlgorithmParameter.get_gamma()]
+                           AlgorithmParameter.get_gamma(), AlgorithmParameter.get_SF(), AlgorithmParameter.get_NF(),
+                           AlgorithmParameter.get_KQ(), AlgorithmParameter.get_EndNP(), AlgorithmParameter.get_ILCNP()]
         self.settings = Settings()
 
     def run(self, result_file_name: str, file_test_func: str) -> str:
         """
         Метод для запуска алгоритма.
-        
+
         :param file_test_func: json-файл с информацией о тестовой функции.
         :param result_file_name: имя файла в виде строки (*.json), куда будет сохранен результат.
         :return: 
@@ -46,10 +47,12 @@ class StandardGSA(GSA):
             args = [abs_path_exe, abs_path_config, file_test_func, abs_path_result]
             # записать параметры алгоритма в файл config
             print(to_dict(self.parameters, min_flag=self.settings.min_flag))
-            write_json(abs_path_config, to_dict(self.parameters, min_flag=self.settings.min_flag))  # может написать тут или во внешней функции?
+            write_json(abs_path_config, to_dict(self.parameters,
+                                                min_flag=self.settings.min_flag))  # может написать тут или во внешней функции?
 
             self._start_time = time()
-            self._process = subprocess.Popen(args, shell=True, stdout=subprocess.PIPE)  # bufsize=1, universal_newlines=True
+            self._process = subprocess.Popen(args, shell=True,
+                                             stdout=subprocess.PIPE)  # bufsize=1, universal_newlines=True
             print(self._process.pid)
             # TODO: получить вывод из процесса
             # TODO: возвратить из этой функции значение функции, координату, массив с лучшими значениями, массив с лучшими координатами
@@ -92,7 +95,7 @@ class StandardGSA(GSA):
         in_file = []
         for i in range(number_runs):
             print("Прогон ", i + 1, " ...")
-            path_res = self.run(self.result_file_name, file_test_func)  #TODO: доделать здесь
+            path_res = self.run(self.result_file, file_test_func)  # TODO: доделать здесь
             t = self.wait_process()
             print(t)
             res_dict = read_json(path_res)
@@ -140,7 +143,7 @@ class StandardGSA(GSA):
 
     def set_params_value(self, list_p, **kwargs):
         """
-        
+
         :param list_p: 
         :param kwargs: 
         :return: 
@@ -164,29 +167,16 @@ class StandardGSA(GSA):
                 p.set_selected_values(value)
 
     def get_identifier_name(self) -> str:
-        name = ("s_gsa_" +
+        name = ("nr_gsa_" +
                 self.parameters[0].get_abbreviation() + "=" + str(self.parameters[0].get_selected_values()) + "_" +
                 self.parameters[1].get_abbreviation() + "=" + str(self.parameters[1].get_selected_values()) + "_" +
                 self.parameters[2].get_abbreviation() + "=" + str(self.parameters[2].get_selected_values()) + "_" +
                 self.parameters[3].get_abbreviation() + "=" + str(self.parameters[3].get_selected_values()) + "_" +
                 self.parameters[4].get_abbreviation() + "=" + str(self.parameters[4].get_selected_values()) + "_" +
                 self.parameters[5].get_abbreviation() + "=" + str(self.parameters[5].get_selected_values()) + "_" +
-                self.parameters[6].get_abbreviation() + "=" + str(self.parameters[6].get_selected_values()) + "_" +
-                self.parameters[8].get_abbreviation() + "=" + str(self.parameters[8].get_selected_values()) + "_" +
-                self.parameters[9].get_abbreviation() + "=" + str(self.parameters[9].get_selected_values()))
+                self.parameters[10].get_abbreviation() + "=" + str(self.parameters[10].get_selected_values()) + "_" +
+                self.parameters[11].get_abbreviation() + "=" + str(self.parameters[11].get_selected_values()) + "_" +
+                self.parameters[12].get_abbreviation() + "=" + str(self.parameters[12].get_selected_values()) + "_" +
+                self.parameters[13].get_abbreviation() + "=" + str(self.parameters[13].get_selected_values()) + "_" +
+                self.parameters[14].get_abbreviation() + "=" + str(self.parameters[14].get_selected_values()))
         return name
-
-
-# def main():
-#     s = StandardGSA()
-#     x = s.get_abbreviation_params()
-#     print(x)
-#     x1 = AlgorithmParameter.AlgorithmParameter.get_list_key(s.get_parameters())
-#     print(x1)
-#     res = "res.json"
-#     d = {'MI': 1, 'NP': 2, 'KN': 3, 'IG': 4, 'G0': 5, 'AG': 6, 'EC': 7, 'RN': 8, 'RP': 10}
-#     s.run(d, res)
-
-
-# if __name__ == '__main__':
-#     main()

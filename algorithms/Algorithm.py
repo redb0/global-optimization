@@ -27,6 +27,23 @@ class Algorithm:
         """Метод генерации уникального имени"""
         pass
 
+    def get_abbreviation_params(self) -> List[str]:
+        """Метод получения списка аббревиатур параметров алгоритма"""
+        abr = [i.get_abbreviation() for i in self.parameters]
+        return abr
+
+    def get_description_param(self, abr: str) -> str:
+        """Метод возвращает полное название параметра по его аббревиатуре"""
+        for p in self.parameters:
+            if abr == p.abbreviation:
+                return p.name
+
+    def get_value_param_on_abbreviation(self, abr: str):
+        """Метод возвращает значение параметра алгоритма по его аббревиатуре"""
+        for p in self.parameters:
+            if abr == p.abbreviation:
+                return p.get_selected_values()
+
     # def get_name_params(self) -> List[str]:
     #     return list(self.parameters.values())
 

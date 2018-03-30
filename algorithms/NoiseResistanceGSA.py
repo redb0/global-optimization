@@ -116,19 +116,19 @@ class NoiseResistanceGSA(GSA):
 
         return number_successful_starts / number_runs
 
-    def get_abbreviation_params(self):
-        abr = [i.get_abbreviation() for i in self.parameters]
-        return abr
-
-    def get_description_param(self, abr: str) -> str:
-        for p in self.parameters:
-            if abr == p.abbreviation:
-                return p.name
-
-    def get_value_param_on_abbreviation(self, abr: str):
-        for p in self.parameters:
-            if abr == p.abbreviation:
-                return p.get_selected_values()
+    # def get_abbreviation_params(self):
+    #     abr = [i.get_abbreviation() for i in self.parameters]
+    #     return abr
+    #
+    # def get_description_param(self, abr: str) -> str:
+    #     for p in self.parameters:
+    #         if abr == p.abbreviation:
+    #             return p.name
+    #
+    # def get_value_param_on_abbreviation(self, abr: str):
+    #     for p in self.parameters:
+    #         if abr == p.abbreviation:
+    #             return p.get_selected_values()
 
     def get_params_dict(self) -> dict:
         """

@@ -4,7 +4,7 @@
 
 Включены алгоритмы:
 1) Алгоритм гравитационного поиска;
-2) Помехоустойчивый алгоритм гравитационного поиска; (не реализован)
+2) Помехоустойчивый алгоритм гравитационного поиска;
 3) Алгоритм селективного усреднения координат.
 
 Алгоритмы по умолчанию должны находиться в папке algorithms_exe.
@@ -45,4 +45,4 @@
 }
 ```
 График изолиний данной функции будт следующим:
-![alt text](https://github.com/redb0/global-optimization/tree/master/examples_tf/f3_contou.png)
+![alt text](https://github.com/redb0/global-optimization/blob/master/examples_tf/f3_contour.png)

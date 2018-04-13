@@ -6,6 +6,7 @@ from Settings import Settings
 from algorithms.NoiseResistanceGSA import NoiseResistanceGSA
 from algorithms.StandardGSA import StandardGSA
 from algorithms.StandardSAC import StandardSAC
+from algorithms.SACacsa import AcsaSAC
 from graph.PossibleGraph import PossibleGraph
 
 from gui.mainwindow_ui import UiMainWindow
@@ -26,7 +27,7 @@ class MainWindow(QMainWindow):
 
         self.settings = Settings()
 
-        self.active_alg_1 = [StandardGSA(), StandardSAC(), NoiseResistanceGSA()]
+        self.active_alg_1 = [StandardGSA(), StandardSAC(), NoiseResistanceGSA(), AcsaSAC()]
         self.to_test_list = []
 
         self.ui.setup_ui(self, self.active_alg_1)

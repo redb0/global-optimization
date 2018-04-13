@@ -9,6 +9,7 @@ class Graph:
         self.set_params(fontsize=fontsize)
         fig = Figure(figsize=(width, height), dpi=dpi)
         self.axes = plt.subplot()
+        plt.grid(True)
 
     def set_params(self, fontsize=14):
         # lines.linewidth: 3

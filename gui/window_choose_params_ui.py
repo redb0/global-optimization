@@ -6,7 +6,6 @@ class UiParamsWindow:
         self.list = None
         self.add_params_to_list_btn = None
         self.reset_btn = None
-        # self.ar = []
 
     def setup_ui(self, window):
         main_layout = QtWidgets.QVBoxLayout()

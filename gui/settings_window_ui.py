@@ -45,7 +45,11 @@ class UiSettingsWindow:
         h_box_1 = QHBoxLayout()
         h_box_1.addWidget(self.abs_path_test_func_te)
         h_box_1.addWidget(self.open_file_btn)
-        wgt.setLayout(h_box_1)
+        v_box = QVBoxLayout()
+        v_box.addWidget(self.abs_path_test_func_label)
+        v_box.addLayout(h_box_1)
+        v_box.addStretch(1)
+        wgt.setLayout(v_box)
 
         self.legend_position_label = QLabel()
         # TODO: сделать радиокнопку с двумя флагами: сверху и справа
@@ -54,8 +58,6 @@ class UiSettingsWindow:
         self.form.addRow(self.min_flag_label, self.min_flag)
         self.form.addRow(self.number_runs_label, self.number_runs)
         self.form.addRow(self.epsilon_label, self.epsilon)
-        self.form.addRow("", self.abs_path_test_func_label)
-        self.form.addRow("", wgt)
         self.form.addRow(self.legend_position_label, self.legend_position_te)
 
         self.save_btn = QPushButton()
@@ -64,6 +66,9 @@ class UiSettingsWindow:
         h_box.addWidget(self.reset_btn)
 
         main_layout.addLayout(self.form)
+
+        main_layout.addWidget(wgt)
+        # main_layout.setStretch(1)
         main_layout.addLayout(h_box)
 
         self.retranslate(window)

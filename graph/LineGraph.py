@@ -76,8 +76,8 @@ class LineGraph(Graph):
         # borderaxespad=0. - ширина пространства между границами рисунка и легенды
         # ncol=2, количество столбцов для расположения подписей
         title = "Зависимость оценки вороятности от " + self._param.get_name()
-        xlabel = self._param.get_name()
-        ylabel = "Оценка вероятности"
+        xlabel = self._param.label_TeX
+        ylabel = "$\widehat {P}{_\delta}$"  # "Оценка вероятности"
         self.set_labels(xlabel=xlabel, ylabel=ylabel, title=title, legend_title="")
         if self._settings.legend_position == "top":
             plt.legend(bbox_to_anchor=(0., 1.02), loc=3,

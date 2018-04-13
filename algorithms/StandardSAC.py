@@ -93,13 +93,7 @@ class StandardSAC(SAC):
         # TODO: добавить возможность в настройках указывать путь до папки куда сохранять верузльтат
         script_path = os.path.dirname(os.path.abspath(__file__))
         script_path = script_path.replace('\\\\', '\\')
-        name_file = (self.name.replace(' ', '') + "_" +
-                     self.parameters[0].get_abbreviation() + "=" + str(self.parameters[0].get_selected_values()) + "_" +
-                     self.parameters[1].get_abbreviation() + "=" + str(self.parameters[1].get_selected_values()) + "_" +
-                     self.parameters[2].get_abbreviation() + "=" + str(self.parameters[2].get_selected_values()) + "_" +
-                     self.parameters[4].get_abbreviation() + "=" + str(self.parameters[4].get_selected_values()) + "_" +
-                     self.parameters[6].get_abbreviation() + "=" + str(self.parameters[6].get_selected_values()) +
-                     ".json")  # "StandardSAC_MI=500_NP=100_KN=0.0_SF=1.0_NF=1.json"
+        name_file = self.get_identifier_name() + ".json"  # "StandardSAC_MI=500_NP=100_KN=0.0_SF=1.0_NF=1.json"
         abs_path_file = os.path.join(script_path, "..\\algorithms_exe\\result\\", name_file)  #
         print(name_file)
         in_file = []

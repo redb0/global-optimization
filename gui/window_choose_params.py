@@ -32,8 +32,9 @@ class ParamsWindow(QtWidgets.QWidget):
             for i in range(widget.count()):
                 if widget.item(i).checkState():
                     values.append(p[i])
-            self.p.set_selected_values(values)
-            print(self.p.get_selected_values())
+            # self.p.set_selected_values(values)
+            self.parent().selected_value = values
+            print(self.parent().selected_value)
         return f
 
     def reset_widget(self, widget):

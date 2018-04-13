@@ -1,5 +1,5 @@
 class AlgorithmParameter:
-    def __init__(self, abbreviation: str, name: str, p_type: type,
+    def __init__(self, abbreviation: str, name: str, p_type: type, tex: str,
                  allowable_values=None, default_value=None):
         # TODO: возможно добавить проверку возможных значений на тип
         self.name = name
@@ -8,6 +8,7 @@ class AlgorithmParameter:
         self.allowable_values = allowable_values
         self.selected_values = default_value
         self.default_value = default_value
+        self._label_TeX = tex
 
     # метод можно вызывать прямиком из класса, без создания экземпляра
     @staticmethod
@@ -45,81 +46,86 @@ class AlgorithmParameter:
     def set_selected_values(self, values) -> None:
         self.selected_values = self.p_type(values)
 
+    @property
+    def label_TeX(self):
+        return self._label_TeX
+
 
 def get_MI():
-    p = AlgorithmParameter("MI", "Количество итераций", int, default_value=500)
+    p = AlgorithmParameter("MI", "Количество итераций", int, "$T$", default_value=500)
     return p
 
 
 def get_NP():
-    p = AlgorithmParameter("NP", "Количество точек", int, default_value=200)
+    p = AlgorithmParameter("NP", "Количество точек", int, "$N$", default_value=200)
     return p
 
 
 def get_KN():
-    p = AlgorithmParameter("KN", "Коэффициент помехи", float, default_value=0.0)
+    p = AlgorithmParameter("KN", "Коэффициент помехи", float, "$SNR(k{_{SN}})$", default_value=0.0)
     return p
 
 
 def get_IG():
-    p = AlgorithmParameter("IG", "Индекс функции изменения гравитационной постоянной", int, [1, 2, 3, 4], default_value=1)
+    p = AlgorithmParameter("IG", "Индекс функции изменения гравитационной постоянной", int, "$i{_g}$",
+                           [1, 2, 3, 4], default_value=1)
     # TODO: добавить варианты тестовых функций
     return p
 
 
 def get_G0():
-    p = AlgorithmParameter("G0", "Начальное значение гравитационной постоянной", float, default_value=100)
+    p = AlgorithmParameter("G0", "Начальное значение гравитационной постоянной", float, "$G{_0}$", default_value=100)
     return p
 
 
 def get_AG():
-    p = AlgorithmParameter("AG", "Коэффициент альфа", float, default_value=20)
+    p = AlgorithmParameter("AG", "Коэффициент альфа", float, "$\\alpha$", default_value=20)
     return p
 
 
 def get_EC():
     # bool, [True, False]
-    p = AlgorithmParameter("EC", "Использование элитных зондов", int, [1, 0], default_value=True)
+    p = AlgorithmParameter("EC", "Использование элитных зондов", int, "$EC$", [1, 0], default_value=True)
     return p
 
 
 def get_RN():
-    p = AlgorithmParameter("RN", "Норма линейного пространства", int, [1, 2], default_value=2)
+    p = AlgorithmParameter("RN", "Норма линейного пространства", int, "$Rn$", [1, 2], default_value=2)
     return p
 
 
 def get_RP():
-    p = AlgorithmParameter("RP", "Степень влияния расстояния", int, default_value=1)
+    p = AlgorithmParameter("RP", "Степень влияния расстояния", int, "$Rp$", default_value=1)
     return p
 
 
 def get_gamma():
-    p = AlgorithmParameter("GA", "Коэффициент гамма", float, default_value=1)
+    p = AlgorithmParameter("GA", "Коэффициент гамма", float, "$\\gamma$", default_value=1)
     return p
 
 
 def get_SF():
-    p = AlgorithmParameter("SF", "Коэффициент селективности", float, default_value=100)
+    p = AlgorithmParameter("SF", "Коэффициент селективности", float, "$s$", default_value=100)
     return p
 
 
 def get_KQ():
-    p = AlgorithmParameter("KQ", "Коэффициент q", float, default_value=1)
+    p = AlgorithmParameter("KQ", "Коэффициент q", float, "$q$", default_value=1)
     return p
 
 
 def get_NF():
-    p = AlgorithmParameter("NF", "Индекс ядерной функции", int, default_value=1)
+    p = AlgorithmParameter("NF", "Индекс ядерной функции", int, "$nf$", default_value=1)
     return p
 
 
 def get_EndNP():
-    p = AlgorithmParameter("EndNP", "Конечное количество точек", int, default_value=10)
+    p = AlgorithmParameter("EndNP", "Конечное количество точек", int, "$N{_end}$", default_value=10)
     return p
 
 
 def get_ILCNP():
-    p = AlgorithmParameter("ILCNP", "Индекс закона изменения количества точек", int,
+    p = AlgorithmParameter("ILCNP", "Индекс закона изменения количества точек", int, "$i{_cnp}$",
                            default_value=1, allowable_values=[1, 2, 3, 4, 5, 6, 7])
     return p
 

@@ -24,3 +24,19 @@ class AcsaSAC(StandardSAC):
                            AlgorithmParameter.get_NF()]
 
         self.settings = Settings()
+
+    def get_identifier_name(self) -> str:
+        """
+        Метод построения уникального имени. Для использования в качестве имени файла или подписи к графику.
+        Имя складывается из сокращенного названия алгоритма и его параметров.
+        :return: имя в виде строки. Напримен "sac_acsa_MI=500_NP=200_KN=0.0_"
+        """
+        name = ("sac_acsa_" +
+                self.parameters[0].get_abbreviation() + "=" + str(self.parameters[0].get_selected_values()) + "_" +
+                self.parameters[1].get_abbreviation() + "=" + str(self.parameters[1].get_selected_values()) + "_" +
+                self.parameters[2].get_abbreviation() + "=" + str(self.parameters[2].get_selected_values()) + "_" +
+                self.parameters[4].get_abbreviation() + "=" + str(self.parameters[4].get_selected_values()) + "_" +
+                self.parameters[6].get_abbreviation() + "=" + str(self.parameters[6].get_selected_values()) + "_" +
+                self.parameters[3].get_abbreviation() + "=" + str(self.parameters[3].get_selected_values()) + "_" +
+                self.parameters[5].get_abbreviation() + "=" + str(self.parameters[5].get_selected_values()))
+        return name

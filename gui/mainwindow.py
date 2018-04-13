@@ -45,21 +45,22 @@ class MainWindow(QMainWindow):
         self.change_status_activity_buttons(self.ui.alg_form, True)
 
         self.ui.add_linear_graph_btn.clicked.connect(lambda: self.add_linear_graph(self.to_test_list))
-        # self.ui.add_heat_map_btn.clicked.connect(self.ui.add_heat_map)
-
-    # def open_settings_alg_window(self):
-        # def f():
-        #     self.window_choose = ParamsWindow(parameters, parent=parent)
-        #     self.window_choose.show()
-        # return f
-        # pass
+        self.ui.add_heat_map_btn.clicked.connect(self.add_heat_map)
 
     def add_linear_graph(self, alg):  # сюда лучше не передавать алгориты а передавать в функцию на кнопке построить график
         print("--------->", alg)
         # TODO: переименовать переменные, нихрена не понятно
         d = self.get_value_from_combobox(self.ui.param_linear_graph)
+        if d == {None: ''}:
+            error = "Выберите параметр итерирования"
+            self.print_error(error)
+            return
         p = AlgorithmParameter.get_parameters(list(d.keys())[0])
         print("Параметр для построения графика: ", list(d.keys())[0])
+        n = self.ui.list_graph.count()
+        # print(n)
+        if n > 0:
+            self.ui.list_graph.takeAt(n - 1)
         if p.allowable_values is not None:
             point_graph = PossibleGraph("POINT_GRAPH", [p], [], alg)
             point_graph_wdg = PointGraphWidget(point_graph)
@@ -71,8 +72,10 @@ class MainWindow(QMainWindow):
             self.ui.list_graph.addWidget(line_graph_wdg.get_widget(lower_limit=0, top_limit=1000,
                                                                    step_limit=1, get_alg=self.get_active_algorithm,
                                                                    print_error=self.print_error))
-            # self.ui.list_graph.addStretch(1)
-        # print(self.window_choose)
+        self.ui.list_graph.addStretch(1)
+
+    def add_heat_map(self):
+        pass
 
     def get_value_from_combobox(self, combobox):
         text = combobox.currentText()

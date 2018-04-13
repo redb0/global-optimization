@@ -97,6 +97,7 @@ class UiMainWindow:
         self.alg_layout.addLayout(h_box_3)
 
         self.add_linear_graph_btn = QtWidgets.QPushButton()
+        self.add_linear_graph_btn.setMaximumWidth(170)
         self.param_linear_graph = QtWidgets.QComboBox()
         h_box_1 = QtWidgets.QHBoxLayout()
         # v_box_1 = QtWidgets.QVBoxLayout()
@@ -104,6 +105,7 @@ class UiMainWindow:
         h_box_1.addWidget(self.param_linear_graph)
 
         self.add_heat_map_btn = QtWidgets.QPushButton()
+        self.add_heat_map_btn.setMaximumWidth(170)
         self.param_heat_map_1 = QtWidgets.QComboBox()
         self.param_heat_map_2 = QtWidgets.QComboBox()
         h_box_2 = QtWidgets.QHBoxLayout()
@@ -114,8 +116,6 @@ class UiMainWindow:
         v_box_2.addWidget(self.param_heat_map_2)
 
         self.list_graph = QtWidgets.QVBoxLayout()
-        # TODO: Сделать чтобы виджеты при добавлении не растягивались
-        # self.list_graph.addStretch(1)
 
         scroll = QtWidgets.QScrollArea()
         scroll.setWidgetResizable(True)

@@ -10,6 +10,7 @@ class PointGraphWidget(PossibleGraphWidget):
         self.type_graph = "POINT_GRAPH"
 
         self.graph_obj = point_graph_obj
+        self.selected_value = []
 
         self.btn_delete = None
         self.btn_plot = None
@@ -22,6 +23,8 @@ class PointGraphWidget(PossibleGraphWidget):
         self.btn_delete = QtWidgets.QPushButton()
         self.btn_plot = QtWidgets.QPushButton()
         self.btn_choose = QtWidgets.QPushButton()
+        self.btn_delete.setMaximumWidth(100)
+        self.btn_plot.setMaximumWidth(100)
         p = self.graph_obj.get_parameters_obj()
         self.btn_choose.clicked.connect(self.window_choose_params(p[0], parent=parent))
         label = QtWidgets.QLabel()

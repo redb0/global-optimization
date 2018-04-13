@@ -21,6 +21,8 @@ class LineGraphWidget(PossibleGraphWidget):
         grid = QtWidgets.QGridLayout()
         self.btn_delete = QtWidgets.QPushButton()
         self.btn_plot = QtWidgets.QPushButton()
+        self.btn_delete.setMaximumWidth(100)
+        self.btn_plot.setMaximumWidth(100)
         label = QtWidgets.QLabel()
         grid.addWidget(self.btn_plot, 0, 0)
         grid.addWidget(self.btn_delete, 1, 0)

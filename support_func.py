@@ -208,3 +208,33 @@ def clear_combobox(*args: QComboBox) -> None:
     for cmb in args:
         cmb.clear()
 
+
+def combinations(ar):
+    idxs = [0 for i in range(len(ar))]
+    f = True
+    while f:
+        combin = []
+        for i in range(len(ar)):
+            combin.append(ar[i][idxs[i]])
+            if i == len(ar) - 1:
+                j = len(idxs) - 1
+                while j >= 0:
+                    idxs[j] += 1
+                    if idxs[j] == len(ar[j]):
+                        if j == 0:
+                            f = False
+                        idxs[j] = 0
+                        j -= 1
+                    else:
+                        break
+        yield combin
+    raise StopIteration
+
+
+# def main():
+#     x = [[1], [4, 5, 6], [7]]
+#     for i in combinations(x):
+#         print(i)
+#
+# if __name__ == "__main__":
+#     main()

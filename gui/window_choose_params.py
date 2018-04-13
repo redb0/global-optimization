@@ -33,7 +33,7 @@ class ParamsWindow(QtWidgets.QWidget):
                 if widget.item(i).checkState():
                     values.append(p[i])
             # self.p.set_selected_values(values)
-            self.parent().selected_value = values
+            self.parent().selected_value.append(values)
             print(self.parent().selected_value)
         return f
 

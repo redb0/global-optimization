@@ -87,4 +87,4 @@ class HeatMapWidget(PossibleGraphWidget):
                     # print(axis_range)
         algorithm = get_alg()
         heat_map = HeatMap("Тепловая карта", algorithm, self.graph_obj.get_parameters_obj(), axis_range)
-        heat_map.plot()
+        heat_map.plot(print_error=print_error)

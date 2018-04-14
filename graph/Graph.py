@@ -18,7 +18,8 @@ class Graph:
                   "axes.labelsize": fontsize,
                   "xtick.labelsize": fontsize,
                   "ytick.labelsize": fontsize}
-        rcParams.update(params)
+        # rcParams['text.usetex'] = True
+        # rcParams['text.latex.unicode'] = True
 
     def set_labels(self, xlabel="", ylabel="", title="", legend_title=""):
         plt.xlabel(xlabel)
@@ -40,15 +41,3 @@ class Graph:
     def make_data(self):
         """Метод генерации данных"""
         pass
-
-#
-# def main():
-#     ax = plt.subplot()
-#
-#     plt.text(0.5, 0.04, 'common X', ha='center')
-#     plt.text(-0.1, 1, 'common Y', va='top', rotation=0)
-#     print(ax.get_yticks()[len(ax.get_yticks())-1])
-#     plt.show()
-#
-# if __name__ =="__main__":
-#     main()

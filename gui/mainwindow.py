@@ -11,9 +11,6 @@ from graph.PossibleGraph import PossibleGraph
 
 from gui.mainwindow_ui import UiMainWindow
 
-
-# TODO: сделать видет для линейного графика, если у показателя диапазон - линейный график, если значения, то точечный
-# TODO: сделать классы для потенциальных графиков - линейный, точечный, тепловая карта
 from gui.wdg.HeatMapWidget import HeatMapWidget
 from gui.wdg.LineGraphWidget import LineGraphWidget
 from gui.wdg.PointGraphWidget import PointGraphWidget
@@ -36,7 +33,6 @@ class MainWindow(QMainWindow):
         fill_combobox_list_alg(self.active_alg_1, self.ui.combobox_alg)
         self.ui.add_new_alg_btn.clicked.connect(lambda: self.add_alg())
 
-        # self.active_alg = {"StandardGSA": None, "StandardSAC": None}
         self.window_settings_alg = None
         self.window_common_settings = None
 
@@ -45,11 +41,13 @@ class MainWindow(QMainWindow):
 
         self.change_status_activity_buttons(self.ui.alg_form, True)
 
-        self.ui.add_linear_graph_btn.clicked.connect(lambda: self.add_linear_graph(self.to_test_list))
-        self.ui.add_heat_map_btn.clicked.connect(lambda: self.add_heat_map(self.to_test_list))
+        self.get_selected_algorithms = self.ui.get_index_active_checkbox(self.ui.alg_form)
 
-    def add_linear_graph(self, alg):  # сюда лучше не передавать алгориты а передавать в функцию на кнопке построить график
-        print("--------->", alg)
+        self.ui.add_linear_graph_btn.clicked.connect(self.add_linear_graph)
+        self.ui.add_heat_map_btn.clicked.connect(self.add_heat_map)
+
+    def add_linear_graph(self):  # сюда лучше не передавать алгориты а передавать в функцию на кнопке построить график
+        algorithms = self.get_active_algorithm()
         # TODO: переименовать переменные, нихрена не понятно
         d = self.get_value_from_combobox(self.ui.param_linear_graph)
         if d == {None: ''}:
@@ -59,30 +57,30 @@ class MainWindow(QMainWindow):
         p = AlgorithmParameter.get_parameters(list(d.keys())[0])
         print("Параметр для построения графика: ", list(d.keys())[0])
         n = self.ui.list_graph.count()
-        # print(n)
         if n > 0:
             self.ui.list_graph.takeAt(n - 1)
         if p.allowable_values is not None:
-            point_graph = PossibleGraph("POINT_GRAPH", [p], [], alg)
+            point_graph = PossibleGraph("POINT_GRAPH", [p], [], algorithms)
             point_graph_wdg = PointGraphWidget(point_graph)
             self.ui.list_graph.addWidget(point_graph_wdg.get_widget(parent=self))
-            # self.ui.list_graph.addStretch(1)
         else:
             line_graph = PossibleGraph("LINE_GRAPH", p, [], [])
             line_graph_wdg = LineGraphWidget(line_graph)
             self.ui.list_graph.addWidget(line_graph_wdg.get_widget(lower_limit=0, top_limit=1000,
-                                                                   step_limit=1, get_alg=self.get_active_algorithm,
+                                                                   step_limit=1, algorithms=algorithms,
                                                                    print_error=self.print_error))
         self.ui.list_graph.addStretch(1)
 
-    def add_heat_map(self, alg):
+    def add_heat_map(self):
+        algorithms = self.get_active_algorithm()
         param_x = self.get_value_from_combobox(self.ui.param_heat_map_1)
         param_y = self.get_value_from_combobox(self.ui.param_heat_map_2)
         if (param_x == {None: ''}) or (param_y == {None: ''}):
             error = "Выберите параметр итерирования!"
             self.print_error(error)
             return
-        if len(alg) != 1:
+        print(algorithms)
+        if len(algorithms) != 1:
             error = "Должен быть выбран один алгоритм!"
             self.print_error(error)
             return
@@ -92,10 +90,10 @@ class MainWindow(QMainWindow):
         n = self.ui.list_graph.count()
         if n > 0:
             self.ui.list_graph.takeAt(n - 1)
-        graph = PossibleGraph("HEAT_MAP", [p_x, p_y], [], alg)
+        graph = PossibleGraph("HEAT_MAP", [p_x, p_y], [], self.to_test_list)
         graph_widget = HeatMapWidget(graph)
         self.ui.list_graph.addWidget(graph_widget.get_widget(lower_limit=0, top_limit=1000,
-                                                             step_limit=1, get_alg=self.get_active_algorithm,
+                                                             step_limit=1, algorithm=algorithms,
                                                              print_error=self.print_error))
         self.ui.list_graph.addStretch(1)
 
@@ -164,7 +162,9 @@ class MainWindow(QMainWindow):
         return list(sets[0].intersection(*sets[1:]))
 
     def get_active_algorithm(self):
-        return self.to_test_list
+        idx = self.get_selected_algorithms()
+        algorithms = [self.to_test_list[idx[i]] for i in range(len(idx))]
+        return algorithms
 
     def change_status_activity_buttons(self, layout, flag):
         for i in range(layout.count()):

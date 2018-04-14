@@ -100,7 +100,6 @@ class UiMainWindow:
         self.add_linear_graph_btn.setMaximumWidth(170)
         self.param_linear_graph = QtWidgets.QComboBox()
         h_box_1 = QtWidgets.QHBoxLayout()
-        # v_box_1 = QtWidgets.QVBoxLayout()
         h_box_1.addWidget(self.add_linear_graph_btn)
         h_box_1.addWidget(self.param_linear_graph)
 
@@ -188,17 +187,15 @@ class UiMainWindow:
         h_box = QtWidgets.QHBoxLayout()
         h_box.addWidget(btn)
         h_box.addWidget(delete_btn)
-        # idx = form.rowCount()
         form.addRow(cb, h_box)
         cb.setText(self.translate("MainWindow", text))
         btn.setText(self.translate("MainWindow", text_btn))
         delete_btn.setText(self.translate("MainWindow", "Удалить"))
-        delete_btn.clicked.connect(self.delete_row(form, cb))
+        delete_btn.clicked.connect(self.delete_row(window, form, cb))
         btn.setDisabled(True)
         btn.clicked.connect(self.open_settings_alg_window(settings_list, text, parent=window))
         cb.stateChanged.connect(btn.setEnabled)
         cb.stateChanged.connect(cb_handler(self.get_index_active_checkbox(form)))
-        # delete_btn.setDisabled(True)
 
     def get_index_active_checkbox(self, form):
         """
@@ -222,12 +219,13 @@ class UiMainWindow:
             return idx
         return f
 
-    def delete_row(self, form, cb):
+    def delete_row(self, main_window, form, cb):
         """
         Удаление строки в форме.
         
         Возвращает функцию, 
         удаляющую строку в форме, если строка содержит переданный чекбокс.
+        :param main_window: 
         :param form: форма из которой необходимо удалить строку, QFormLayout 
         :param cb: чекбокс, строку с которым необходимо удалить, QCheckBox
         :return: функция, которая замыкается на аргументах form и cb и удаляет строку
@@ -240,6 +238,7 @@ class UiMainWindow:
             idx = form.indexOf(cb)
             idx = (idx - 1) / 2 + 1
             form.removeRow(idx)
+            main_window.to_test_list.pop(int(idx - 1))
         return f
 
     def open_settings_alg_window(self, settings_list, alg_name, parent=None):

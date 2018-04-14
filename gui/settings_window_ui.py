@@ -68,7 +68,6 @@ class UiSettingsWindow:
         main_layout.addLayout(self.form)
 
         main_layout.addWidget(wgt)
-        # main_layout.setStretch(1)
         main_layout.addLayout(h_box)
 
         self.retranslate(window)

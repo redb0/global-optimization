@@ -12,14 +12,13 @@ class Graph:
         plt.grid(True)
 
     def set_params(self, fontsize=14):
-        # lines.linewidth: 3
-        # lines.markersize: 10
         params = {"axes.titlesize": fontsize,
                   "axes.labelsize": fontsize,
                   "xtick.labelsize": fontsize,
                   "ytick.labelsize": fontsize}
         # rcParams['text.usetex'] = True
         # rcParams['text.latex.unicode'] = True
+        rcParams.update(params)
 
     def set_labels(self, xlabel="", ylabel="", title="", legend_title=""):
         plt.xlabel(xlabel)

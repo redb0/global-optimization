@@ -26,24 +26,18 @@ class AlgorithmSetupWindow(QtWidgets.QWidget):
                     value = item.value()
                     s = AlgorithmParameter.get_param_on_name(settings, name)
                     s.set_selected_values(value)
-                    # print(s.get_selected_values())
                 elif type(item) == QtWidgets.QDoubleSpinBox:
                     name = self.ui.form.itemAt(i - 1).widget().text()
                     value = round(item.value(), 2)
                     s = AlgorithmParameter.get_param_on_name(settings, name)
                     s.set_selected_values(value)
-                    # print(s.get_selected_values())
                 elif type(item) == QtWidgets.QComboBox:
                     name = self.ui.form.itemAt(i - 1).widget().text()
                     value = item.currentText()
                     s = AlgorithmParameter.get_param_on_name(settings, name)
                     s.set_selected_values(value)
-                    # print(s.get_selected_values())
             for p in self.parent().to_test_list[0].get_parameters():
                 print(p.get_selected_values())
-            # settings.clear()
-            # settings.append(self.parent().to_test_list[0].get_parameters())
-            # print(self.parent().to_test_list[0].get_parameters())
         return f
 
     @deprecated(message="Вызывает некорректное закрытие по крестику. После чего не открываются окна.")

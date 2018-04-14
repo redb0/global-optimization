@@ -55,7 +55,6 @@ class LineGraph(Graph):
             else:
                 return None
 
-        # markers_list = []
         if len(data) > len(markers):
             markers_list = markers.append(markers[:(len(data) - len(markers))])
         else:

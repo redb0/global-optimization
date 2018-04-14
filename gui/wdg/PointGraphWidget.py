@@ -15,7 +15,6 @@ class PointGraphWidget(PossibleGraphWidget):
         self.btn_delete = None
         self.btn_plot = None
         self.btn_choose = None
-        # self.range_wdg = None
 
     def get_widget(self, parent=None):
         w = QtWidgets.QWidget()

@@ -25,10 +25,9 @@ class HeatMap(Graph):
             return
 
         print(data)
-        ax = sns.heatmap(data, cmap=plt.cm.Blues, linewidths=.1)  #, cmap=plt.cm.Blues , linewidths=.1 cbar_kws={'label': '$\widehat {P}{_\delta}$'}
+        ax = sns.heatmap(data, cmap=plt.cm.Blues, linewidths=.1)  # cbar_kws={'label': '$\widehat {P}{_\delta}$'}
 
         # plt.rc('text', usetex=True)
-        # plt.rc('font', family='serif')
 
         cbar_axes = ax.figure.axes[-1]
         cbar_axes.set_ylabel('$\\uparrow$\n  $\widehat{P}{_\delta}$', rotation=0, size=12)
@@ -53,9 +52,9 @@ class HeatMap(Graph):
         #                 title=self._title, legend_title="")
 
         ax.invert_yaxis()
-        plt.arrow(0, 0, self.axis_range[1][-1], 0, width=.0007, color="k", clip_on=False, head_width=0.05,
+        plt.arrow(0, 0, len(self.axis_range[1]), 0, width=.0007, color="k", clip_on=False, head_width=0.05,
                   head_length=0.1)
-        plt.arrow(0, 0, 0, self.axis_range[0][-1], width=.0007, color="k", clip_on=False, head_width=0.05,
+        plt.arrow(0, 0, 0, len(self.axis_range[0]), width=.0007, color="k", clip_on=False, head_width=0.05,
                   head_length=0.1)
 
         plt.savefig(file_name, bbox_inches='tight')

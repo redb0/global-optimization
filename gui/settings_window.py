@@ -75,7 +75,6 @@ class SettingsWindow(QWidget):
                                                    "All Files (*);;JSON Files (*.json)", options=options)
         if file_name:
             self.ui.abs_path_test_func_te.setText(file_name)
-            # print(file_name)
 
     def print_error(self, text: str) -> None:
         QMessageBox.information(self, 'Внимание!', text,

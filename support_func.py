@@ -7,7 +7,6 @@ from PyQt5.QtWidgets import QComboBox
 from typing import List, Union
 
 from AlgorithmParameter import AlgorithmParameter
-from algorithms.Algorithm import Algorithm
 
 
 def get_max_step(sb, w):
@@ -190,7 +189,7 @@ def fill_combobox_list(cmb: QComboBox, data: list) -> None:
         cmb.addItem(str(k))
 
 
-def fill_combobox_list_alg(data: List[Algorithm], *args: QComboBox) -> None:
+def fill_combobox_list_alg(data, *args: QComboBox) -> None:
     """
     Функция заполнения нескольких комбобоксов названиями алгоритмов и экземплярами их классов.
     :param data: список содержащий экземпляры наследников Algorithm.

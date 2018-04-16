@@ -115,7 +115,7 @@ def get_KQ():
 
 
 def get_NF():
-    p = AlgorithmParameter("NF", "Индекс ядерной функции", int, "$nf$", default_value=1)
+    p = AlgorithmParameter("NF", "Индекс ядерной функции", int, "$nf$", default_value=1, allowable_values=[1, 2, 3, 4])
     return p
 
 
@@ -154,6 +154,14 @@ def get_parameters(key: str):
         p = get_gamma()
     elif key == "SF":
         p = get_SF()
+    elif key == "KQ":
+        p = get_KQ()
+    elif key == "NF":
+        p = get_NF()
+    elif key == "EndNP":
+        p = get_EndNP()
+    elif key == "ILCNP":
+        p = get_ILCNP()
 
     # if key == "RN":
     #     p = get_RN()

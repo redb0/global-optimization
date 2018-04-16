@@ -76,7 +76,7 @@ class LineGraph(Graph):
         # ncol=2, количество столбцов для расположения подписей
         title = "Зависимость оценки вороятности от " + self._param.get_name()
         xlabel = self._param.label_TeX
-        ylabel = "$\widehat {P}{_\delta}$"  # "Оценка вероятности"
+        ylabel = "$\widehat {P}{_\delta}$   "  # "Оценка вероятности"
         self.set_labels(xlabel=xlabel, ylabel=ylabel, title=title, legend_title="")
         if self._settings.legend_position == "top":
             plt.legend(bbox_to_anchor=(0., 1.02), loc=3,
@@ -90,6 +90,11 @@ class LineGraph(Graph):
         elif self._settings.legend_position == "right":
             plt.legend(bbox_to_anchor=(1.02, 1.0), loc=2,
                        ncol=1, borderaxespad=0.)
+
+        # plt.arrow(x[0], data[0], x[0], data[-1], width=.0007, color="k", clip_on=False, head_width=0.05,
+        #           head_length=0.1)
+        # plt.arrow(x[0], data[0], x[-1], data[0], width=.0007, color="k", clip_on=False, head_width=0.05,
+        #           head_length=0.1)
 
         plt.savefig(file_name, bbox_inches='tight')
         plt.show()

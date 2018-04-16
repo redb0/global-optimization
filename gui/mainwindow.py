@@ -46,6 +46,12 @@ class MainWindow(QMainWindow):
         self.ui.add_linear_graph_btn.clicked.connect(self.add_linear_graph)
         self.ui.add_heat_map_btn.clicked.connect(self.add_heat_map)
 
+        self.param_in_combobox_for_heat_map = {}
+        self.ui.param_heat_map_1.activated.connect(
+            lambda: self.prohibit_duplicate_selection(self.ui.param_heat_map_1, self.ui.param_heat_map_2))
+        self.ui.param_heat_map_2.activated.connect(
+            lambda: self.prohibit_duplicate_selection(self.ui.param_heat_map_2, self.ui.param_heat_map_1))
+
     def add_linear_graph(self):  # сюда лучше не передавать алгориты а передавать в функцию на кнопке построить график
         algorithms = self.get_active_algorithm()
         # TODO: переименовать переменные, нихрена не понятно
@@ -75,8 +81,8 @@ class MainWindow(QMainWindow):
         algorithms = self.get_active_algorithm()
         param_x = self.get_value_from_combobox(self.ui.param_heat_map_1)
         param_y = self.get_value_from_combobox(self.ui.param_heat_map_2)
-        if (param_x == {None: ''}) or (param_y == {None: ''}):
-            error = "Выберите параметр итерирования!"
+        if (param_x == param_y) or (param_x == {None: ''}) or (param_y == {None: ''}):
+            error = "Параметры итерирования выбраны некорректно!"
             self.print_error(error)
             return
         print(algorithms)
@@ -113,8 +119,10 @@ class MainWindow(QMainWindow):
             # params = self.get_params(self.to_test_list)
             idx_active_cb = get_idx_active_cb()
             params = self.get_params_on_idx(self.to_test_list, idx_active_cb)
-            print(params)
+            # print(params)
             common_params = self.get_common_params(*params)
+            print(common_params)
+            self.param_in_combobox_for_heat_map = common_params
             self.fill_combobox(common_params,
                                self.ui.param_linear_graph,
                                self.ui.param_heat_map_1,
@@ -185,6 +193,26 @@ class MainWindow(QMainWindow):
         # print(a)
 
         self.ui.add_row_in_form(self.ui.alg_form, a.get_parameters(), name, "Параметризировать", cb_handler, self)
+
+    def prohibit_duplicate_selection(self, cmb, cmb1):
+        # all_items = [(cmb.itemText(i), cmb.itemData(i)) for i in range(cmb.count())]
+        item = cmb.currentText()
+        item_data = cmb.currentData()
+
+        item1 = cmb1.currentText()
+        item_data1 = cmb1.currentData()
+
+        list_without_item = []
+        cmb1.clear()
+        for i in self.param_in_combobox_for_heat_map.keys():
+            if item_data != i:
+                list_without_item.append(i)
+                cmb1.addItem(self.param_in_combobox_for_heat_map.get(i), i)
+
+        if item != item1:
+            cmb1.setCurrentText(item1)
+
+
 
     def print_error(self, text: str) -> None:
         """Вывод сообщения об ошибке на экран"""

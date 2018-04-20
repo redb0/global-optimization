@@ -211,9 +211,15 @@ def clear_combobox(*args: QComboBox) -> None:
 def combinations(ar):
     idxs = [0 for i in range(len(ar))]
     f = True
+    if len(ar) == 0:
+        yield []
+        f = False
     while f:
         combin = []
         for i in range(len(ar)):
+            if len(ar[i]) == 0:
+                f = False
+                continue
             combin.append(ar[i][idxs[i]])
             if i == len(ar) - 1:
                 j = len(idxs) - 1
@@ -231,7 +237,7 @@ def combinations(ar):
 
 
 # def main():
-#     x = [[1], [4, 5, 6], [7]]
+#     x = [[1], [4, 5, 6], []]
 #     for i in combinations(x):
 #         print(i)
 #

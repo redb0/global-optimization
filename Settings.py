@@ -58,7 +58,7 @@ class Settings:
                 print("Epsilon должно быть больше 0. Установлено значение по умолчанию (0.5).")
                 self.__class__._epsilon.set_default_value()
         elif type(value) == list:
-            if all([((type(value[i]) == int) or (type(value[i] == float)) for i in range(len(value)))]):
+            if all([(type(value[i]) == int) or (type(value[i]) == float) for i in range(len(value))]):
                 self.__class__._epsilon.present_value = value
             else:
                 print("Недопустимый тип epsilon.")
@@ -80,8 +80,12 @@ class Settings:
             if os.path.isfile(value):
                 self.__class__._abs_path_test_func.present_value = value
                 with open(self.__class__._abs_path_test_func.present_value, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                self.__class__._real_extrema.present_value = data['real_extrema']
+                    try:
+                        data = json.load(f)
+                        self.__class__._real_extrema.present_value = data['real_extrema']
+                    except UnicodeDecodeError:
+                        print("Передан не json файл.")
+                        self.__class__._abs_path_test_func.set_default_value()
             else:
                 print("Значение не является путем.")
                 self.__class__._abs_path_test_func.set_default_value()

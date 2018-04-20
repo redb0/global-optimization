@@ -212,8 +212,6 @@ class MainWindow(QMainWindow):
         if item != item1:
             cmb1.setCurrentText(item1)
 
-
-
     def print_error(self, text: str) -> None:
         """Вывод сообщения об ошибке на экран"""
         QMessageBox.information(self, 'Внимание!', text,

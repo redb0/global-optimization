@@ -131,7 +131,7 @@ class Algorithm:
             self._start_time = time()
             self._process = subprocess.Popen(args, shell=True,
                                              stdout=subprocess.PIPE)  # bufsize=1, universal_newlines=True
-            print(self._process.pid)
+            # print(self._process.pid)
             # TODO: получить вывод из процесса
             # TODO: возвратить из этой функции значение функции, координату, массив с лучшими значениями, массив с лучшими координатами
             return abs_path_result

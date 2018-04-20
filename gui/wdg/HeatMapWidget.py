@@ -45,11 +45,11 @@ class HeatMapWidget(PossibleGraphWidget):
         self.btn_plot.setText(self.translate("MainWindow", "Построить"))
 
         self.btn_delete.clicked.connect(self.delete_graph(w))
-        self.btn_plot.clicked.connect(lambda: self.plot(print_error, algorithm))
+        self.btn_plot.clicked.connect(lambda: self.create_graph(print_error, algorithm))
 
         return w
 
-    def plot(self, print_error, algorithm):
+    def create_graph(self, print_error, algorithm):
         axis_range = []
         p = self.graph_obj.get_parameters_obj()
         j = 0

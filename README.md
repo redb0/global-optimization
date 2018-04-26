@@ -53,8 +53,8 @@
 ![alt text](https://github.com/redb0/global-optimization/blob/master/examples_tf/f5.png)
 ![alt text](https://github.com/redb0/global-optimization/blob/master/examples_tf/f5_x1=x2.png)
 При добавлении аддитивной равномерно распределенной помехи, превышающей по амплитуде полезный сигнал в 10 раз:
-![alt text](https://github.com/redb0/global-optimization/blob/master/examples_tf/f5_k_SN=10.png)
-![alt text](https://github.com/redb0/global-optimization/blob/master/examples_tf/f5_x1=x2_k_SN=10.png)
+![alt text](https://github.com/redb0/global-optimization/blob/master/examples_tf/f5_k_sn%3D10.png)
+![alt text](https://github.com/redb0/global-optimization/blob/master/examples_tf/f5_x1%3Dx2_k_sn%3D10.png)
 
 ## Добавление дополнительных алгоритмов
 

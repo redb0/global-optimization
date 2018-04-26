@@ -47,3 +47,30 @@
 ```
 График изолиний данной функции будт следующим:
 ![alt text](https://github.com/redb0/global-optimization/blob/master/examples_tf/f3_contour.png)
+
+Пример из файла ./example_tf/func5.json имеет следующий графический вид:
+
+![alt text](https://github.com/redb0/global-optimization/blob/master/examples_tf/f5.png)
+![alt text](https://github.com/redb0/global-optimization/blob/master/examples_tf/f5_x1=x2.png)
+При добавлении аддитивной равномерно распределенной помехи, превышающей по амплитуде полезный сигнал в 10 раз:
+![alt text](https://github.com/redb0/global-optimization/blob/master/examples_tf/f5_k_SN=10.png)
+![alt text](https://github.com/redb0/global-optimization/blob/master/examples_tf/f5_x1=x2_k_SN=10.png)
+
+## Добавление дополнительных алгоритмов
+
+Для добавления дополнительных алгоритмов необходимо выполнить следующие шаги:
+1) Добавить класс алгоритма на языке python и поместить в папку ./algorithms/.
+Класс должен быть унаследован от класса Algorithm либо от существующих классов групп (GSA, SAC), 
+если вы хотите добавить свою группу алгоритмов, то унаследуйте ее от класса Algorithm, 
+а затем класс конкретного алгоритма делайте наследником новой группы. 
+Класс для группы алгоритмов должен реализовать метод ```__init__``` и имть поле с названием группы.
+Класс консретного алгоритма должен реализовать метод ```__init__``` и ```get_identifier_name```. 
+Они должны быть реализованы по аналогии с методами классов в файлах `./algorithms/StandardSAC.py`, 
+`./algorithms/StandardGSA.py`.
+2) Добавить недостающие параметру алгоритма в файл AlgorithmParameter.py, по аналогии с уже созданными.
+3) Добавить алгоритм к списку используемых в поле ```self.active_alg_1``` класса MainWindow.
+3) Добавить реализацию алгоритма на языце Golang в папку ./algorithms_exe/alg_go/algorithms, 
+либо .exe файл в папку ./algorithms_exe/.
+
+API к алгоритму: (будет добавлено позже)
+

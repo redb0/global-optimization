@@ -54,8 +54,8 @@ class TestSettings:
         self.settings.abs_path_test_func = ""
         assert self.settings.abs_path_test_func == ""
 
-        self.settings.abs_path_test_func = "C:\\Projects_Python\\GlobalOptimization2\\examples_tf\\func3.json"
-        assert self.settings.abs_path_test_func == "C:\\Projects_Python\\GlobalOptimization2\\examples_tf\\func3.json"
+        self.settings.abs_path_test_func = "C:\\Projects_Python\\GlobalOptimization2\\examples_tf\\func5.json"
+        assert self.settings.abs_path_test_func == "C:\\Projects_Python\\GlobalOptimization2\\examples_tf\\func5.json"
 
         self.settings.abs_path_test_func = "C:\\Projects_Python\\GlobalOptimization2\\examples_tf\\f3_contour.png"
         assert self.settings.abs_path_test_func == ""

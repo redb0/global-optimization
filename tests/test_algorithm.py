@@ -14,7 +14,7 @@ class TestAlgorithm(unittest.TestCase):
     @patch("time.time")
     def test_run(self, no_time, no_popen):
         result_file_name = "..\\algorithms_exe\\res.json"
-        file_test_func = "\\examples_tf\\func3.json"
+        file_test_func = "\\examples_tf\\func5.json"
 
         no_popen.return_value = None
         no_time.return_value = None

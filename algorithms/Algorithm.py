@@ -181,27 +181,6 @@ class Algorithm:
         print("Оценка вероятности ", res["probability"])
         print(res["runs"])
 
-        # for i in range(number_runs):
-        #     print("Прогон ", i + 1, " ...")
-        #     path_res = self.run(self.result_file_name, file_test_func)  # TODO: доделать здесь
-        #     t = self.wait_process()
-        #     print(t)
-        #     res_dict = read_json(path_res)
-        #
-        #     # print(res_dict)
-        #     in_file.append(res_dict)
-        #     x_best = res_dict["x_best"]
-        #     if (type(epsilon) == float) or (type(epsilon) == int):
-        #         mask = [lies_in_epsilon(x_best[k], extremum[k], epsilon) for k in range(len(x_best))]
-        #         if all(mask):
-        #             number_successful_starts = number_successful_starts + 1
-        #     elif type(epsilon) == list:
-        #         for j in range(len(epsilon)):
-        #             mask = [lies_in_epsilon(x_best[k], extremum[k], epsilon[j]) for k in range(len(x_best))]
-        #             if all(mask):
-        #                 number_successful_starts[j] = number_successful_starts[j] + 1
-        # write_json(abs_path_file, in_file)
-
         return res["probability"]
 
     # def get_name_params(self) -> List[str]:

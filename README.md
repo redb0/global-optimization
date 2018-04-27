@@ -3,10 +3,10 @@
 Программа для исследования алгоритмов глобальной оптимизации.
 
 Включены алгоритмы:
-1) Алгоритм гравитационного поиска;
-2) Помехоустойчивый алгоритм гравитационного поиска;
-3) Алгоритм селективного усреднения координат;
-4) Алгоритм селективного усреднения с нессиметричным изменением области поиска.
+1) Gravitation Search Algorithm [(GSA)](http://ahmetcevahircinar.com.tr/wp-content/uploads/2017/04/GSA_A_Gravitational_Search_Algorithm.pdf);
+2) Noise Resistance Gravitation Search Algorithm (NR-GSA);
+3) Algorithm Selective Averaging Coordinates [(SAC)](https://cyberleninka.ru/article/v/metod-globalnoy-optimizatsii-osnovannyy-na-selektivnom-usrednenii-koordinat-pri-nalichii-ogranicheniy);
+4) Algorithm Selective Averaging Coordinates with asymmetric change of search area (SAC-ACSA).
 
 Алгоритмы по умолчанию должны находиться в папке algorithms_exe.
 Результаты работы по умолчанию сохраняются в виде json-файлов в папку algorithms_exe/result.
@@ -52,7 +52,9 @@
 
 ![alt text](https://github.com/redb0/global-optimization/blob/master/examples_tf/f5.png)
 ![alt text](https://github.com/redb0/global-optimization/blob/master/examples_tf/f5_x1=x2.png)
+
 При добавлении аддитивной равномерно распределенной помехи, превышающей по амплитуде полезный сигнал в 10 раз:
+
 ![alt text](https://github.com/redb0/global-optimization/blob/master/examples_tf/f5_k_sn%3D10.png)
 ![alt text](https://github.com/redb0/global-optimization/blob/master/examples_tf/f5_x1%3Dx2_k_sn%3D10.png)
 

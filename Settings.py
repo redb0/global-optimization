@@ -14,9 +14,11 @@ class Settings:
     _number_of_runs = Parameter("Количество пусков алгоритма", int, 100)
     _epsilon = Parameter("Размер epsilon-окрестности", [float, list], 0.5)
     _abs_path_test_func = Parameter("Тестовая функция", str, "")  # путь до файла с тестовой функцийей
-    _real_extrema = Parameter("Координаты глобального экстремума", list, [0, 0])
+    _global_min = Parameter("Координаты глобального минимума", list, [0, 0])
+    _global_max = Parameter("Координаты глобального максимума", list, [0, 0])
     _legend_position = Parameter("Положение легенда на графике", str, "top",
                                  allowable_values=["top", "left", "bottom", "right"])
+    _dimension = Parameter("Размерность задачи", int, 0)
 
     def __init__(self):
         pass
@@ -82,7 +84,7 @@ class Settings:
                 with open(self.__class__._abs_path_test_func.present_value, 'r', encoding='utf-8') as f:
                     try:
                         data = json.load(f)
-                        self.__class__._real_extrema.present_value = data['real_extrema']
+                        # self.__class__._global_min.present_value = data['real_extrema']
                     except UnicodeDecodeError:
                         print("Передан не json файл.")
                         self.__class__._abs_path_test_func.set_default_value()
@@ -103,8 +105,34 @@ class Settings:
             self.__class__._legend_position.set_default_value()
 
     @property
-    def real_extrema(self) -> List[Union[int, float]]:
-        return self.__class__._real_extrema.present_value
+    def global_min(self) -> List[Union[int, float]]:
+        return self.__class__._global_min.present_value
+
+    @global_min.setter
+    def global_min(self, value: List[Union[int, float]]) -> None:
+        if type(value) == list:
+            self.__class__._global_min.present_value = value
+        else:
+            self.__class__._global_min.set_default_value()
+
+    @property
+    def global_max(self) -> List[Union[int, float]]:
+        return self.__class__._global_max.present_value
+
+    @global_max.setter
+    def global_max(self, value: List[Union[int, float]]) -> None:
+        if type(value) == list:
+            self.__class__._global_max.present_value = value
+        else:
+            self.__class__._global_max.set_default_value()
+
+    @property
+    def dimension(self) -> int:
+        return self.__class__._dimension.present_value
+
+    @dimension.setter
+    def dimension(self, value: int) -> None:
+        self.__class__._dimension.present_value = value
 
     # @real_extrema.setter
     # def real_extrema(self, value: List[Union[int, float]]):

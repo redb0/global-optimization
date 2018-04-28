@@ -1,5 +1,6 @@
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QPushButton, QFormLayout, QLabel, QSpinBox, QLineEdit, QWidget
+from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QPushButton, QFormLayout, QLabel, QSpinBox, QLineEdit, QWidget, \
+    QRadioButton
 
 
 class UiSettingsWindow:
@@ -48,26 +49,44 @@ class UiSettingsWindow:
         v_box = QVBoxLayout()
         v_box.addWidget(self.abs_path_test_func_label)
         v_box.addLayout(h_box_1)
-        v_box.addStretch(1)
+        # v_box.addStretch(1)
         wgt.setLayout(v_box)
 
         self.legend_position_label = QLabel()
-        # TODO: сделать радиокнопку с двумя флагами: сверху и справа
-        self.legend_position_te = QLineEdit()
+        # self.legend_position_te = QLineEdit()
+        self.legend_position_top = QRadioButton()
+        self.legend_position_top.setChecked(True)
+        self.legend_position_right = QRadioButton()
+        h_box_2 = QHBoxLayout()
+        h_box_2.addWidget(self.legend_position_top)
+        h_box_2.addWidget(self.legend_position_right)
+        # legend = QVBoxLayout()
+        v_box.addWidget(self.legend_position_label)
+        v_box.addLayout(h_box_2)
+        v_box.addStretch(1)
 
+        self.global_min_label = QLabel()
+        self.global_min = QLineEdit()
+        self.global_max_label = QLabel()
+        self.global_max = QLineEdit()
+        self.dimension_label = QLabel()
+        self.dimension = QLabel()
+
+        self.form.addRow(self.dimension_label, self.dimension)
+        self.form.addRow(self.global_min_label, self.global_min)
+        self.form.addRow(self.global_max_label, self.global_max)
         self.form.addRow(self.min_flag_label, self.min_flag)
         self.form.addRow(self.number_runs_label, self.number_runs)
         self.form.addRow(self.epsilon_label, self.epsilon)
-        self.form.addRow(self.legend_position_label, self.legend_position_te)
+        # self.form.addRow(self.legend_position_label, self.legend_position_te)
 
         self.save_btn = QPushButton()
         self.reset_btn = QPushButton()
         h_box.addWidget(self.save_btn)
         h_box.addWidget(self.reset_btn)
 
-        main_layout.addLayout(self.form)
-
         main_layout.addWidget(wgt)
+        main_layout.addLayout(self.form)
         main_layout.addLayout(h_box)
 
         self.retranslate(window)
@@ -79,7 +98,15 @@ class UiSettingsWindow:
         self.epsilon_label.setText(self.translate("SettingsWindow", "Размер epsilon-окрестности"))
         self.abs_path_test_func_label.setText(self.translate("SettingsWindow", "Тестовая функция"))
         self.legend_position_label.setText(self.translate("SettingsWindow", "Положение легенда на графике"))
-        self.legend_position_te.setText(self.translate("SettingsWindow", "top"))
+        # self.legend_position_te.setText(self.translate("SettingsWindow", "top"))
+        self.legend_position_top.setText(self.translate("SettingsWindow", "Сверху"))
+        self.legend_position_right.setText(self.translate("SettingsWindow", "Справа"))
+
+        self.global_min_label.setText(self.translate("SettingsWindow", "Координаты глобального минимума"))
+        self.global_max_label.setText(self.translate("SettingsWindow", "Координаты глобального максимума"))
+
+        self.dimension_label.setText(self.translate("SettingsWindow", "Размерность задачи"))
+        self.dimension.setText(self.translate("SettingsWindow", "0"))
 
         self.save_btn.setText(self.translate("SettingsWindow", "Сохранить"))
         self.reset_btn.setText(self.translate("SettingsWindow", "Сбросить"))

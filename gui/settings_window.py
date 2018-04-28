@@ -1,3 +1,5 @@
+import json
+
 from PyQt5 import QtCore
 
 from PyQt5.QtWidgets import QWidget, QFileDialog, QMessageBox
@@ -43,10 +45,18 @@ class SettingsWindow(QWidget):
             self.settings.abs_path_test_func = self.ui.abs_path_test_func_te.text()
         else:
             self.print_error("Не указано расположение файла тестовой функции.")
-        if self.ui.legend_position_te.text() in ["top", "left", "bottom", "right"]:
-            self.settings.legend_position = self.ui.legend_position_te.text()
+        if self.ui.legend_position_top.isChecked():  # "left", "bottom"
+            self.settings.legend_position = "top"
+        elif self.ui.legend_position_right.isChecked():
+            self.settings.legend_position = "right"
         else:
             self.print_error("Некорректное расположение легенды. Установлено значение по умолчанию (top)")
+        if self.ui.global_min.text() != str(None):
+            self.settings.global_min = json.loads(self.ui.global_min.text())
+        if self.ui.global_max.text() != str(None):
+            self.settings.global_max = json.loads(self.ui.global_max.text())
+        if self.ui.dimension.text() != "0":
+            self.settings.dimension = int(self.ui.dimension.text())
 
     def reset(self) -> None:
         """
@@ -58,7 +68,11 @@ class SettingsWindow(QWidget):
         self.ui.number_runs.setValue(self.settings.number_of_runs)
         self.ui.epsilon.setText(str(self.settings.epsilon))  # epsilon пока поддерживать только одинарные значения. без списков
         self.ui.abs_path_test_func_te.setText(self.settings.abs_path_test_func)
-        self.ui.legend_position_te.setText(self.settings.legend_position)
+        # self.ui.legend_position_te.setText(self.settings.legend_position)
+        self.ui.legend_position_top.setChecked(True)
+        self.ui.dimension.setText(str(self.settings.dimension))
+        self.ui.global_min.setText(str(self.settings.global_min))
+        self.ui.global_max.setText(str(self.settings.global_max))
 
     def closeEvent(self, e):
         self.parent().window_common_settings = None
@@ -75,6 +89,11 @@ class SettingsWindow(QWidget):
                                                    "All Files (*);;JSON Files (*.json)", options=options)
         if file_name:
             self.ui.abs_path_test_func_te.setText(file_name)
+            with open(file_name, 'r') as f:
+                data = json.load(f)
+            self.ui.dimension.setText(str(data["dimension"]))
+            self.ui.global_min.setText(str(data["global_min"]))
+            self.ui.global_max.setText(str(data["global_max"]))
 
     def print_error(self, text: str) -> None:
         QMessageBox.information(self, 'Внимание!', text,

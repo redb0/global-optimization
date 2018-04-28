@@ -45,7 +45,8 @@ type TestFunction struct {
 	Up             []float64 `json:"constraints_high"`
 	Down           []float64 `json:"constraints_down"`
 	AmplitudeNoise float64   `json:"amp_noise"`
-	RealMin        []float64 `json:"real_extrema"`
+	RealMin        []float64 `json:"global_min"`
+    RealMax        []float64 `json:"global_max"`
 	MinValue       float64   `json:"min_value"`
 	MaxValue       float64   `json:"max_value"`
 }

@@ -21,7 +21,8 @@
   ],
   "constraints_high": [6, 6],
   "constraints_down": [-6, -6],
-  "real_extrema": [-2, 4],
+  "global_min": [-2, 4],
+  "global_max": [6, 6],
   "amp_noise": 11.5,
   "min_value": 0,
   "Max_value": 23

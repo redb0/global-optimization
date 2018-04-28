@@ -99,7 +99,7 @@ class Algorithm:
         abs_path_config = os.path.join(script_path, self.config_file)  # путь до конфиг файла
 
         if type(self.settings.epsilon) in [int, float]:
-            epsilon = [self.settings.epsilon for i in range(len(self.settings.real_extrema))]
+            epsilon = [self.settings.epsilon for i in range(len(self.settings.dimension))]
         elif type(self.settings.epsilon) is list:
             epsilon = self.settings.epsilon
         else:

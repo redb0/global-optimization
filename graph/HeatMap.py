@@ -75,7 +75,7 @@ class HeatMap(Graph):
         for c in combinations(self.axis_range):
             for j in range(len(c)):
                 self._algorithms.set_parameter(names[j], c[j])
-            p = self._algorithms.find_probability_estimate(self._settings.real_extrema,
+            p = self._algorithms.find_probability_estimate(self._settings.global_min,
                                                            self._settings.epsilon,
                                                            self._settings.abs_path_test_func,
                                                            number_runs=self._settings.number_of_runs)

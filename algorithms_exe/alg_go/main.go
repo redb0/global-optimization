@@ -138,7 +138,7 @@ func findProbability(tf testfunc.TestFunction, function runAlgFunc, options algo
 		realExtrema = tf.RealMin
 	} else {
 		//заменить на realMax
-		realExtrema = tf.RealMin
+		realExtrema = tf.RealMax
 	}
 
 	for i := 0; i < numberRuns; i++ {

@@ -20,6 +20,24 @@ class Settings:
                                  allowable_values=["top", "left", "bottom", "right"])
     _dimension = Parameter("Размерность задачи", int, 0)
 
+    _report = True  # отчет json, в настройках сделать галочку "составлять для всех прогонов" и "не составлять"
+    # [
+    #   "time": {"min": 0, "mean": 0, "max": 0},
+    #   "iteration": {"min": 0, "mean": 0, "max": 0}
+    # ]
+    # Дополнительные графики, сделать для них галочку "название графика" \/
+    # _draw_convergence_func_value = True  # сходимость по значениям функции, по X - номер итерации, по Y - значения функции
+    # _draw_convergence_coordinates = True  # сходимость по координатам, по X - номер итерации, по Y - координата
+    # _draw_dispersion_graph = True  # график дисперсии
+    # _draw_graph_best_point_motion = True  # график движения лучшей точки
+    # _draw_graph_number_iteration = False  # ??? точечный график количества итераций, по X - номер прогона, по Y - количество итераций
+
+    _additional_graphics = [{'name': "График сходимости по значениям функции", 'draw': True},
+                            {'name': "График сходимости по координатам", 'draw': True},
+                            {'name': "График движения лучшей точки", 'draw': True},
+                            {'name': "График дисперсии", 'draw': True},
+                            {'name': "График количества рабочих итераций", 'draw': False}]
+
     def __init__(self):
         pass
 
@@ -83,7 +101,7 @@ class Settings:
                 self.__class__._abs_path_test_func.present_value = value
                 with open(self.__class__._abs_path_test_func.present_value, 'r', encoding='utf-8') as f:
                     try:
-                        data = json.load(f)
+                        json.load(f)
                         # self.__class__._global_min.present_value = data['real_extrema']
                     except UnicodeDecodeError:
                         print("Передан не json файл.")
@@ -134,11 +152,49 @@ class Settings:
     def dimension(self, value: int) -> None:
         self.__class__._dimension.present_value = value
 
-    # @real_extrema.setter
-    # def real_extrema(self, value: List[Union[int, float]]):
-    #     if self.__class__._abs_path_test_func.present_value != "":
-    #         with open(self.__class__._abs_path_test_func.present_value, 'r', encoding='utf-8') as f:
-    #             data = json.load(f)
+    @property
+    def draw_con_coord(self):
+        return self.__class__._additional_graphics[1]
+
+    @draw_con_coord.setter
+    def draw_con_coord(self, value: bool) -> None:
+        self.__class__._additional_graphics[1]['draw'] = value
+
+    @property
+    def draw_con_func_value(self):
+        return self.__class__._additional_graphics[0]
+
+    @draw_con_func_value.setter
+    def draw_con_func_value(self, value: bool) -> None:
+        self.__class__._additional_graphics[0]['draw'] = value
+
+    @property
+    def draw_point_motion(self):
+        return self.__class__._additional_graphics[2]
+
+    @draw_point_motion.setter
+    def draw_point_motion(self, value: bool) -> None:
+        self.__class__._additional_graphics[2]['draw'] = value
+
+    @property
+    def draw_dispersion_graph(self):
+        return self.__class__._additional_graphics[3]
+
+    @draw_dispersion_graph.setter
+    def draw_dispersion_graph(self, value: bool) -> None:
+        self.__class__._additional_graphics[3]['draw'] = value
+
+    @property
+    def draw_graph_number_iteration(self):
+        return self.__class__._additional_graphics[4]
+
+    @draw_graph_number_iteration.setter
+    def draw_graph_number_iteration(self, value: bool) -> None:
+        self.__class__._additional_graphics[4]['draw'] = value
+
+    @property
+    def additional_graphics(self):
+        return self.__class__._additional_graphics
 
 
 def set_all_default_values(cls):

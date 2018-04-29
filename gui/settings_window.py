@@ -1,8 +1,7 @@
 import json
 
 from PyQt5 import QtCore
-
-from PyQt5.QtWidgets import QWidget, QFileDialog, QMessageBox
+from PyQt5.QtWidgets import QWidget, QFileDialog, QMessageBox, QCheckBox
 
 from Settings import Settings, get_attributes, set_all_default_values
 from gui.settings_window_ui import UiSettingsWindow
@@ -21,6 +20,12 @@ class SettingsWindow(QWidget):
 
         self.ui.setup_ui(self, self.settings_list)
 
+        for g in self.settings.additional_graphics:
+            cb = QCheckBox(g['name'])
+            cb.setChecked(g['draw'])
+            self.ui.box_layout.addWidget(cb)
+        self.ui.box_layout.addStretch(1)
+
         # self.ui.close_btn.clicked.connect(self.closeEvent)  # переопределение встроенного обработчика
         self.ui.save_btn.clicked.connect(self.save_settings)
         self.ui.reset_btn.clicked.connect(self.reset)
@@ -29,34 +34,45 @@ class SettingsWindow(QWidget):
     def save_settings(self):
         """Сохранение общих настроек. Действие по клику на кнопку "Сохранить"."""
         # TODO: возможно стоит перенести вывод ошибок прямо в Settings и отказаться от property
-        if self.ui.min_flag.value() in [0, 1]:
-            self.settings.min_flag = self.ui.min_flag.value()
-        else:
-            self.print_error("Недопустимое значения флага минимизации. Установлено значение по умолчанию (1)")
-        if self.ui.number_runs.value() > 0:
-            self.settings.number_of_runs = self.ui.number_runs.value()
-        else:
-            self.print_error("Количество прогонов должно быть больше 0. Установлено значение по умолчанию (100).")
-        if float(self.ui.epsilon.text()) > 0:
-            self.settings.epsilon = float(self.ui.epsilon.text())  # epsilon пока поддерживать только одинарные значения. без списков
-        else:
-            self.print_error("Epsilon должно быть больше 0. Установлено значение по умолчанию (0.5).")
         if self.ui.abs_path_test_func_te.text() != "":
             self.settings.abs_path_test_func = self.ui.abs_path_test_func_te.text()
         else:
             self.print_error("Не указано расположение файла тестовой функции.")
+            return
+        if self.ui.min_flag.value() in [0, 1]:
+            self.settings.min_flag = self.ui.min_flag.value()
+        else:
+            self.print_error("Недопустимое значения флага минимизации. Установлено значение по умолчанию (1)")
+            return
+        if self.ui.number_runs.value() > 0:
+            self.settings.number_of_runs = self.ui.number_runs.value()
+        else:
+            self.print_error("Количество прогонов должно быть больше 0. Установлено значение по умолчанию (100).")
+            return
+        if float(self.ui.epsilon.text()) > 0:
+            self.settings.epsilon = float(self.ui.epsilon.text())  # epsilon пока поддерживать только одинарные значения. без списков
+        else:
+            self.print_error("Epsilon должно быть больше 0. Установлено значение по умолчанию (0.5).")
+            return
         if self.ui.legend_position_top.isChecked():  # "left", "bottom"
             self.settings.legend_position = "top"
         elif self.ui.legend_position_right.isChecked():
             self.settings.legend_position = "right"
         else:
             self.print_error("Некорректное расположение легенды. Установлено значение по умолчанию (top)")
+            return
         if self.ui.global_min.text() != str(None):
             self.settings.global_min = json.loads(self.ui.global_min.text())
         if self.ui.global_max.text() != str(None):
             self.settings.global_max = json.loads(self.ui.global_max.text())
         if self.ui.dimension.text() != "0":
             self.settings.dimension = int(self.ui.dimension.text())
+
+        for i in range(self.ui.box_layout.count()):
+            wdg = self.ui.box_layout.itemAt(i).widget()
+            if type(wdg) == QCheckBox:
+                self.settings.additional_graphics[i]['draw'] = wdg.isChecked()
+        # print(self.settings.additional_graphics)
 
     def reset(self) -> None:
         """
@@ -73,6 +89,8 @@ class SettingsWindow(QWidget):
         self.ui.dimension.setText(str(self.settings.dimension))
         self.ui.global_min.setText(str(self.settings.global_min))
         self.ui.global_max.setText(str(self.settings.global_max))
+
+        self.ui.report_cb.setChecked(True)
 
     def closeEvent(self, e):
         self.parent().window_common_settings = None

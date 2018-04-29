@@ -99,7 +99,7 @@ class Algorithm:
         abs_path_config = os.path.join(script_path, self.config_file)  # путь до конфиг файла
 
         if type(self.settings.epsilon) in [int, float]:
-            epsilon = [self.settings.epsilon for i in range(len(self.settings.dimension))]
+            epsilon = [self.settings.epsilon for i in range(self.settings.dimension)]
         elif type(self.settings.epsilon) is list:
             epsilon = self.settings.epsilon
         else:
@@ -152,7 +152,7 @@ class Algorithm:
             self._process = None  # сбросить процесс, так как он завершен
             return return_code, run_time
 
-    def find_probability_estimate(self, extremum: list, epsilon: Union[list, float, int],
+    def find_probability_estimate(self, epsilon: Union[list, float, int],
                                   file_test_func: str, number_runs=100, file_path="") -> float:
         # extremum - из тестовой функции
         # epsilon - из настроек

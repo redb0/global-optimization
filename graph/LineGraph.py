@@ -117,8 +117,7 @@ class LineGraph(Graph):
             for i in range(len(x)):
                 alg.set_parameter(x_name, x[i])
                 if os.path.isfile(self._settings.abs_path_test_func):
-                    probability = alg.find_probability_estimate(self._settings.global_min,
-                                                                self._settings.epsilon,
+                    probability = alg.find_probability_estimate(self._settings.epsilon,
                                                                 self._settings.abs_path_test_func,
                                                                 number_runs=self._settings.number_of_runs)
                 else:

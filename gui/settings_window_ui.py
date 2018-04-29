@@ -1,6 +1,6 @@
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QPushButton, QFormLayout, QLabel, QSpinBox, QLineEdit, QWidget, \
-    QRadioButton
+    QRadioButton, QCheckBox, QGroupBox
 
 
 class UiSettingsWindow:
@@ -72,6 +72,25 @@ class UiSettingsWindow:
         self.dimension_label = QLabel()
         self.dimension = QLabel()
 
+        # self.report_label = QLabel()
+        # self.convergence_func_value_label = QLabel()
+        # self.convergence_coordinates = QLabel()
+        # self.dispersion_graph_label = QLabel()
+        # self.graph_number_iteration_label = QLabel()
+        # self.graph_best_point_motion_label = QLabel()
+
+        self.report_cb = QCheckBox()
+        self.report_cb.setChecked(True)
+
+        # self.convergence_coordinates_cb = QCheckBox()
+        # self.convergence_coordinates_cb.setChecked(True)
+        # self.convergence_func_value_cb = QCheckBox()
+        # self.convergence_func_value_cb.setChecked(True)
+        # self.dispersion_graph_cb = QCheckBox()
+        # self.dispersion_graph_cb.setChecked(True)
+        # self.graph_best_point_motion_cb = QCheckBox()
+        # self.graph_best_point_motion_cb.setChecked(True)
+
         self.form.addRow(self.dimension_label, self.dimension)
         self.form.addRow(self.global_min_label, self.global_min)
         self.form.addRow(self.global_max_label, self.global_max)
@@ -87,6 +106,25 @@ class UiSettingsWindow:
 
         main_layout.addWidget(wgt)
         main_layout.addLayout(self.form)
+        # main_layout.addWidget(self.report_cb)
+
+        self.groupBox_0 = QGroupBox()
+        v_box_1 = QVBoxLayout()
+        v_box_1.addWidget(self.report_cb)
+        v_box_1.addStretch(1)
+        self.groupBox_0.setLayout(v_box_1)
+        main_layout.addWidget(self.groupBox_0)
+
+        self.groupBox = QGroupBox()
+        self.box_layout = QVBoxLayout()
+        self.groupBox.setLayout(self.box_layout)
+        main_layout.addWidget(self.groupBox)
+
+        # main_layout.addWidget(self.convergence_func_value_cb)
+        # main_layout.addWidget(self.convergence_coordinates_cb)
+        # main_layout.addWidget(self.graph_best_point_motion_cb)
+        # main_layout.addWidget(self.dispersion_graph_cb)
+        main_layout.addStretch(1)
         main_layout.addLayout(h_box)
 
         self.retranslate(window)
@@ -107,6 +145,17 @@ class UiSettingsWindow:
 
         self.dimension_label.setText(self.translate("SettingsWindow", "Размерность задачи"))
         self.dimension.setText(self.translate("SettingsWindow", "0"))
+        self.global_min.setText(self.translate("SettingsWindow", "None"))
+        self.global_max.setText(self.translate("SettingsWindow", "None"))
+
+        self.groupBox.setTitle(self.translate("SettingsWindow", "Дополнительные графики"))
+        self.groupBox_0.setTitle(self.translate("SettingsWindow", "Json-отчет"))
+
+        self.report_cb.setText(self.translate("SettingsWindow", "Время выполнения и количество итераций"))
+        # self.convergence_coordinates_cb.setText(self.translate("SettingsWindow", "График сходимости по координатам"))
+        # self.convergence_func_value_cb.setText(self.translate("SettingsWindow", "График сходимости по значениям функции"))
+        # self.dispersion_graph_cb.setText(self.translate("SettingsWindow", "График дисперсии"))
+        # self.graph_best_point_motion_cb.setText(self.translate("SettingsWindow", "График движения лучшей точки"))
 
         self.save_btn.setText(self.translate("SettingsWindow", "Сохранить"))
         self.reset_btn.setText(self.translate("SettingsWindow", "Сбросить"))

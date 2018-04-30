@@ -35,6 +35,20 @@ class Graph:
         # plt.subplots_adjust(top=0.85)  # пространство между графиком и краями
         # plt.legend(loc='center left', title=legend_title, bbox_to_anchor=(1, 0.5))
 
+    def set_legend_pos(self, position="right"):
+        if position == "top":
+            plt.legend(bbox_to_anchor=(0., 1.02), loc=3,
+                       ncol=1, borderaxespad=0.)
+        # elif self._settings.legend_position == "bottom":
+        #     plt.legend(bbox_to_anchor=(0., -0.02), loc=4,
+        #                ncol=2, borderaxespad=0.)
+        # elif self._settings.legend_position == "left":
+        #     plt.legend(bbox_to_anchor=(-0.02, 1.0), loc=4,
+        #                ncol=1, borderaxespad=0.)
+        elif position == "right":
+            plt.legend(bbox_to_anchor=(1.02, 1.0), loc=2,
+                       ncol=1, borderaxespad=0.)
+
     def plot(self):
         """Метод построения графика"""
         pass

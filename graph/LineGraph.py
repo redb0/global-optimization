@@ -40,9 +40,9 @@ class LineGraph(Graph):
     def plot(self, print_error=None, file_name="line_graph_1.png"):
         """
         Метод построения и вывода линейного графика.
-        :param print_error: 
-        :param file_name: 
-        :return: 
+        :param print_error : функция обработки ошибки, принимающая строку.
+        :param file_name   : имя файла для сохранения файла в виде строки.
+        :return: None.
         """
         markers = ['o', 'x', 'v', '^', '<',
                    '>', 's', 'p', '*', 'h',
@@ -63,7 +63,7 @@ class LineGraph(Graph):
 
         for i in range(len(data)):
             # TODO: сделать label для одинаковых алгоритмов
-            self.axes.plot(x, data[i], label=self._algorithms[i].get_identifier_name(),  # self._algorithms[i].get_name()
+            self.axes.plot(x, data[i], label=self._algorithms[i].get_identifier_name(),
                            linewidth=1.5, marker=markers_list[markers_idx[i]])
 
         # bbox_to_anchor - точка к которой закреплена легенда
@@ -78,18 +78,7 @@ class LineGraph(Graph):
         xlabel = self._param.label_TeX
         ylabel = "$\widehat {P}{_\delta}$   "  # "Оценка вероятности"
         self.set_labels(xlabel=xlabel, ylabel=ylabel, title=title, legend_title="")
-        if self._settings.legend_position == "top":
-            plt.legend(bbox_to_anchor=(0., 1.02), loc=3,
-                       ncol=1, borderaxespad=0.)
-        # elif self._settings.legend_position == "bottom":
-        #     plt.legend(bbox_to_anchor=(0., -0.02), loc=4,
-        #                ncol=2, borderaxespad=0.)
-        # elif self._settings.legend_position == "left":
-        #     plt.legend(bbox_to_anchor=(-0.02, 1.0), loc=4,
-        #                ncol=1, borderaxespad=0.)
-        elif self._settings.legend_position == "right":
-            plt.legend(bbox_to_anchor=(1.02, 1.0), loc=2,
-                       ncol=1, borderaxespad=0.)
+        self.set_legend_pos(self._settings.legend_position)
 
         # plt.arrow(x[0], data[0], x[0], data[-1], width=.0007, color="k", clip_on=False, head_width=0.05,
         #           head_length=0.1)
@@ -161,3 +150,180 @@ class LineGraph(Graph):
     @step.setter
     def step(self, value: Num) -> None:
         self._step = value
+
+
+# def convergence_graph(data, x, lbl=None, file_name="", x_label="", y_label="", title=""):
+#     graph = Graph()
+#     graph.set_params()
+#     settings = Settings()
+#     markers = ['o', 'x', 'v', '^', '<',
+#                '>', 's', 'p', '*', 'h',
+#                'H', '+', 'D', 'd', '|', '_']
+#
+#     graph.set_labels(xlabel=x_label, ylabel=y_label, title=title, legend_title="")
+#
+#     if len(data) > len(markers):
+#         markers_list = markers.append(markers[:(len(data) - len(markers))])
+#     else:
+#         markers_list = markers
+#     markers_idx = generate_rand_int_list(len(data))
+#     data = np.array(data)
+#     if len(data.shape) == 1:
+#         graph.axes.plot(x, data, label=lbl, linewidth=1.5, marker=markers[0])
+#     elif data.shape[-1] == 2:
+#         if 2 * len(data) > len(markers):
+#             markers_list = markers.append(markers[:(2 * len(data) - len(markers))])
+#         markers_idx = generate_rand_int_list(2 * len(data))
+#         if len(data.shape) == settings.dimension:
+#             graph.axes.plot(x, data[:, 0], label=lbl[0], linewidth=1.5, marker=markers[0])
+#             graph.axes.plot(x, data[:, 1], label=lbl[1], linewidth=1.5, marker=markers[1])
+#         else:
+#             for i in range(len(data)):
+#                 if i > 0:
+#                     graph = Graph()
+#                     graph.set_params()
+#                     graph.set_labels(xlabel=x_label, ylabel=y_label, title=title, legend_title="")
+#                 graph.axes.plot(x, data[i, :, 0], label=lbl[i][0], linewidth=1.5, marker=markers_list[markers_idx[2*i]])
+#                 graph.axes.plot(x, data[i, :, 1], label=lbl[i][1], linewidth=1.5, marker=markers_list[markers_idx[2*i + 1]])
+#                 graph.set_legend_pos(settings.legend_position)
+#                 plt.savefig(file_name, bbox_inches='tight')
+#                 plt.show()
+#             return
+#     else:
+#         for i in range(len(data)):
+#             graph.axes.plot(x, data[i], label=lbl[i], linewidth=1.5, marker=markers_list[markers_idx[i]])
+
+
+    # title = "Зависимость оценки вороятности от "
+    # graph.set_legend_pos(settings.legend_position)
+    # plt.savefig(file_name, bbox_inches='tight')
+    # plt.show()
+
+
+def graph_convergence_func_value(data, x, lbl=None, file_name="", x_label="", y_label="", title=""):
+    graph = Graph()
+    graph.set_params()
+    settings = Settings()
+    markers = ['o', 'x', 'v', '^', '<',
+               '>', 's', 'p', '*', 'h',
+               'H', '+', 'D', 'd', '|', '_']
+
+    graph.set_labels(xlabel=x_label, ylabel=y_label, title=title, legend_title="")
+
+    if len(data) > len(markers):
+        markers_list = markers.append(markers[:(len(data) - len(markers))])
+    else:
+        markers_list = markers
+    markers_idx = generate_rand_int_list(len(data))
+    data = np.array(data)
+    if len(data.shape) == 1:
+        graph.axes.plot(x, data, label=lbl, linewidth=1.5, marker=markers[0])
+    else:
+        for i in range(len(data)):
+            graph.axes.plot(x, data[i], label=lbl[i], linewidth=1.5, marker=markers_list[markers_idx[i]])
+    graph.set_legend_pos(settings.legend_position)
+    plt.savefig(file_name, bbox_inches='tight')
+    plt.show()
+
+
+def graph_convergence_coord(data, x, lbl=None, file_name="", x_label="", y_label="", title="", single_graph=False):
+    """
+    Функция построения графика сходимости по координатам.
+    Строит график изменения координат в зависимости от итераций.
+    Пример вызова 1:
+        x = [0, 1, 2, 3, 4, 5]  # номер итерации
+        data = [[5, 5], [2.43, 4.7], [1.52, 4.61], [0.5, 4.56], [-1.1, 4.2], [-1.99, 4.01]]  # изменения координат
+        labels = ["${x}{_0}$", "${x}{_1}$"]  # массив подписей к данным с использованием нотации TeX.
+        graph_convergence_coord(data, x, lbl=labels, 
+                                file_name="42.png", x_label="t", y_label="x", 
+                                title="Сходимость алгоритма к глобальному экстремуму по координатам", 
+                                single_graph=False)
+    Пример вызова 2:
+        x = [0, 1, 2, 3, 4, 5]  # номер итерации
+        data = [[[5, 5], [2.43, 4.7], [1.52, 4.61], [0.5, 4.56], [-1.1, 4.2], [-1.99, 4.01]],
+                [[5, 5], [2.5, 4.89], [1.38, 4.64], [-0.12, 4.27], [-1.76, 4.15], [-2.03, 3.98]]]
+        labels = [["${x}{_0} GSA$", "${x}{_1} GSA$"], 
+                  ["${x}{_0} SAC$", "${x}{_1} SAC$"]]
+        graph_convergence_coord(data, x, lbl=labels, 
+                                file_name="42.png", x_label="t", y_label="x", 
+                                title="Сходимость алгоритма к глобальному экстремуму по координатам", 
+                                single_graph=False)
+    Если в последнем примере single_graph=False, то будет два графика отдельно для GSA и для SAC 
+    (имена файлов в этом случае будут "42_0.png" и "42_1.png").
+    Если же single_graph=True, то будет один график с 4-мя линиями.
+    
+    :param data         : 
+    :param x            : 
+    :param lbl          : 
+    :param file_name    : название файла для сохранения графика, например : "42.png".
+    :param x_label      : подпись оси X, в виде строки. 
+    :param y_label      : подпись оси Y, в виде строки.
+    :param title        : название графика.
+    :param single_graph : флаг, если установлено False - график сходимоти для каждого набора будет свой,
+                          если установлено значение True - все данные будут на одном графике.
+    :return: None
+    """
+    graph = Graph()
+    graph.set_params()
+    settings = Settings()
+    dim = settings.dimension
+    markers = ['o', 'x', 'v', '^', '<',
+               '>', 's', 'p', '*', 'h',
+               'H', '+', 'D', 'd', '|', '_']
+
+    graph.set_labels(xlabel=x_label, ylabel=y_label, title=title, legend_title="")
+
+    if 2 * len(data) > len(markers):
+        markers_list = markers.append(markers[:(2 * len(data) - len(markers))])
+    else:
+        markers_list = markers
+    markers_idx = generate_rand_int_list(2 * len(data))
+    data = np.array(data)
+    if len(data.shape) == 2 and data.shape[-1] == dim:
+        if len(lbl) != dim:
+            raise ValueError("Ожидается параметр lbl длиной " + str(dim) +
+                             ", текущая длина " + str(len(lbl)))
+        for j in range(dim):
+            graph.axes.plot(x, data[:, j], label=lbl[j], linewidth=1.5, marker=markers_list[markers_idx[j]])
+    else:
+        lbl = np.array(lbl)
+        if lbl.shape[0] != len(data) or lbl.shape[-1] != dim:
+            raise ValueError("Ожидается параметр lbl длиной " + str(len(data)) +
+                             ", текущая длина " + str(len(lbl)) +
+                             ", с подмассивами длиной " + str(dim) +
+                             ", текущая длина подмассивов" + str(lbl.shape[-1]))
+        for i in range(len(data)):
+            for j in range(dim):
+                graph.axes.plot(x, data[i, :, j], label=lbl[i][j], linewidth=1.5,
+                                marker=markers_list[markers_idx[dim*i+j]])
+            if not single_graph:
+                graph.set_legend_pos(settings.legend_position)
+                name = file_name[:file_name.find('.')] + "_" + str(i) + file_name[file_name.find('.'):]
+                plt.savefig(name, bbox_inches='tight')
+                plt.show()
+                if i == len(data) - 1:
+                    return
+                else:
+                    graph = Graph()
+
+    graph.set_legend_pos(settings.legend_position)
+    plt.savefig(file_name, bbox_inches='tight')
+    plt.show()
+
+
+def main():
+    x = [0, 1, 2, 3, 4, 5]
+    y = [[[4, 5], [3, 4], [2.1, 1.9], [0.5, 0.4], [0.1, 0.2], [0.01, 0.02]],
+         [[5, 4], [3, 3], [1.9, 2.2], [0.4, 0.3], [0.3, 0.1], [0.05, 0.05]]]
+    labels = [["${x}{_0}$", "${x}{_0}$"], ["${x}{_0}$", "${x}{_0}$"]]
+
+    # y = [[4, 5], [3, 4], [2.1, 1.9], [0.5, 0.4], [0.1, 0.2], [0.01, 0.02]]
+    # labels = ["${x}{_0}$", "${x}{_1}$"]
+
+    graph_convergence_coord(y, x, lbl=labels,
+                            file_name="qwe.png", x_label="t", y_label="x", title="Сходимость по координатам",
+                            single_graph=False)
+
+
+if __name__ == "__main__":
+    main()

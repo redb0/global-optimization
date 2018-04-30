@@ -25,13 +25,7 @@ class Settings:
     #   "time": {"min": 0, "mean": 0, "max": 0},
     #   "iteration": {"min": 0, "mean": 0, "max": 0}
     # ]
-    # Дополнительные графики, сделать для них галочку "название графика" \/
-    # _draw_convergence_func_value = True  # сходимость по значениям функции, по X - номер итерации, по Y - значения функции
-    # _draw_convergence_coordinates = True  # сходимость по координатам, по X - номер итерации, по Y - координата
-    # _draw_dispersion_graph = True  # график дисперсии
-    # _draw_graph_best_point_motion = True  # график движения лучшей точки
-    # _draw_graph_number_iteration = False  # ??? точечный график количества итераций, по X - номер прогона, по Y - количество итераций
-
+    # Дополнительные графики
     _additional_graphics = [{'name': "График сходимости по значениям функции", 'draw': True},
                             {'name': "График сходимости по координатам", 'draw': True},
                             {'name': "График движения лучшей точки", 'draw': True},

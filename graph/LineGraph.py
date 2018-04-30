@@ -1,3 +1,5 @@
+import json
+
 import numpy as np
 from typing import Union, List, Tuple
 import matplotlib.pyplot as plt
@@ -201,6 +203,7 @@ class LineGraph(Graph):
 
 
 def graph_convergence_func_value(data, x, lbl=None, file_name="", x_label="", y_label="", title=""):
+    # TODO: Добавить документацию
     graph = Graph()
     graph.set_params()
     settings = Settings()
@@ -252,9 +255,9 @@ def graph_convergence_coord(data, x, lbl=None, file_name="", x_label="", y_label
     (имена файлов в этом случае будут "42_0.png" и "42_1.png").
     Если же single_graph=True, то будет один график с 4-мя линиями.
     
-    :param data         : 
-    :param x            : 
-    :param lbl          : 
+    :param data         : список с данными.
+    :param x            : одномерный список значений для рисок по оси X.
+    :param lbl          : список подписей для линий.
     :param file_name    : название файла для сохранения графика, например : "42.png".
     :param x_label      : подпись оси X, в виде строки. 
     :param y_label      : подпись оси Y, в виде строки.
@@ -311,6 +314,72 @@ def graph_convergence_coord(data, x, lbl=None, file_name="", x_label="", y_label
     plt.show()
 
 
+def motion_point_graph(data, func, lbl=None, file_name="", x_label="", y_label="", title=""):
+    h = 0.2
+    delta = 0.5
+    l = 2
+    data = np.array(data)
+    graph = Graph()
+    settings = Settings()
+    if settings.dimension != 2:  # settings.dimension
+        raise ValueError("График движения точки строиться для функции двух переменных.")
+    with open(settings.abs_path_test_func, 'r') as f:  # settings.abs_path_test_func
+        tf = json.load(f)
+    constraints_x = [tf['constraints_down'][0], tf['constraints_high'][0]]
+    constraints_y = [tf['constraints_down'][1], tf['constraints_high'][1]]
+    x, y, z, levels = make_contour_data(func, constraints_x, constraints_y, h, delta, l)
+    plt.contour(x, y, z, levels=levels)
+    graph.axes.plot(data[:, 0], data[:, 1], label=lbl, marker='o', color='r', linestyle='')
+
+    arrowprops = {
+        'arrowstyle': '-|>',
+        'linewidth': 1.5,
+        'fc': 'k',  # заливка
+        'ec': 'k',  # контур
+        # 'alpha': 0.5,  # прозрачность
+    }
+
+    for i in range(len(data) - 1):
+        # dx = data[i+1][0] - data[i][0]
+        # dy = data[i+1][1] - data[i][1]
+        graph.axes.annotate('', xy=(data[i+1][0], data[i+1][1]), xytext=(data[i][0], data[i][1]),
+                            arrowprops=arrowprops)
+
+    graph.axes.grid()
+    graph.set_labels(xlabel=x_label, ylabel=y_label, title=title, legend_title="")
+    graph.set_legend_pos(settings.legend_position)
+    plt.savefig(file_name, bbox_inches='tight')
+    plt.show()
+
+
+def make_contour_data(func, constraints_x, constraints_y, h, delta, l):
+    x = np.arange(constraints_x[0], constraints_x[1], h)
+    y = np.arange(constraints_y[0], constraints_y[1], h)
+    xgrid, ygrid = np.meshgrid(x, y)
+
+    zgrid = np.zeros(xgrid.shape)
+
+    for i in range(xgrid.shape[0]):
+        for j in range(xgrid.shape[1]):
+            zgrid[i][j] = func([xgrid[i][j], ygrid[i][j]])
+            # if amp_noise > 0:
+            #     zgrid[i][j] = zgrid[i][j] + np.random.uniform(-amp_noise, amp_noise)
+
+    levels = []
+    for i in get_delta(np.min(zgrid), np.max(zgrid), delta=delta, l=l):
+        levels.append(i)
+
+    return xgrid, ygrid, zgrid, levels
+
+
+def get_delta(min_z, max_z, delta=0.5, l=0.5):
+    j = 1
+    while min_z < max_z:
+        min_z = min_z + (delta * j)
+        yield min_z
+        j = j + l
+
+
 def main():
     x = [0, 1, 2, 3, 4, 5]
     y = [[[4, 5], [3, 4], [2.1, 1.9], [0.5, 0.4], [0.1, 0.2], [0.01, 0.02]],
@@ -320,9 +389,21 @@ def main():
     # y = [[4, 5], [3, 4], [2.1, 1.9], [0.5, 0.4], [0.1, 0.2], [0.01, 0.02]]
     # labels = ["${x}{_0}$", "${x}{_1}$"]
 
-    graph_convergence_coord(y, x, lbl=labels,
-                            file_name="qwe.png", x_label="t", y_label="x", title="Сходимость по координатам",
-                            single_graph=False)
+    # graph_convergence_coord(y, x, lbl=labels,
+    #                         file_name="qwe.png", x_label="t", y_label="x", title="Сходимость по координатам",
+    #                         single_graph=False)
+
+    with open("../examples_tf/func5.json", 'r') as f:
+        data = json.load(f)
+    import test_func
+    func = test_func.get_test_function_method_min(10, data['coefficients_abruptness'],
+                                                  data['coordinates'],
+                                                  data['degree_smoothness'],
+                                                  data['func_values'])
+    motion_point_graph([[5, 5], [3, 4.7], [1, 4.5], [-1, 4.2], [-2.02, 3.99]],
+                       func, lbl="Лучшее решение",
+                       file_name="42.png",
+                       x_label="${x}{_0}$", y_label="${x}{_1}$", title="")
 
 
 if __name__ == "__main__":

@@ -122,9 +122,12 @@ class UiMainWindow:
         w.setLayout(self.list_graph)
         scroll.setWidget(w)
 
+        self.additional_graphics_btn = QtWidgets.QPushButton()
+
         # self.graph_form.addRow()
         self.graph_layout.addLayout(h_box_1)
         self.graph_layout.addLayout(h_box_2)
+        self.graph_layout.addWidget(self.additional_graphics_btn)
         self.graph_layout.addWidget(scroll)
         # self.graph_layout.addLayout(self.list_graph)
         # self.graph_layout.addStretch(1)
@@ -163,6 +166,7 @@ class UiMainWindow:
 
         self.add_linear_graph_btn.setText(self.translate("MainWindow", "Добавить линейный график"))
         self.add_heat_map_btn.setText(self.translate("MainWindow", "Добавить тепловую карту"))
+        self.additional_graphics_btn.setText(self.translate("MainWindow", "Построить дополнительные графики"))
 
         self.add_new_alg_btn.setText(self.translate("MainWindow", "Добавить алгоритм"))
 

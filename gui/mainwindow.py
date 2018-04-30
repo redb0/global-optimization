@@ -51,6 +51,7 @@ class MainWindow(QMainWindow):
             lambda: self.prohibit_duplicate_selection(self.ui.param_heat_map_1, self.ui.param_heat_map_2))
         self.ui.param_heat_map_2.activated.connect(
             lambda: self.prohibit_duplicate_selection(self.ui.param_heat_map_2, self.ui.param_heat_map_1))
+        self.ui.additional_graphics_btn.clicked.connect(self.draw_additional_graphics)
 
     def add_linear_graph(self):  # сюда лучше не передавать алгориты а передавать в функцию на кнопке построить график
         algorithms = self.get_active_algorithm()
@@ -217,3 +218,11 @@ class MainWindow(QMainWindow):
         QMessageBox.information(self, 'Внимание!', text,
                                 QMessageBox.Cancel, QMessageBox.Cancel)
 
+    def draw_additional_graphics(self):
+        flags = [g['draw'] for g in self.settings.additional_graphics]
+        if not any(flags):
+            error = "Не выбрано ни одного дополнительного графика"
+            self.print_error(error)
+            return
+        # TODO: определиться откуда брать данные? (или делать прогон отдельно, или брать из файла)
+        # TODO: можно предложить открыть файл с данными и оттуда считать все.

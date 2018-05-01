@@ -7,7 +7,7 @@ import os
 
 from Settings import Settings
 from graph.Graph import Graph
-from support_func import generate_rand_int_list
+from support_func import generate_rand_int_list, get_delta
 
 
 Num = Union[int, float]
@@ -64,7 +64,6 @@ class LineGraph(Graph):
         markers_idx = generate_rand_int_list(len(data))
 
         for i in range(len(data)):
-            # TODO: сделать label для одинаковых алгоритмов
             self.axes.plot(x, data[i], label=self._algorithms[i].get_identifier_name(),
                            linewidth=1.5, marker=markers_list[markers_idx[i]])
 
@@ -81,11 +80,6 @@ class LineGraph(Graph):
         ylabel = "$\widehat {P}{_\delta}$   "  # "Оценка вероятности"
         self.set_labels(xlabel=xlabel, ylabel=ylabel, title=title, legend_title="")
         self.set_legend_pos(self._settings.legend_position)
-
-        # plt.arrow(x[0], data[0], x[0], data[-1], width=.0007, color="k", clip_on=False, head_width=0.05,
-        #           head_length=0.1)
-        # plt.arrow(x[0], data[0], x[-1], data[0], width=.0007, color="k", clip_on=False, head_width=0.05,
-        #           head_length=0.1)
 
         plt.savefig(file_name, bbox_inches='tight')
         plt.show()
@@ -202,7 +196,9 @@ class LineGraph(Graph):
     # plt.show()
 
 
-def graph_convergence_func_value(data, x, lbl=None, file_name="", x_label="", y_label="", title=""):
+# для графика сходимости по значениям функции
+# для графика дисперсии
+def line_graph(data, x, lbl=None, file_name="", x_label="", y_label="", title=""):
     # TODO: Добавить документацию
     graph = Graph()
     graph.set_params()
@@ -315,15 +311,29 @@ def graph_convergence_coord(data, x, lbl=None, file_name="", x_label="", y_label
 
 
 def motion_point_graph(data, func, lbl=None, file_name="", x_label="", y_label="", title=""):
+    """
+    Функция построения графика движения точки.
+    На фоне располагается график изолиний тестовой функции.
+    Положение зонда(точки) изображается красными точками на графике.
+    Каждое положение соединяется стрелкой со следующим с указанием направления перемещения точки.
+    :param data      : координаты точек.
+    :param func      : тестовая функция, в виде вызываемого объекта.
+    :param lbl       : подпись для точек.
+    :param file_name : название файла для сохранения графика.
+    :param x_label   : подпись оси X.
+    :param y_label   : подпись оси Y.
+    :param title     : название графика.
+    :return: None
+    """
     h = 0.2
     delta = 0.5
     l = 2
     data = np.array(data)
     graph = Graph()
     settings = Settings()
-    if settings.dimension != 2:  # settings.dimension
+    if settings.dimension != 2:
         raise ValueError("График движения точки строиться для функции двух переменных.")
-    with open(settings.abs_path_test_func, 'r') as f:  # settings.abs_path_test_func
+    with open(settings.abs_path_test_func, 'r') as f:
         tf = json.load(f)
     constraints_x = [tf['constraints_down'][0], tf['constraints_high'][0]]
     constraints_y = [tf['constraints_down'][1], tf['constraints_high'][1]]
@@ -336,12 +346,9 @@ def motion_point_graph(data, func, lbl=None, file_name="", x_label="", y_label="
         'linewidth': 1.5,
         'fc': 'k',  # заливка
         'ec': 'k',  # контур
-        # 'alpha': 0.5,  # прозрачность
     }
 
     for i in range(len(data) - 1):
-        # dx = data[i+1][0] - data[i][0]
-        # dy = data[i+1][1] - data[i][1]
         graph.axes.annotate('', xy=(data[i+1][0], data[i+1][1]), xytext=(data[i][0], data[i][1]),
                             arrowprops=arrowprops)
 
@@ -353,6 +360,19 @@ def motion_point_graph(data, func, lbl=None, file_name="", x_label="", y_label="
 
 
 def make_contour_data(func, constraints_x, constraints_y, h, delta, l):
+    """
+    Метод генерации данных для построения графика изолиний.
+    :param func          : функция, изолинии которой будут строиться, в виде вызываемого объекта.
+    :param constraints_x : ограничения по оси X.
+    :param constraints_y : ограничения по оси Y.
+    :param h             : шаг сетки.
+    :param delta         : переменная для расчета уровней изолиний.
+    :param l             : переменная для расчета уровней изолиний.
+    :return: xgrid  -
+             ygrid  - 
+             zgrid  - 
+             levels - уровни изолиний.
+    """
     x = np.arange(constraints_x[0], constraints_x[1], h)
     y = np.arange(constraints_y[0], constraints_y[1], h)
     xgrid, ygrid = np.meshgrid(x, y)
@@ -362,22 +382,12 @@ def make_contour_data(func, constraints_x, constraints_y, h, delta, l):
     for i in range(xgrid.shape[0]):
         for j in range(xgrid.shape[1]):
             zgrid[i][j] = func([xgrid[i][j], ygrid[i][j]])
-            # if amp_noise > 0:
-            #     zgrid[i][j] = zgrid[i][j] + np.random.uniform(-amp_noise, amp_noise)
 
     levels = []
     for i in get_delta(np.min(zgrid), np.max(zgrid), delta=delta, l=l):
         levels.append(i)
 
     return xgrid, ygrid, zgrid, levels
-
-
-def get_delta(min_z, max_z, delta=0.5, l=0.5):
-    j = 1
-    while min_z < max_z:
-        min_z = min_z + (delta * j)
-        yield min_z
-        j = j + l
 
 
 def main():

@@ -9,6 +9,9 @@ from typing import List, Union
 from AlgorithmParameter import AlgorithmParameter
 
 
+Num = Union[int, float]
+
+
 def get_max_step(sb, w):
     """
     Функция-замыкание. Возвращает функцию устанавливающую максимальное значение виджета QSpinBox или QDoubleSpinBox. 
@@ -95,9 +98,9 @@ def add_in_json(file: str, data: dict) -> None:
         json.dump(data_from_file, f)
 
 
-def create_json_file(file: str):
+def create_json_file(file: str) -> None:
     """Функция создания пустого json-файла"""
-    with open(file, 'w', encoding='utf-8') as f:
+    with open(file, 'w', encoding='utf-8') as _:
         pass
         # Установить указатель в начало файла
         # f.seek(0, 0)
@@ -126,7 +129,7 @@ def overwrite_field_json(file_path: str, field_name: str, value) -> str:
         return error
 
 
-def lies_in_interval(x, left, right) -> bool:
+def lies_in_interval(x: Num, left: Num, right: Num) -> bool:
     """
     Функция проверки значения x на принадлежность отрезку [left, right].
     :param x: значение
@@ -139,11 +142,11 @@ def lies_in_interval(x, left, right) -> bool:
     return False
 
 
-def lies_in_epsilon(x, c, e) -> bool:
+def lies_in_epsilon(x: Num, c: Num, e: Num) -> bool:
     """
     Функция проверки значения x на принадлежность отрезку выда [c - e, c + e].
     :param x: значение
-    :param c: значение попадание в epsilon-окрестность которо необходимо проверить
+    :param c: значение попадание в epsilon-окрестность которого необходимо проверить
     :param e: epsilon-окрестность вокруг значения c
     :return: True - если точка лежит в интервале, иначе - False.
     """
@@ -169,7 +172,13 @@ def to_dict(parameters: List[AlgorithmParameter], **kwargs) -> dict:
     return d
 
 
-def generate_rand_int_list(len_list=10):
+def generate_rand_int_list(len_list=10) -> List[int]:
+    """
+    Функция генерации списка целых чисел. 
+    Конечный список содержит числа от 0 до len_list в случайном порядке.
+    :param len_list: длина генерируемого списка
+    :return: список длиной len_list с целыми числами в случайном порядке.
+    """
     numbers = list(range(len_list))
     for i in range(len_list):
         x = random.randrange(0, len_list)
@@ -209,7 +218,23 @@ def clear_combobox(*args: QComboBox) -> None:
 
 
 def combinations(ar):
-    idxs = [0 for i in range(len(ar))]
+    """
+    Генератор комбинаций.
+    >>> x = [1, 2, 3]
+    >>> y = [4, 5, 6, 7]
+    >>> list(combinations([x, y]))
+    [[1, 4], [1, 5], [1, 6], [1, 7], [2, 4], [2, 5], [2, 6], [2, 7], [3, 4], [3, 5], [3, 6], [3, 7]]
+    >>> list(combinations([]))
+    [[]]
+    >>> list(combinations([[]]))
+    [[]]
+    >>> list(combinations([[1, 2, 3]]))
+    [[1], [2], [3]]
+    
+    :param ar: список со списками
+    :return: генератор, возвращающий комбинации элементов списков
+    """
+    idxs = [0 for _ in range(len(ar))]
     f = True
     if len(ar) == 0:
         yield []
@@ -236,10 +261,9 @@ def combinations(ar):
     raise StopIteration
 
 
-# def main():
-#     x = [[1], [4, 5, 6], []]
-#     for i in combinations(x):
-#         print(i)
-#
-# if __name__ == "__main__":
-#     main()
+def get_delta(min_z, max_z, delta=0.5, l=0.5):
+    j = 1
+    while min_z < max_z:
+        min_z = min_z + (delta * j)
+        yield min_z
+        j = j + l

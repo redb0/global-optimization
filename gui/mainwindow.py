@@ -196,12 +196,11 @@ class MainWindow(QMainWindow):
         self.ui.add_row_in_form(self.ui.alg_form, a.get_parameters(), name, "Параметризировать", cb_handler, self)
 
     def prohibit_duplicate_selection(self, cmb, cmb1):
-        # all_items = [(cmb.itemText(i), cmb.itemData(i)) for i in range(cmb.count())]
         item = cmb.currentText()
         item_data = cmb.currentData()
 
         item1 = cmb1.currentText()
-        item_data1 = cmb1.currentData()
+        # item_data1 = cmb1.currentData()
 
         list_without_item = []
         cmb1.clear()

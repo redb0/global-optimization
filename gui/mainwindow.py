@@ -14,7 +14,8 @@ from gui.mainwindow_ui import UiMainWindow
 from gui.wdg.HeatMapWidget import HeatMapWidget
 from gui.wdg.LineGraphWidget import LineGraphWidget
 from gui.wdg.PointGraphWidget import PointGraphWidget
-from support_func import fill_combobox_list_alg
+
+from support_func import fill_combobox_list_alg, open_file_dialog
 
 
 class MainWindow(QMainWindow):
@@ -52,6 +53,7 @@ class MainWindow(QMainWindow):
         self.ui.param_heat_map_2.activated.connect(
             lambda: self.prohibit_duplicate_selection(self.ui.param_heat_map_2, self.ui.param_heat_map_1))
         self.ui.additional_graphics_btn.clicked.connect(self.draw_additional_graphics)
+        self.ui.open_data_file_btn.clicked.connect(self.open_data_file)
 
     def add_linear_graph(self):  # сюда лучше не передавать алгориты а передавать в функцию на кнопке построить график
         algorithms = self.get_active_algorithm()
@@ -120,7 +122,6 @@ class MainWindow(QMainWindow):
             # params = self.get_params(self.to_test_list)
             idx_active_cb = get_idx_active_cb()
             params = self.get_params_on_idx(self.to_test_list, idx_active_cb)
-            # print(params)
             common_params = self.get_common_params(*params)
             print(common_params)
             self.param_in_combobox_for_heat_map = common_params
@@ -200,7 +201,6 @@ class MainWindow(QMainWindow):
         item_data = cmb.currentData()
 
         item1 = cmb1.currentText()
-        # item_data1 = cmb1.currentData()
 
         list_without_item = []
         cmb1.clear()
@@ -225,3 +225,14 @@ class MainWindow(QMainWindow):
             return
         # TODO: определиться откуда брать данные? (или делать прогон отдельно, или брать из файла)
         # TODO: можно предложить открыть файл с данными и оттуда считать все.
+
+    def open_data_file(self) -> None:
+        """
+        Метод открытия окна для выбора json-файла с данными для построения графиков.
+        Обработчик события нажатия на кнопку self.ui.open_data_file_btn.
+        :return: None.
+        """
+        file_name = open_file_dialog("Открыть json-файл данных",
+                                     "All Files (*);;JSON Files (*.json)", self)
+        if file_name:
+            self.ui.data_path_le.setText(file_name)

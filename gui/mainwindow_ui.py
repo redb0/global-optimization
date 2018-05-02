@@ -10,6 +10,12 @@ class UiMainWindow:
         self.menuSettings = None
         self.menuHelp = None
         self.statusBar = None
+        self.actionOpenJson = None
+        self.actionOpenDBJson = None
+        self.actionQuit = None
+        self.actionAbout = None
+        self.actionSettings = None
+        self.actionHelp = None
 
     def setup_ui(self, main_window, alg_list):
         main_window.setObjectName("MainWindow")
@@ -75,12 +81,8 @@ class UiMainWindow:
 
         self.alg_layout = QtWidgets.QVBoxLayout()
         self.graph_layout = QtWidgets.QVBoxLayout()
-        # self.graph_settings = QtWidgets.QVBoxLayout()
-        # self.graph_settings.addStretch(1)
-        # self.params_layout = QtWidgets.QVBoxLayout()
         main_layout.addLayout(self.alg_layout)
         main_layout.addLayout(self.graph_layout)
-        # main_layout.addLayout(self.graph_settings)
 
         self.alg_title = QtWidgets.QLabel()
 
@@ -123,13 +125,17 @@ class UiMainWindow:
         scroll.setWidget(w)
 
         self.additional_graphics_btn = QtWidgets.QPushButton()
+        self.open_data_file_btn = QtWidgets.QPushButton()
+        self.data_path_le = QtWidgets.QLineEdit()
+        h_box_4 = QtWidgets.QHBoxLayout()
+        h_box_4.addWidget(self.data_path_le)
+        h_box_4.addWidget(self.open_data_file_btn)
 
-        # self.graph_form.addRow()
         self.graph_layout.addLayout(h_box_1)
         self.graph_layout.addLayout(h_box_2)
+        self.graph_layout.addLayout(h_box_4)
         self.graph_layout.addWidget(self.additional_graphics_btn)
         self.graph_layout.addWidget(scroll)
-        # self.graph_layout.addLayout(self.list_graph)
         # self.graph_layout.addStretch(1)
 
         self.actionSettings.triggered.connect(self.open_common_settings_window(main_window))
@@ -147,7 +153,6 @@ class UiMainWindow:
         self.actionOpenDBJson.setStatusTip(self.translate("MainWindow", "Выбрать тестовую функцию из базы Json"))
 
         # self.actionSave.setText(self.translate("MainWindow", "Сохранить параметры"))
-        # self.actionSave.setStatusTip(self.translate("MainWindow", "Сохранить парметры тестовой функции в json файле"))
         self.actionQuit.setText(self.translate("MainWindow", "Выход"))
         self.actionQuit.setShortcut(self.translate("MainWindow", "Ctrl+Q"))
 
@@ -160,13 +165,14 @@ class UiMainWindow:
         # Настройки
         self.menuSettings.setTitle(self.translate("MainWindow", "Настройки"))
         self.actionSettings.setText(self.translate("MainWindow", "Настройки"))
-        # self.actionOpenDocker.setText(self.translate("MainWindow", "Показать докеры"))
 
         self.alg_title.setText(self.translate("MainWindow", "Алгоритмы"))
 
         self.add_linear_graph_btn.setText(self.translate("MainWindow", "Добавить линейный график"))
         self.add_heat_map_btn.setText(self.translate("MainWindow", "Добавить тепловую карту"))
         self.additional_graphics_btn.setText(self.translate("MainWindow", "Построить дополнительные графики"))
+        self.open_data_file_btn.setText(self.translate("MainWindow", "Открыть"))
+        self.data_path_le.setText(self.translate("MainWindow", ""))
 
         self.add_new_alg_btn.setText(self.translate("MainWindow", "Добавить алгоритм"))
 

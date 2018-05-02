@@ -3,7 +3,7 @@ import random
 from functools import wraps
 import warnings
 
-from PyQt5.QtWidgets import QComboBox
+from PyQt5.QtWidgets import QComboBox, QFileDialog
 from typing import List, Union
 
 from AlgorithmParameter import AlgorithmParameter
@@ -215,6 +215,20 @@ def clear_combobox(*args: QComboBox) -> None:
     """Очистака комбобоксов"""
     for cmb in args:
         cmb.clear()
+
+
+def open_file_dialog(title: str, file_filter: str, parent) -> str:
+    """
+    Метод открытия диалогового окна для выбора файла.
+    :return: путь файла в виде строки, если он выбран, иначе пустая строка.
+    """
+    options = QFileDialog.Options()
+    # options |= QFileDialog.DontUseNativeDialog
+    file_name, _ = QFileDialog.getOpenFileName(parent, title, "",
+                                               file_filter, options=options)
+    if file_name:
+        return file_name
+    return ""
 
 
 def combinations(ar):

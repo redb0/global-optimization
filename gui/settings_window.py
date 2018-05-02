@@ -1,10 +1,12 @@
 import json
 
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QWidget, QFileDialog, QMessageBox, QCheckBox
+from PyQt5.QtWidgets import QWidget, QMessageBox, QCheckBox
 
 from Settings import Settings, get_attributes, set_all_default_values
 from gui.settings_window_ui import UiSettingsWindow
+
+import support_func
 
 
 class SettingsWindow(QWidget):
@@ -101,14 +103,11 @@ class SettingsWindow(QWidget):
         Метод открытия окна для выбора json-файла с информацией о тестовой функции.
         :return: 
         """
-        options = QFileDialog.Options()
-        # options |= QFileDialog.DontUseNativeDialog
-        file_name, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", "",
-                                                   "All Files (*);;JSON Files (*.json)", options=options)
+        file_name = support_func.open_file_dialog("Открыть файл тестовой функции",
+                                                  "All Files (*);;JSON Files (*.json)", self)
         if file_name:
             self.ui.abs_path_test_func_te.setText(file_name)
-            with open(file_name, 'r') as f:
-                data = json.load(f)
+            data = support_func.read_json(file_name)
             self.ui.dimension.setText(str(data["dimension"]))
             self.ui.global_min.setText(str(data["global_min"]))
             self.ui.global_max.setText(str(data["global_max"]))

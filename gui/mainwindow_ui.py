@@ -134,7 +134,8 @@ class UiMainWindow:
         self.graph_layout.addLayout(h_box_1)
         self.graph_layout.addLayout(h_box_2)
         self.graph_layout.addLayout(h_box_4)
-        self.graph_layout.addWidget(self.additional_graphics_btn)
+        self.graph_layout.addWidget(self.additional_graphics_btn, alignment=QtCore.Qt.AlignTop)
+        # self.graph_layout.addWidget(scroll, alignment=QtCore.Qt.AlignTop)
         self.graph_layout.addWidget(scroll)
         # self.graph_layout.addStretch(1)
 

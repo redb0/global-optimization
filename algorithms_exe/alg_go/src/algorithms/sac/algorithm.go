@@ -242,11 +242,12 @@ func findPNorm(g []float64, fitTestPointValue []float64, fitOperatingPointValue 
 	return nuclearFuncNormValue[0], ok
 }
 
-func SAC(function testfunc.TestFunction, options Options) (fBest float64, xBest, bestChart, meanChart, nuclearFunc []float64, dispersion [][]float64, numberMeasurements, stopIter int) {
+func SAC(function testfunc.TestFunction, options Options) (fBest float64, xBest, bestChart, meanChart, nuclearFunc []float64, dispersion, coordinates [][]float64, numberMeasurements, stopIter int) {
 	rand.Seed(time.Now().UTC().UnixNano())
 	bestChart = make([]float64, options.MaxIterations)
 	meanChart = make([]float64, options.MaxIterations)
 	dispersion = make([][]float64, options.MaxIterations)
+	coordinates = make([][]float64, options.MaxIterations)
 	//coord = make([][]float64, options.MaxIterations)
 	xBest = make([]float64, function.Dimension)
 	nuclearFunc = make([]float64, options.MaxIterations)
@@ -270,6 +271,8 @@ func SAC(function testfunc.TestFunction, options Options) (fBest float64, xBest,
 		numberMeasurements = numberMeasurements + len(fitnessTestPointValue) + 1
 
 		fBest = fitnessOperatingPointValue
+		coordinates[i] = make([]float64, len(xBest))
+		copy(coordinates[i], operatingPoint)
 		copy(xBest, operatingPoint)
 		bestChart[i] = fBest
 		meanChart[i] = support.Mean(fitnessTestPointValue)
@@ -313,8 +316,8 @@ func SAC(function testfunc.TestFunction, options Options) (fBest float64, xBest,
 	return
 }
 
-func RunSAC(function testfunc.TestFunction, options algorithms.OptionsAlgorithm) (float64, []float64, []float64, interface{}, int, int) {
+func RunSAC(function testfunc.TestFunction, options algorithms.OptionsAlgorithm) (float64, []float64, []float64, interface{}, [][]float64, int, int) {
 	op := options.(*Options)
-	fBest, xBest, bestChart, _, _, dispersion, numberMeasurements, stopIteration := SAC(function, *op)
-	return fBest, xBest, bestChart, dispersion, numberMeasurements, stopIteration
+	fBest, xBest, bestChart, _, _, dispersion, coordinates, numberMeasurements, stopIteration := SAC(function, *op)
+	return fBest, xBest, bestChart, dispersion, coordinates, numberMeasurements, stopIteration
 }

@@ -17,6 +17,7 @@ type Result struct {
 	FBest float64   `json:"f_best"`
 	XBest []float64 `json:"x_best"`
 	BestChart []float64 `json:"best_chart"`
+	Coordinates [][]float64 `json:"coordinates"`
 	Dispersion interface{} `json:"dispersion"`
 	NumberMeasurements int `json:"number_measurements"`
 	StopIteration int `json:"stop_iteration"`
@@ -48,7 +49,7 @@ func writeInFile(fileName string, data RunGroup) {
 	file.Write(inFile)
 }
 
-type runAlgFunc func(testfunc.TestFunction, algorithms.OptionsAlgorithm) (float64, []float64, []float64, interface{}, int, int)
+type runAlgFunc func(testfunc.TestFunction, algorithms.OptionsAlgorithm) (float64, []float64, []float64, interface{}, [][]float64, int, int)
 
 func main() {
 /*
@@ -143,7 +144,7 @@ func findProbability(tf testfunc.TestFunction, function runAlgFunc, options algo
 
 	for i := 0; i < numberRuns; i++ {
 		var run Result
-		run.FBest, run.XBest, run.BestChart, run.Dispersion, run.NumberMeasurements, run.StopIteration  = function(tf, options)
+		run.FBest, run.XBest, run.BestChart, run.Dispersion, run.Coordinates, run.NumberMeasurements, run.StopIteration  = function(tf, options)
 		res.Runs[i] = run
 		for i := range run.XBest {
 			flag := inInterval(run.XBest[i], realExtrema[i], epsilon[i])

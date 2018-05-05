@@ -1,6 +1,6 @@
 # GlobalOptimization
 
-Программа для исследования алгоритмов глобальной оптимизации.
+Program for the study of global optimization algorithms.
 
 ## Algorithms
 1) Gravitation Search Algorithm [(GSA)](http://ahmetcevahircinar.com.tr/wp-content/uploads/2017/04/GSA_A_Gravitational_Search_Algorithm.pdf);
@@ -8,20 +8,20 @@
 3) Algorithm Selective Averaging Coordinates [(SAC)](https://cyberleninka.ru/article/v/metod-globalnoy-optimizatsii-osnovannyy-na-selektivnom-usrednenii-koordinat-pri-nalichii-ogranicheniy);
 4) Algorithm Selective Averaging Coordinates with asymmetric change of search area (SAC-ACSA).
 
-Алгоритмы по умолчанию должны находиться в папке `algorithms_exe`.
-Результаты работы по умолчанию сохраняются в виде json-файлов в папку `algorithms_exe/result`.
+The default algorithms must be in the folder `algorithms_exe`.
+The default output is saved as json files to a folder `algorithms_exe/result`.
 
 ## Graphs
-1) линейный график (Представляет собой зависимость оценки вероятности от выбранного параметра алгоритма);
-2) тепловая карта;
+1) line chart (the dependence of the probability estimate on the parameter of the algorithm);
+2) heat map;
 3) сходимость по значениям функции (-);
-4) сходимость по значениям координат (-);
+4) convergence in coordinate values;
 5) дисперсии (-);
 6) движение лучшей точки (-).
 
 ## Test Functions
 Поддерживается работа со следующими многоэкстремальными тестовыми функциями:
-1) функции Фельдбаума (с использованием метода минимум);
+1) функции Фельдбаума (using the operation of a minimum);
 2) гиперболические потенциальные функции;
 3) экспоненциальные потенциальные функции.
 

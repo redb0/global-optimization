@@ -207,7 +207,7 @@ func Move(x, a, v [][] float64) (xNew, vNew [][]float64) {
 }
 
 //TODO: добавить документацию
-func GSA(function testfunc.TestFunction, options Options) (fBest float64, xBest, bestChart, meanChart, dispersion []float64) {
+func GSA(function testfunc.TestFunction, options Options) (fBest float64, xBest, bestChart, meanChart, dispersion []float64, coordinates [][]float64) {
 	rand.Seed(time.Now().UTC().UnixNano())
 	//op := options.(Options)
 
@@ -218,6 +218,7 @@ func GSA(function testfunc.TestFunction, options Options) (fBest float64, xBest,
 	bestChart = make([]float64, options.MaxIterations)
 	meanChart = make([]float64, options.MaxIterations)
 	dispersion = make([]float64, options.MaxIterations)
+	coordinates = make([][]float64, options.MaxIterations)
 
 	var iteration int
 	var best float64
@@ -254,6 +255,9 @@ func GSA(function testfunc.TestFunction, options Options) (fBest float64, xBest,
 		}
 
 		bestChart[i] = fBest
+		coordinates[i] = make([]float64, len(xBest))
+		copy(coordinates[i], xBest)
+		//coordinates[i] = xBest
 		meanChart[i] = support.Mean(fitness)
 		if function.Dimension == 2 {
 			dispersion[i], _ = support.Dispersion(x)
@@ -274,8 +278,8 @@ func GSA(function testfunc.TestFunction, options Options) (fBest float64, xBest,
 	return
 }
 
-func RunGSA(function testfunc.TestFunction, options algorithms.OptionsAlgorithm) (float64, []float64, []float64, interface{}, int, int) {
+func RunGSA(function testfunc.TestFunction, options algorithms.OptionsAlgorithm) (float64, []float64, []float64, interface{}, [][]float64, int, int) {
 	op := options.(*Options)
-	fBest, xBest, bestChart, _, dispersion := GSA(function, *op)
-	return fBest, xBest, bestChart, dispersion, op.MaxIterations * op.NumberPoints, op.MaxIterations
+	fBest, xBest, bestChart, _, dispersion, coordinates := GSA(function, *op)
+	return fBest, xBest, bestChart, dispersion, coordinates, op.MaxIterations * op.NumberPoints, op.MaxIterations
 }

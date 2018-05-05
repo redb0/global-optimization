@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 import numpy as np
 
@@ -104,4 +104,17 @@ def get_tf_exponential_potential(n: int, a: List[float], c: List[List[float]],
             res = (-b[i]) * np.exp((-a[i]) * res)
             value = value + res
         return value
+    return func
+
+
+def get_test_func(type_func: str, n: int,
+                  a: List[Union[List[float], float]], c: List[List[float]], p: List[List[float]], b: List[float]):
+    if type_func == "feldbaum_function":
+        func = get_test_function_method_min(n, a, c, p, b)
+    elif type_func == "hyperbolic_potential_abs":
+        func = get_tf_hyperbolic_potential_abs(n, a, c, p, b)
+    elif type_func == "exponential_potential":
+        func = get_tf_exponential_potential(n, a, c, p, b)
+    else:
+        func = None
     return func

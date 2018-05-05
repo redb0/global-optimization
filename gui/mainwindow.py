@@ -1,4 +1,7 @@
 import copy
+import os
+import operator
+
 from PyQt5.QtWidgets import QMainWindow, QPushButton, QMessageBox
 
 import AlgorithmParameter
@@ -7,6 +10,7 @@ from algorithms.NoiseResistanceGSA import NoiseResistanceGSA
 from algorithms.StandardGSA import StandardGSA
 from algorithms.StandardSAC import StandardSAC
 from algorithms.SACacsa import AcsaSAC
+from graph.LineGraph import motion_point_graph, graph_convergence_coord
 from graph.PossibleGraph import PossibleGraph
 
 from gui.mainwindow_ui import UiMainWindow
@@ -15,7 +19,8 @@ from gui.wdg.HeatMapWidget import HeatMapWidget
 from gui.wdg.LineGraphWidget import LineGraphWidget
 from gui.wdg.PointGraphWidget import PointGraphWidget
 
-from support_func import fill_combobox_list_alg, open_file_dialog
+from support_func import fill_combobox_list_alg, open_file_dialog, read_json, write_json
+from test_func import get_test_func
 
 
 class MainWindow(QMainWindow):
@@ -223,6 +228,66 @@ class MainWindow(QMainWindow):
             error = "Не выбрано ни одного дополнительного графика"
             self.print_error(error)
             return
+        algorithms = self.get_active_algorithm()
+        test_func_data = read_json(self.settings.abs_path_test_func)
+        all_data = []
+        if not algorithms:
+            error = "Не выбрано ни одного алгоритма"
+            self.print_error(error)
+            return
+        print("--->", algorithms)
+        if self.ui.data_path_le.text() != "":
+            # TODO: здесь чтение данных из файла
+            pass
+        else:
+            script_path = os.path.dirname(os.path.abspath(__file__))
+            for alg in algorithms:
+                abs_path_config = os.path.join(script_path, alg.config_file)
+                config = read_json(abs_path_config)
+                config['number_runs'] = 1
+                write_json(abs_path_config, config)
+                file_name = alg.get_identifier_name() + '.json'
+                abs_path = os.path.join(script_path, "..\\algorithms_exe\\result\\", file_name)
+                print(abs_path)
+                alg.run(abs_path, self.settings.abs_path_test_func)
+                return_code, run_time = alg.wait_process()
+                if return_code != 0:
+                    self.print_error("Ошибка при работе алгоритма")
+                    return
+                # result_files.append(abs_path)
+                data = read_json(abs_path)
+                all_data.append(data['runs'][0])
+            # TODO: здесь генерация данных через прогон
+
+        for g in self.settings.additional_graphics:
+            if g['draw']:
+                if g['name'] == "График движения лучшей точки":  # не работает
+                    func = get_test_func(test_func_data['type'],
+                                         test_func_data['number_extrema'], test_func_data['coefficients_abruptness'],
+                                         test_func_data['coordinates'], test_func_data['degree_smoothness'],
+                                         test_func_data['func_values'])
+                    # data = []
+                    # g['iter'] if g['iter'] >= d['stop_iteration'] else d['stop_iteration']
+                    stop_iter = min(operator.getitem(i, 'stop_iteration') for i in all_data)
+                    data = [operator.getitem(d, 'coordinates')[:g['iter'] if g['iter'] >= stop_iter else stop_iter] for d in all_data]
+                    motion_point_graph(data, func, lbl=[alg.get_identifier_name() for alg in algorithms],
+                                       file_name="motion_graph.png", x_label="${x}{_0}$", y_label="${x}{_1}$",
+                                       title=g['name'] + " за " + str(g['iter']) + " итераций")
+                if g['name'] == "График сходимости по координатам":
+                    data = []
+                    max_stop_iter = max(operator.getitem(i, 'stop_iteration') for i in all_data)
+                    for d in all_data:
+                        meaningful_data = operator.getitem(d, 'coordinates')[:d['stop_iteration']]
+                        if d['stop_iteration'] < max_stop_iter:
+                            data.append(meaningful_data + [meaningful_data[-1] for _ in range(max_stop_iter - len(meaningful_data))])
+                        else:
+                            data.append(meaningful_data)
+                    graph_convergence_coord(data, [i for i in range(max_stop_iter)],
+                                            lbl=[["${x}{_0}$", "${x}{_1}$"] for _ in range(len(algorithms))],
+                                            file_name=["graph_convergence_coord_" + alg.get_identifier_name() + ".png" for alg in algorithms],
+                                            x_label="${t}$", y_label="${x}$", title=g['name'], single_graph=False)
+            # TODO: рисование графиков
+
         # TODO: определиться откуда брать данные? (или делать прогон отдельно, или брать из файла)
         # TODO: можно предложить открыть файл с данными и оттуда считать все.
 

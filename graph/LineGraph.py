@@ -225,7 +225,7 @@ def line_graph(data, x, lbl=None, file_name="", x_label="", y_label="", title=""
     plt.show()
 
 
-def graph_convergence_coord(data, x, lbl=None, file_name="", x_label="", y_label="", title="", single_graph=False):
+def graph_convergence_coord(data, x, lbl=None, file_name=None, x_label="", y_label="", title="", single_graph=False):
     """
     Функция построения графика сходимости по координатам.
     Строит график изменения координат в зависимости от итераций.
@@ -283,7 +283,7 @@ def graph_convergence_coord(data, x, lbl=None, file_name="", x_label="", y_label
             raise ValueError("Ожидается параметр lbl длиной " + str(dim) +
                              ", текущая длина " + str(len(lbl)))
         for j in range(dim):
-            graph.axes.plot(x, data[:, j], label=lbl[j], linewidth=1.5, marker=markers_list[markers_idx[j]])
+            graph.axes.plot(x, data[:, j], label=lbl[0][j], linewidth=1.5, marker=markers_list[markers_idx[j]])
     else:
         lbl = np.array(lbl)
         if lbl.shape[0] != len(data) or lbl.shape[-1] != dim:
@@ -297,8 +297,8 @@ def graph_convergence_coord(data, x, lbl=None, file_name="", x_label="", y_label
                                 marker=markers_list[markers_idx[dim*i+j]])
             if not single_graph:
                 graph.set_legend_pos(settings.legend_position)
-                name = file_name[:file_name.find('.')] + "_" + str(i) + file_name[file_name.find('.'):]
-                plt.savefig(name, bbox_inches='tight')
+                # name = file_name[:file_name.find('.')] + "_" + str(i) + file_name[file_name.find('.'):]
+                plt.savefig(file_name[i], bbox_inches='tight')
                 plt.show()
                 if i == len(data) - 1:
                     return

@@ -4,6 +4,7 @@ import os
 from typing import Union, List
 
 from Parameter import Parameter
+# from graph.LineGraph import motion_point_graph, line_graph, graph_convergence_coord
 
 
 class Settings:
@@ -28,9 +29,9 @@ class Settings:
     # Дополнительные графики
     _additional_graphics = [{'name': "График сходимости по значениям функции", 'draw': True},
                             {'name': "График сходимости по координатам", 'draw': True},
-                            {'name': "График движения лучшей точки", 'draw': True},
-                            {'name': "График дисперсии", 'draw': True},
-                            {'name': "График количества рабочих итераций", 'draw': False}]
+                            {'name': "График движения лучшей точки", 'draw': True, 'iter': 5},
+                            {'name': "График дисперсии", 'draw': True}]
+                            # {'name': "График количества рабочих итераций", 'draw': False}]
 
     def __init__(self):
         pass

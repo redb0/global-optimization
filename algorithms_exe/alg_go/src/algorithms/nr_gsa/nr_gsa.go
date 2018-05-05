@@ -172,7 +172,7 @@ func getN(op Options, startNP, iteration int) int {
 
 //TODO: добавить документацию
 func NRGSA(function testfunc.TestFunction, options Options) (fBest float64, numberMeasurements int,
-															 xBest, bestChart, meanChart, dispersion []float64) {
+															 xBest, bestChart, meanChart, dispersion []float64, coordinates [][]float64) {
 	rand.Seed(time.Now().UTC().UnixNano())
 	var x [][]float64
 	var velocity, a [][]float64
@@ -181,6 +181,7 @@ func NRGSA(function testfunc.TestFunction, options Options) (fBest float64, numb
 	bestChart = make([]float64, options.MaxIterations)
 	meanChart = make([]float64, options.MaxIterations)
 	dispersion = make([]float64, options.MaxIterations)
+	coordinates = make([][]float64, options.MaxIterations)
 
 	var iteration int
 	var best float64
@@ -242,6 +243,9 @@ func NRGSA(function testfunc.TestFunction, options Options) (fBest float64, numb
 		}
 
 		bestChart[i] = fBest
+		coordinates[i] = make([]float64, len(xBest))
+		copy(coordinates[i], xBest)
+		//coordinates[i] = xBest
 		meanChart[i] = support.Mean(fitness)
 		if function.Dimension == 2 {
 			dispersion[i], _ = support.Dispersion(x)
@@ -263,8 +267,8 @@ func NRGSA(function testfunc.TestFunction, options Options) (fBest float64, numb
 	return
 }
 
-func RunNRGSA(function testfunc.TestFunction, options algorithms.OptionsAlgorithm) (float64, []float64, []float64, interface{}, int, int) {
+func RunNRGSA(function testfunc.TestFunction, options algorithms.OptionsAlgorithm) (float64, []float64, []float64, interface{}, [][]float64, int, int) {
 	op := options.(*Options)
-	fBest, numberMeasurements, xBest, bestChart, _, dispersion := NRGSA(function, *op)
-	return fBest, xBest, bestChart, dispersion, numberMeasurements, op.MaxIterations
+	fBest, numberMeasurements, xBest, bestChart, _, dispersion, coordinates := NRGSA(function, *op)
+	return fBest, xBest, bestChart, dispersion, coordinates, numberMeasurements, op.MaxIterations
 }

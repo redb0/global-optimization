@@ -10,7 +10,7 @@ from algorithms.NoiseResistanceGSA import NoiseResistanceGSA
 from algorithms.StandardGSA import StandardGSA
 from algorithms.StandardSAC import StandardSAC
 from algorithms.SACacsa import AcsaSAC
-from graph.LineGraph import motion_point_graph, graph_convergence_coord
+from graph.LineGraph import motion_point_graph, graph_convergence_coord, line_graph
 from graph.PossibleGraph import PossibleGraph
 
 from gui.mainwindow_ui import UiMainWindow
@@ -235,10 +235,12 @@ class MainWindow(QMainWindow):
             error = "Не выбрано ни одного алгоритма"
             self.print_error(error)
             return
-        print("--->", algorithms)
+        # print("--->", algorithms)
         if self.ui.data_path_le.text() != "":
             # TODO: здесь чтение данных из файла
-            pass
+            abs_path = self.ui.data_path_le.text()
+            data = read_json(abs_path)
+            all_data.append(data['runs'][0])
         else:
             script_path = os.path.dirname(os.path.abspath(__file__))
             for alg in algorithms:
@@ -254,39 +256,48 @@ class MainWindow(QMainWindow):
                 if return_code != 0:
                     self.print_error("Ошибка при работе алгоритма")
                     return
-                # result_files.append(abs_path)
                 data = read_json(abs_path)
                 all_data.append(data['runs'][0])
-            # TODO: здесь генерация данных через прогон
 
         for g in self.settings.additional_graphics:
-            if g['draw']:
-                if g['name'] == "График движения лучшей точки":  # не работает
-                    func = get_test_func(test_func_data['type'],
-                                         test_func_data['number_extrema'], test_func_data['coefficients_abruptness'],
-                                         test_func_data['coordinates'], test_func_data['degree_smoothness'],
-                                         test_func_data['func_values'])
-                    # data = []
-                    # g['iter'] if g['iter'] >= d['stop_iteration'] else d['stop_iteration']
-                    stop_iter = min(operator.getitem(i, 'stop_iteration') for i in all_data)
-                    data = [operator.getitem(d, 'coordinates')[:g['iter'] if g['iter'] >= stop_iter else stop_iter] for d in all_data]
-                    motion_point_graph(data, func, lbl=[alg.get_identifier_name() for alg in algorithms],
-                                       file_name="motion_graph.png", x_label="${x}{_0}$", y_label="${x}{_1}$",
-                                       title=g['name'] + " за " + str(g['iter']) + " итераций")
-                if g['name'] == "График сходимости по координатам":
-                    data = []
-                    max_stop_iter = max(operator.getitem(i, 'stop_iteration') for i in all_data)
-                    for d in all_data:
-                        meaningful_data = operator.getitem(d, 'coordinates')[:d['stop_iteration']]
-                        if d['stop_iteration'] < max_stop_iter:
-                            data.append(meaningful_data + [meaningful_data[-1] for _ in range(max_stop_iter - len(meaningful_data))])
-                        else:
-                            data.append(meaningful_data)
-                    graph_convergence_coord(data, [i for i in range(max_stop_iter)],
-                                            lbl=[["${x}{_0}$", "${x}{_1}$"] for _ in range(len(algorithms))],
-                                            file_name=["graph_convergence_coord_" + alg.get_identifier_name() + ".png" for alg in algorithms],
-                                            x_label="${t}$", y_label="${x}$", title=g['name'], single_graph=False)
-            # TODO: рисование графиков
+            if g['draw'] and g['name'] == "График движения лучшей точки":  # работает
+                func = get_test_func(test_func_data['type'],
+                                     test_func_data['number_extrema'], test_func_data['coefficients_abruptness'],
+                                     test_func_data['coordinates'], test_func_data['degree_smoothness'],
+                                     test_func_data['func_values'])
+                last_iter = min(operator.getitem(i, 'stop_iteration') for i in all_data)
+                stop_iter = g['iter'] if g['iter'] <= last_iter else last_iter
+                data = [operator.getitem(d, 'coordinates')[:stop_iter] for d in all_data]
+                motion_point_graph(data, func, lbl=[alg.get_identifier_name() for alg in algorithms],
+                                   file_name="motion_graph.png", x_label="${x}{_0}$", y_label="${x}{_1}$",
+                                   title=g['name'] + " за " + str(g['iter']) + " итераций")
+
+            data = []
+            max_stop_iter = max(operator.getitem(i, 'stop_iteration') for i in all_data)
+            for d in all_data:
+                meaningful_data = operator.getitem(d, g['name_field'])[:d['stop_iteration']]
+                if d['stop_iteration'] < max_stop_iter:
+                    data.append(
+                        meaningful_data + [meaningful_data[-1] for _ in range(max_stop_iter - len(meaningful_data))])
+                else:
+                    data.append(meaningful_data)
+
+            if g['draw'] and g['name'] == "График сходимости по координатам":
+                graph_convergence_coord(data, [i for i in range(max_stop_iter)],
+                                        lbl=[["${x}{_0}$", "${x}{_1}$"] for _ in range(len(algorithms))],
+                                        file_name=["graph_convergence_coord_" + alg.get_identifier_name() + ".png" for alg in algorithms],
+                                        x_label="${t}$", y_label="${x}$", title=g['name'], single_graph=False)
+            if g['draw'] and g['name'] == "График сходимости по значениям функции":
+                file_name = "graph_convergence_func_value_" + alg.get_name() + ".png"
+                line_graph(data, [i for i in range(max_stop_iter)],
+                           lbl=[alg.get_identifier_name() for alg in algorithms], file_name=file_name,
+                           x_label="${t}$", y_label="${f(x)}$", title=g['name'])
+            if g['draw'] and g['name'] == "График дисперсии":
+                graph_convergence_coord(data, [i for i in range(max_stop_iter)],
+                                        lbl=[["${x}{_0}$", "${x}{_1}$"] for _ in range(len(algorithms))],
+                                        file_name=["graph_dispersion_" + alg.get_identifier_name() + ".png"
+                                                   for alg in algorithms],
+                                        x_label="${t}$", y_label="${\sigma}^2$", title=g['name'], single_graph=False)
 
         # TODO: определиться откуда брать данные? (или делать прогон отдельно, или брать из файла)
         # TODO: можно предложить открыть файл с данными и оттуда считать все.

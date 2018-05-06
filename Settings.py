@@ -27,10 +27,10 @@ class Settings:
     #   "iteration": {"min": 0, "mean": 0, "max": 0}
     # ]
     # Дополнительные графики
-    _additional_graphics = [{'name': "График сходимости по значениям функции", 'draw': True},
-                            {'name': "График сходимости по координатам", 'draw': True},
-                            {'name': "График движения лучшей точки", 'draw': True, 'iter': 5},
-                            {'name': "График дисперсии", 'draw': True}]
+    _additional_graphics = [{'name': "График сходимости по значениям функции", 'draw': True, 'name_field': 'best_chart'},
+                            {'name': "График сходимости по координатам", 'draw': True, 'name_field': 'coordinates'},
+                            {'name': "График движения лучшей точки", 'draw': True, 'name_field': 'coordinates', 'iter': 5},
+                            {'name': "График дисперсии", 'draw': True, 'name_field': 'dispersion'}]
                             # {'name': "График количества рабочих итераций", 'draw': False}]
 
     def __init__(self):

@@ -397,11 +397,13 @@ func NewSAC(function testfunc.TestFunction, options Options) (fBest float64, xBe
 		bestChart[i] = fBest
 		coordinates[i] = make([]float64, len(xBest))
 		copy(coordinates[i], xBest)
-		//coordinates[i] = xBest
 		meanChart[i] = support.Mean(fitnessTestPointValue)
 
-		//fmt.Println(fBest)
-		//fmt.Println(xBest)
+
+		dispersion[i] = make([]float64, function.Dimension)
+		for j := range dispersion[i] {
+			dispersion[i][j] = support.Sum(delta[j])
+		}
 
 		if iteration > 2 {
 			if ((delta[0][0] + delta[0][1]) < math.Pow(10, -5)) || ((delta[1][0] + delta[1][1]) < math.Pow(10, -5)) {
@@ -413,14 +415,6 @@ func NewSAC(function testfunc.TestFunction, options Options) (fBest float64, xBe
 			//	break
 			//}
 		}
-
-		//coord[i] = make([]float64, function.Dimension)
-		dispersion[i] = make([]float64, function.Dimension)
-		for j := range dispersion[i] {
-			dispersion[i][j] = support.Sum(delta[j])
-		}
-		//copy(coord[i], operatingPoint)
-		//xBest = operatingPoint
 
 		g = findG(fitnessTestPointValue, options.MinFlag)
 		nuclearFuncValues := make([]float64, options.NumberPoints)

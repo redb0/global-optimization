@@ -218,6 +218,11 @@ def line_graph(data, x, lbl=None, file_name="", x_label="", y_label="", title=""
     if len(data.shape) == 1:
         graph.axes.plot(x, data, label=lbl, linewidth=1.5, marker=markers[0])
     else:
+        # if data.shape[-1] == settings.dimension:
+        #     for i in range(len(data)):
+        #         for j in range(settings.dimension):
+        #             graph.axes.plot(x, data[i][j], label=lbl[i][j], linewidth=1.5, marker=markers_list[markers_idx[i]])
+        # else:
         for i in range(len(data)):
             graph.axes.plot(x, data[i], label=lbl[i], linewidth=1.5, marker=markers_list[markers_idx[i]])
     graph.set_legend_pos(settings.legend_position)
@@ -277,7 +282,7 @@ def graph_convergence_coord(data, x, lbl=None, file_name=None, x_label="", y_lab
     else:
         markers_list = markers
     markers_idx = generate_rand_int_list(2 * len(data))
-    data = np.array(data)
+    data = np.array([np.array(d) for d in data])
     if len(data.shape) == 2 and data.shape[-1] == dim:
         if len(lbl) != dim:
             raise ValueError("Ожидается параметр lbl длиной " + str(dim) +
@@ -304,6 +309,7 @@ def graph_convergence_coord(data, x, lbl=None, file_name=None, x_label="", y_lab
                     return
                 else:
                     graph = Graph()
+                    graph.set_labels(xlabel=x_label, ylabel=y_label, title=title, legend_title="")
 
     graph.set_legend_pos(settings.legend_position)
     plt.savefig(file_name, bbox_inches='tight')
@@ -339,7 +345,6 @@ def motion_point_graph(data, func, lbl=None, file_name="", x_label="", y_label="
     constraints_y = [tf['constraints_down'][1], tf['constraints_high'][1]]
     x, y, z, levels = make_contour_data(func, constraints_x, constraints_y, h, delta, l)
     plt.contour(x, y, z, levels=levels)
-    graph.axes.plot(data[:, 0], data[:, 1], label=lbl, marker='o', color='r', linestyle='')
 
     arrowprops = {
         'arrowstyle': '-|>',
@@ -348,9 +353,11 @@ def motion_point_graph(data, func, lbl=None, file_name="", x_label="", y_label="
         'ec': 'k',  # контур
     }
 
-    for i in range(len(data) - 1):
-        graph.axes.annotate('', xy=(data[i+1][0], data[i+1][1]), xytext=(data[i][0], data[i][1]),
-                            arrowprops=arrowprops)
+    for i in range(len(data)):
+        graph.axes.plot(data[i][:, 0], data[i][:, 1], label=lbl[i], marker='o', linestyle='')  # color='r'
+        for j in range(len(data[i]) - 1):
+            graph.axes.annotate('', xy=(data[i][j+1][0], data[i][j+1][1]), xytext=(data[i][j][0], data[i][j][1]),
+                                arrowprops=arrowprops)
 
     graph.axes.grid()
     graph.set_labels(xlabel=x_label, ylabel=y_label, title=title, legend_title="")

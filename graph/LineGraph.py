@@ -148,57 +148,9 @@ class LineGraph(Graph):
         self._step = value
 
 
-# def convergence_graph(data, x, lbl=None, file_name="", x_label="", y_label="", title=""):
-#     graph = Graph()
-#     graph.set_params()
-#     settings = Settings()
-#     markers = ['o', 'x', 'v', '^', '<',
-#                '>', 's', 'p', '*', 'h',
-#                'H', '+', 'D', 'd', '|', '_']
-#
-#     graph.set_labels(xlabel=x_label, ylabel=y_label, title=title, legend_title="")
-#
-#     if len(data) > len(markers):
-#         markers_list = markers.append(markers[:(len(data) - len(markers))])
-#     else:
-#         markers_list = markers
-#     markers_idx = generate_rand_int_list(len(data))
-#     data = np.array(data)
-#     if len(data.shape) == 1:
-#         graph.axes.plot(x, data, label=lbl, linewidth=1.5, marker=markers[0])
-#     elif data.shape[-1] == 2:
-#         if 2 * len(data) > len(markers):
-#             markers_list = markers.append(markers[:(2 * len(data) - len(markers))])
-#         markers_idx = generate_rand_int_list(2 * len(data))
-#         if len(data.shape) == settings.dimension:
-#             graph.axes.plot(x, data[:, 0], label=lbl[0], linewidth=1.5, marker=markers[0])
-#             graph.axes.plot(x, data[:, 1], label=lbl[1], linewidth=1.5, marker=markers[1])
-#         else:
-#             for i in range(len(data)):
-#                 if i > 0:
-#                     graph = Graph()
-#                     graph.set_params()
-#                     graph.set_labels(xlabel=x_label, ylabel=y_label, title=title, legend_title="")
-#                 graph.axes.plot(x, data[i, :, 0], label=lbl[i][0], linewidth=1.5, marker=markers_list[markers_idx[2*i]])
-#                 graph.axes.plot(x, data[i, :, 1], label=lbl[i][1], linewidth=1.5, marker=markers_list[markers_idx[2*i + 1]])
-#                 graph.set_legend_pos(settings.legend_position)
-#                 plt.savefig(file_name, bbox_inches='tight')
-#                 plt.show()
-#             return
-#     else:
-#         for i in range(len(data)):
-#             graph.axes.plot(x, data[i], label=lbl[i], linewidth=1.5, marker=markers_list[markers_idx[i]])
-
-
-    # title = "Зависимость оценки вороятности от "
-    # graph.set_legend_pos(settings.legend_position)
-    # plt.savefig(file_name, bbox_inches='tight')
-    # plt.show()
-
-
 # для графика сходимости по значениям функции
 # для графика дисперсии
-def line_graph(data, x, lbl=None, file_name="", x_label="", y_label="", title=""):
+def line_graph(data, x, lbl=None, file_name="", x_label="", y_label="", title="", marker=None):
     # TODO: Добавить документацию
     graph = Graph()
     graph.set_params()
@@ -216,7 +168,7 @@ def line_graph(data, x, lbl=None, file_name="", x_label="", y_label="", title=""
     markers_idx = generate_rand_int_list(len(data))
     data = np.array(data)
     if len(data.shape) == 1:
-        graph.axes.plot(x, data, label=lbl, linewidth=1.5, marker=markers[0])
+        graph.axes.plot(x, data, label=lbl, linewidth=1.5, marker=markers[0] if marker is None else marker)
     else:
         # if data.shape[-1] == settings.dimension:
         #     for i in range(len(data)):
@@ -224,13 +176,14 @@ def line_graph(data, x, lbl=None, file_name="", x_label="", y_label="", title=""
         #             graph.axes.plot(x, data[i][j], label=lbl[i][j], linewidth=1.5, marker=markers_list[markers_idx[i]])
         # else:
         for i in range(len(data)):
-            graph.axes.plot(x, data[i], label=lbl[i], linewidth=1.5, marker=markers_list[markers_idx[i]])
+            graph.axes.plot(x, data[i], label=lbl[i], linewidth=1.5,
+                            marker=markers_list[markers_idx[i]] if marker is None else marker)
     graph.set_legend_pos(settings.legend_position)
     plt.savefig(file_name, bbox_inches='tight')
     plt.show()
 
 
-def graph_convergence_coord(data, x, lbl=None, file_name=None, x_label="", y_label="", title="", single_graph=False):
+def graph_convergence_coord(data, x, lbl=None, file_name=None, x_label="", y_label="", title="", single_graph=False, marker=None):
     """
     Функция построения графика сходимости по координатам.
     Строит график изменения координат в зависимости от итераций.
@@ -281,6 +234,7 @@ def graph_convergence_coord(data, x, lbl=None, file_name=None, x_label="", y_lab
         markers_list = markers.append(markers[:(2 * len(data) - len(markers))])
     else:
         markers_list = markers
+    marker = '' if (marker is None) and (len(data) >= 15) else None
     markers_idx = generate_rand_int_list(2 * len(data))
     data = np.array([np.array(d) for d in data])
     if len(data.shape) == 2 and data.shape[-1] == dim:
@@ -288,7 +242,10 @@ def graph_convergence_coord(data, x, lbl=None, file_name=None, x_label="", y_lab
             raise ValueError("Ожидается параметр lbl длиной " + str(dim) +
                              ", текущая длина " + str(len(lbl)))
         for j in range(dim):
-            graph.axes.plot(x, data[:, j], label=lbl[0][j], linewidth=1.5, marker=markers_list[markers_idx[j]])
+            graph.axes.plot(x, data[:, j], label=lbl[0][j], linewidth=1.5, marker=markers_list[markers_idx[j]] if marker is None else marker)
+    elif len(data.shape) == 2 and data.shape[-1] != dim:
+        for j in range(len(data)):
+            graph.axes.plot(x, data[j], label=lbl[j], linewidth=1.5, marker=markers_list[markers_idx[j]] if marker is None else marker)
     else:
         lbl = np.array(lbl)
         if lbl.shape[0] != len(data) or lbl.shape[-1] != dim:
@@ -299,7 +256,7 @@ def graph_convergence_coord(data, x, lbl=None, file_name=None, x_label="", y_lab
         for i in range(len(data)):
             for j in range(dim):
                 graph.axes.plot(x, data[i, :, j], label=lbl[i][j], linewidth=1.5,
-                                marker=markers_list[markers_idx[dim*i+j]])
+                                marker=markers_list[markers_idx[dim*i+j]] if marker is None else marker)
             if not single_graph:
                 graph.set_legend_pos(settings.legend_position)
                 # name = file_name[:file_name.find('.')] + "_" + str(i) + file_name[file_name.find('.'):]
@@ -421,6 +378,9 @@ def main():
                        func, lbl="Лучшее решение",
                        file_name="42.png",
                        x_label="${x}{_0}$", y_label="${x}{_1}$", title="")
+
+    graph_convergence_coord(data, x, lbl=None, file_name=None, x_label="${t}$", y_label="${\sigma}^2$", title="", single_graph=False,
+                            marker=None)
 
 
 if __name__ == "__main__":

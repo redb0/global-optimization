@@ -16,7 +16,7 @@ The default output is saved as json files to a folder `algorithms_exe/result`.
 2) heat map;
 3) convergence in function values;
 4) convergence in coordinate values;
-5) dispersion;
+5) dispersion (-);
 6) best point motion.
 
 ## Test Functions

@@ -106,12 +106,6 @@ func initializationTestPoints(function testfunc.TestFunction, options Options, d
 		}
 		quadTree[int(idx)] = append(quadTree[int(idx)], testPoints)
 	}
-	//fmt.Println(len(quadTree))
-	//fmt.Println(len(quadTree[0]))
-	//fmt.Println(len(quadTree[1]))
-	//fmt.Println(len(quadTree[2]))
-	//fmt.Println(len(quadTree[3]))
-	//fmt.Println(quadTree)
 	return quadTree
 }
 
@@ -232,9 +226,6 @@ func evaluateFunc(testPoints [][][]float64, operatingPoint []float64, function t
 }
 
 func moveCorrect(operatingPoint, nuclearFuncNormValue []float64, testPoints [][][]float64, delta [][]float64, options Options) ([]float64, [][]float64) {
-	//fmt.Println("-----------------------------------")
-	//fmt.Println("старая точка ", operatingPoint)
-	//fmt.Println("старая дельта ", delta)
 	//N := options.NumberPoints
 	dimension := len(operatingPoint)
 	//u := make([][]float64, N)
@@ -296,8 +287,6 @@ func moveCorrect(operatingPoint, nuclearFuncNormValue []float64, testPoints [][]
 		//newDelta[d][0] = options.Gamma * delta[d][0] * math.Pow(sumUP[i][d], 1 / options.Q)
 		//newDelta[d][1] = options.Gamma * delta[d][1] * math.Pow(sumUP[i][d], 1 / options.Q)
 	}
-	//fmt.Println("дельта ", newDelta)
-	//fmt.Println("новая точка ", newOperatingPoint)
 	return newOperatingPoint, newDelta
 }
 

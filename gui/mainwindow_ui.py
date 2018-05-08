@@ -143,7 +143,7 @@ class UiMainWindow:
         self.retranslate(main_window)
 
     def retranslate(self, main_window):
-        main_window.setWindowTitle(self.translate("MainWindow", "Global Optimization"))
+        main_window.setWindowTitle(self.translate("MainWindow", "GlOpPy"))
         self.menuFile.setTitle(self.translate("MainWindow", "Файл"))
         # TODO: продумать меню
 

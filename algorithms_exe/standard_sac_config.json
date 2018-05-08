@@ -1,1 +1,1 @@
-{"MI": 30, "NP": 200, "KN": 10.0, "GA": 1.2, "SF": 100.0, "KQ": 2.0, "NF": 1, "min_flag": 1, "epsilon": [0.5, 0.5], "number_runs": 1}
+{"MI": 500, "NP": 200, "KN": 0.0, "GA": 1, "SF": 100, "KQ": 1, "NF": 1, "min_flag": 1, "epsilon": [0.5, 0.5], "number_runs": 1}

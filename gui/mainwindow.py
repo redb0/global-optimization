@@ -2,7 +2,9 @@ import copy
 import os
 import operator
 
+from PyQt5.QtCore import Q_FLAGS
 from PyQt5.QtWidgets import QMainWindow, QPushButton, QMessageBox
+import numpy as np
 
 import AlgorithmParameter
 from Settings import Settings
@@ -12,6 +14,7 @@ from algorithms.StandardSAC import StandardSAC
 from algorithms.SACacsa import AcsaSAC
 from graph.LineGraph import motion_point_graph, graph_convergence_coord, line_graph
 from graph.PossibleGraph import PossibleGraph
+from gui.about_dialog import AboutDialog
 
 from gui.mainwindow_ui import UiMainWindow
 
@@ -48,6 +51,8 @@ class MainWindow(QMainWindow):
         self.change_status_activity_buttons(self.ui.alg_form, True)
 
         self.get_selected_algorithms = self.ui.get_index_active_checkbox(self.ui.alg_form)
+
+        self.ui.actionAbout.triggered.connect(self.open_about_dialog)
 
         self.ui.add_linear_graph_btn.clicked.connect(self.add_linear_graph)
         self.ui.add_heat_map_btn.clicked.connect(self.add_heat_map)
@@ -235,7 +240,6 @@ class MainWindow(QMainWindow):
             error = "Не выбрано ни одного алгоритма"
             self.print_error(error)
             return
-        # print("--->", algorithms)
         if self.ui.data_path_le.text() != "":
             # TODO: здесь чтение данных из файла
             abs_path = self.ui.data_path_le.text()
@@ -244,10 +248,8 @@ class MainWindow(QMainWindow):
         else:
             script_path = os.path.dirname(os.path.abspath(__file__))
             for alg in algorithms:
-                abs_path_config = os.path.join(script_path, alg.config_file)
-                config = read_json(abs_path_config)
-                config['number_runs'] = 1
-                write_json(abs_path_config, config)
+                alg.settings.number_of_runs = 1
+                alg.write_parameters()
                 file_name = alg.get_identifier_name() + '.json'
                 abs_path = os.path.join(script_path, "..\\algorithms_exe\\result\\", file_name)
                 print(abs_path)
@@ -260,7 +262,7 @@ class MainWindow(QMainWindow):
                 all_data.append(data['runs'][0])
 
         for g in self.settings.additional_graphics:
-            if g['draw'] and g['name'] == "График движения лучшей точки":  # работает
+            if g['draw'] and g['name'] == "График движения лучшей точки":
                 func = get_test_func(test_func_data['type'],
                                      test_func_data['number_extrema'], test_func_data['coefficients_abruptness'],
                                      test_func_data['coordinates'], test_func_data['degree_smoothness'],
@@ -287,16 +289,23 @@ class MainWindow(QMainWindow):
                                         lbl=[["${x}{_0}$", "${x}{_1}$"] for _ in range(len(algorithms))],
                                         file_name=["graph_convergence_coord_" + alg.get_identifier_name() + ".png" for alg in algorithms],
                                         x_label="${t}$", y_label="${x}$", title=g['name'], single_graph=False)
-            if g['draw'] and g['name'] == "График сходимости по значениям функции":
+            elif g['draw'] and g['name'] == "График сходимости по значениям функции":
                 file_name = "graph_convergence_func_value_" + alg.get_name() + ".png"
                 line_graph(data, [i for i in range(max_stop_iter)],
                            lbl=[alg.get_identifier_name() for alg in algorithms], file_name=file_name,
-                           x_label="${t}$", y_label="${f(x)}$", title=g['name'])
-            if g['draw'] and g['name'] == "График дисперсии":
+                           x_label="${t}$", y_label="${f(x)}$", title=g['name'], marker='')
+            elif g['draw'] and g['name'] == "График дисперсии":  # переделать для дисперсии.
+                data = np.array(data)
+                dim = self.settings.dimension
+                if data.shape[-1] != dim:
+                    label = ["${\sigma}{_x}$_" + alg.get_name().replace(' ', '_') for _ in range(len(algorithms))]
+                    file_name = "graph_dispersion_" + alg.get_identifier_name() + ".png"
+                else:
+                    label = [["${\sigma}{_x}{_" + str(i) + "}$" for i in range(dim)] for _ in range(len(algorithms))]
+                    file_name = ["graph_dispersion_" + alg.get_identifier_name() + ".png" for alg in algorithms]
                 graph_convergence_coord(data, [i for i in range(max_stop_iter)],
-                                        lbl=[["${x}{_0}$", "${x}{_1}$"] for _ in range(len(algorithms))],
-                                        file_name=["graph_dispersion_" + alg.get_identifier_name() + ".png"
-                                                   for alg in algorithms],
+                                        lbl=label,
+                                        file_name=file_name,
                                         x_label="${t}$", y_label="${\sigma}^2$", title=g['name'], single_graph=False)
 
         # TODO: определиться откуда брать данные? (или делать прогон отдельно, или брать из файла)
@@ -312,3 +321,8 @@ class MainWindow(QMainWindow):
                                      "All Files (*);;JSON Files (*.json)", self)
         if file_name:
             self.ui.data_path_le.setText(file_name)
+
+    def open_about_dialog(self) -> None:
+        """Метод открытия окна "О программе" """
+        self.about = AboutDialog(flags=Q_FLAGS())
+        self.about.show()

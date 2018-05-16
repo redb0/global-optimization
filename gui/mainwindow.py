@@ -22,7 +22,7 @@ from gui.wdg.HeatMapWidget import HeatMapWidget
 from gui.wdg.LineGraphWidget import LineGraphWidget
 from gui.wdg.PointGraphWidget import PointGraphWidget
 
-from support_func import fill_combobox_list_alg, open_file_dialog, read_json, write_json
+from support_func import fill_combobox_list_alg, open_file_dialog, read_json
 from test_func import get_test_func
 
 
@@ -65,7 +65,7 @@ class MainWindow(QMainWindow):
         self.ui.additional_graphics_btn.clicked.connect(self.draw_additional_graphics)
         self.ui.open_data_file_btn.clicked.connect(self.open_data_file)
 
-    def add_linear_graph(self):  # сюда лучше не передавать алгориты а передавать в функцию на кнопке построить график
+    def add_linear_graph(self):
         algorithms = self.get_active_algorithm()
         # TODO: переименовать переменные, нихрена не понятно
         d = self.get_value_from_combobox(self.ui.param_linear_graph)
@@ -79,9 +79,10 @@ class MainWindow(QMainWindow):
         if n > 0:
             self.ui.list_graph.takeAt(n - 1)
         if p.allowable_values is not None:
-            point_graph = PossibleGraph("POINT_GRAPH", [p], [], algorithms)
+            point_graph = PossibleGraph("POINT_GRAPH", p, [], algorithms)
             point_graph_wdg = PointGraphWidget(point_graph)
-            self.ui.list_graph.addWidget(point_graph_wdg.get_widget(parent=self))
+            self.ui.list_graph.addWidget(point_graph_wdg.get_widget(parent=self, algorithms=algorithms,
+                                                                    print_error=self.print_error))
         else:
             line_graph = PossibleGraph("LINE_GRAPH", p, [], [])
             line_graph_wdg = LineGraphWidget(line_graph)
@@ -129,7 +130,6 @@ class MainWindow(QMainWindow):
             
             :return: 
             """
-            # params = self.get_params(self.to_test_list)
             idx_active_cb = get_idx_active_cb()
             params = self.get_params_on_idx(self.to_test_list, idx_active_cb)
             common_params = self.get_common_params(*params)
@@ -200,10 +200,6 @@ class MainWindow(QMainWindow):
 
         cb_handler = self.add_parameters_in_combobox
 
-        # a = copy.deepcopy(alg)
-        # a.set_params_value(a.get_parameters(), MI=0)
-        # print(a)
-
         self.ui.add_row_in_form(self.ui.alg_form, a.get_parameters(), name, "Параметризировать", cb_handler, self)
 
     def prohibit_duplicate_selection(self, cmb, cmb1):
@@ -248,6 +244,7 @@ class MainWindow(QMainWindow):
         else:
             script_path = os.path.dirname(os.path.abspath(__file__))
             for alg in algorithms:
+                number_runs = alg.settings.number_of_runs
                 alg.settings.number_of_runs = 1
                 alg.write_parameters()
                 file_name = alg.get_identifier_name() + '.json'
@@ -260,6 +257,8 @@ class MainWindow(QMainWindow):
                     return
                 data = read_json(abs_path)
                 all_data.append(data['runs'][0])
+                alg.settings.number_of_runs = number_runs
+                alg.write_parameters()
 
         for g in self.settings.additional_graphics:
             if g['draw'] and g['name'] == "График движения лучшей точки":
@@ -288,7 +287,7 @@ class MainWindow(QMainWindow):
                 graph_convergence_coord(data, [i for i in range(max_stop_iter)],
                                         lbl=[["${x}{_0}$", "${x}{_1}$"] for _ in range(len(algorithms))],
                                         file_name=["graph_convergence_coord_" + alg.get_identifier_name() + ".png" for alg in algorithms],
-                                        x_label="${t}$", y_label="${x}$", title=g['name'], single_graph=False)
+                                        x_label="${t}$", y_label="${x}$", title=g['name'], single_graph=False, marker=None)
             elif g['draw'] and g['name'] == "График сходимости по значениям функции":
                 file_name = "graph_convergence_func_value_" + alg.get_name() + ".png"
                 line_graph(data, [i for i in range(max_stop_iter)],

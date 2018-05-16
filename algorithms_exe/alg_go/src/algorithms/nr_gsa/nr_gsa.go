@@ -102,24 +102,24 @@ func accelerationCalculation (x [][]float64, mass []float64, g float64, t int, o
 	eps := math.Nextafter(1.0,2.0)-1.0
 	a := make([][]float64, options.StartNumberPoints)
 	if options.ElitistCheck == 1 {
-		temp := finalPer + float64(1 - t / options.MaxIterations) * (100 - finalPer)
+		var temp float64
+		temp = float64(finalPer) + float64(1 - float64(t) / float64(options.MaxIterations)) * float64(100 - finalPer)
 		temp = float64(options.StartNumberPoints) * temp / 100
-		kBest = int(temp)
+		kBest = int(support.Round(temp))
 	} else {
 		kBest = options.StartNumberPoints
 	}
 
 	s := support.NewFloat64Slice(mass)
 	sort.Sort(sort.Reverse(s))
-	//var e [][]float64
 	e := make([][]float64, options.StartNumberPoints)
 	for i := range e {
+		e[i] = make([]float64, len(x[i]))
 		for ii := 0; ii < kBest; ii++ {
 			j := s.Idx[ii]
 			if j != i {
 				r = support.Norm(x[i], x[j], options.RNorm)
 				for k := 0; k < len(x[i]); k++ {
-					e[i] = make([]float64, len(x[i]))
 					e[i][k] = e[i][k] + rand.Float64() * mass[j] *
 						((x[j][k] - x[i][k]) / (math.Pow(r, options.RPower) + eps))
 				}
@@ -172,7 +172,7 @@ func getN(op Options, startNP, iteration int) int {
 
 //TODO: добавить документацию
 func NRGSA(function testfunc.TestFunction, options Options) (fBest float64, numberMeasurements int,
-															 xBest, bestChart, meanChart, dispersion []float64, coordinates [][]float64) {
+															 xBest, bestChart, meanChart, dispersion []float64, coordinates [][]float64, stopIteration int) {
 	rand.Seed(time.Now().UTC().UnixNano())
 	var x [][]float64
 	var velocity, a [][]float64
@@ -220,12 +220,15 @@ func NRGSA(function testfunc.TestFunction, options Options) (fBest float64, numb
 				//fmt.Println(iteration, " - ", len(x))
 			}
 		}
+		//fmt.Println(options.StartNumberPoints)
 
 		if options.MinFlag == 1 {
 			best, bestX = support.Min(fitness)
 		} else {
 			best, bestX = support.Max(fitness)
 		}
+		//fBest = best
+		//xBest = x[bestX]
 		if iteration == 1 {
 			fBest = best
 			xBest = x[bestX]
@@ -254,21 +257,28 @@ func NRGSA(function testfunc.TestFunction, options Options) (fBest float64, numb
 		}
 
 		mass = massCalculationWithNuclearFunc(fitness, options)
-		g, err := GetG(i, options)
+		g, err := GetG(iteration, options)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		a = accelerationCalculation(x, mass, g, i, options) //
+		if g < math.Pow(10, -5) {
+			fmt.Println(numberMeasurements)
+			stopIteration = iteration
+			fmt.Println(stopIteration)
+			return
+		}
+		a = accelerationCalculation(x, mass, g, iteration, options) //
 		//a = AccelerationCalculationWithGoroutine(x, mass, g, i, options) //
 		x, velocity = Move(x, a, velocity)
 	}
 	fmt.Println(numberMeasurements)
+	stopIteration = options.MaxIterations
 	return
 }
 
 func RunNRGSA(function testfunc.TestFunction, options algorithms.OptionsAlgorithm) (float64, []float64, []float64, interface{}, [][]float64, int, int) {
 	op := options.(*Options)
-	fBest, numberMeasurements, xBest, bestChart, _, dispersion, coordinates := NRGSA(function, *op)
-	return fBest, xBest, bestChart, dispersion, coordinates, numberMeasurements, op.MaxIterations
+	fBest, numberMeasurements, xBest, bestChart, _, dispersion, coordinates, stopIteration:= NRGSA(function, *op)
+	return fBest, xBest, bestChart, dispersion, coordinates, numberMeasurements, stopIteration
 }

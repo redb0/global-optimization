@@ -41,7 +41,6 @@ class LineGraphWidget(PossibleGraphWidget):
 
         self.btn_delete.clicked.connect(self.delete_graph(w))
         self.btn_plot.clicked.connect(lambda: self.plot(print_error, algorithms))
-
         return w
 
     def plot(self, print_error, algorithms):
@@ -55,10 +54,7 @@ class LineGraphWidget(PossibleGraphWidget):
             print(error)
         else:
             range_param = [down, high, step]
-            # TODO: уже забыл нафига в след строке надо self.line_graph_obj.get_parameters_obj()[0].
-            # понял, для того чтобы хранить парамметр и его диапозон
             self.line_graph_obj.add_param_range([self.line_graph_obj.get_parameters_obj(), range_param])
-            # self.line_graph_obj.add_params(self.line_graph_obj.get_parameters_obj(), range_param)
 
             line_graph = LineGraph.LineGraph("title", algorithms, self.line_graph_obj.get_parameters_obj(),
                                              high, down, step)

@@ -170,11 +170,6 @@ def line_graph(data, x, lbl=None, file_name="", x_label="", y_label="", title=""
     if len(data.shape) == 1:
         graph.axes.plot(x, data, label=lbl, linewidth=1.5, marker=markers[0] if marker is None else marker)
     else:
-        # if data.shape[-1] == settings.dimension:
-        #     for i in range(len(data)):
-        #         for j in range(settings.dimension):
-        #             graph.axes.plot(x, data[i][j], label=lbl[i][j], linewidth=1.5, marker=markers_list[markers_idx[i]])
-        # else:
         for i in range(len(data)):
             graph.axes.plot(x, data[i], label=lbl[i], linewidth=1.5,
                             marker=markers_list[markers_idx[i]] if marker is None else marker)
@@ -230,20 +225,24 @@ def graph_convergence_coord(data, x, lbl=None, file_name=None, x_label="", y_lab
 
     graph.set_labels(xlabel=x_label, ylabel=y_label, title=title, legend_title="")
 
+    data = np.array([np.array(d) for d in data])
+
     if 2 * len(data) > len(markers):
         markers_list = markers.append(markers[:(2 * len(data) - len(markers))])
     else:
         markers_list = markers
-    marker = '' if (marker is None) and (len(data) >= 15) else None
+    # marker = '' if (marker is None) and (len(data.shape[-2]) >= 15) else None
     markers_idx = generate_rand_int_list(2 * len(data))
-    data = np.array([np.array(d) for d in data])
+    # data = np.array([np.array(d) for d in data])
     if len(data.shape) == 2 and data.shape[-1] == dim:
         if len(lbl) != dim:
             raise ValueError("Ожидается параметр lbl длиной " + str(dim) +
                              ", текущая длина " + str(len(lbl)))
+        marker = '' if (marker is None) and (len(data) >= 15) else None
         for j in range(dim):
             graph.axes.plot(x, data[:, j], label=lbl[0][j], linewidth=1.5, marker=markers_list[markers_idx[j]] if marker is None else marker)
     elif len(data.shape) == 2 and data.shape[-1] != dim:
+        marker = '' if (marker is None) and (data.shape[-1] >= 15) else None
         for j in range(len(data)):
             graph.axes.plot(x, data[j], label=lbl[j], linewidth=1.5, marker=markers_list[markers_idx[j]] if marker is None else marker)
     else:
@@ -253,6 +252,9 @@ def graph_convergence_coord(data, x, lbl=None, file_name=None, x_label="", y_lab
                              ", текущая длина " + str(len(lbl)) +
                              ", с подмассивами длиной " + str(dim) +
                              ", текущая длина подмассивов" + str(lbl.shape[-1]))
+        print(data.shape)
+        print(data)
+        marker = '' if (marker is None) and (data.shape[-2] >= 15) else None
         for i in range(len(data)):
             for j in range(dim):
                 graph.axes.plot(x, data[i, :, j], label=lbl[i][j], linewidth=1.5,

@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"encoding/json"
 	"testfunc"
-	"algorithms/sac"
-	"algorithms/gsa"
 	"algorithms"
 	"algorithms/nr_gsa"
+	"algorithms/sac"
+	"algorithms/gsa"
 	"algorithms/sac_acsa"
 )
 
@@ -60,11 +60,11 @@ func main() {
 	//t.ConfigureTestFunction(0, "", "C:\\go_projects\\StandardGSA\\src\\func1.json")
 	t.ConfigureTestFunction(1, "C:\\go_projects\\StandardGSA\\src", "")
 
-	var options GSA.Options
-	options.SetOptions(500, 200, 1, 100, 20, 0,
-		1, 1, 1, 1, 1)
+	//var options GSA.Options
+	//options.SetOptions(500, 200, 1, 100, 20, 0,
+	//	1, 1, 1, 1, 1)
 
-	epsilon := []float64{0.5, 0.5}
+	//epsilon := []float64{0.5, 0.5}
 	//var res Result
 	runs := 1
 	fmt.Println("Начало прогонов")
@@ -74,8 +74,14 @@ func main() {
 	//	res.FBest, res.XBest, res.BestChart, res.Dispersion, res.NumberMeasurements, res.StopIteration = GSA.RunGSA(t, &options, options.KNoise)
 	//	fmt.Println(res)
 	//}
-	p := findProbability(t, GSA.RunGSA, &options, 1, epsilon)
-	fmt.Println(p)
+	//p := findProbability(t, GSA.RunGSA, &options, 1, epsilon)
+	//fmt.Println(p)
+	options := nr_gsa.Options{}
+	//options.LoadConfiguration(configFile)
+	options.SetOptions(500, 50, 1, 1, 100, 20, 0, 1, 2, 1, 0, 1, 5, 2, 4, 1)
+	//res.FBest, res.XBest, res.BestChart, res.Dispersion, res.NumberMeasurements, res.StopIteration = nr_gsa.RunNRGSA(t, &options)
+	//res = findProbability(t, nr_gsa.RunNRGSA, &options, options.NumberRuns, options.MinFlag, options.Epsilon)
+	nr_gsa.NRGSA(t, options)
 	end := time.Now()
 	runtime := float64(end.Sub(start).Seconds())
 	fmt.Println(fmt.Sprintf("Время выполнения %[1]d прогонов: %[2]f секунд", runs, runtime))

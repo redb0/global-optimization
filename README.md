@@ -13,11 +13,12 @@ The default output is saved as json files to a folder `algorithms_exe/result`.
 
 ## Graphs
 1) line chart (the dependence of the probability estimate on the parameter of the algorithm);
-2) heat map;
-3) convergence in function values;
-4) convergence in coordinate values;
-5) dispersion (-);
-6) best point motion.
+2) point graph;
+3) heat map;
+4) convergence in function values;
+5) convergence in coordinate values;
+6) dispersion (-);
+7) best point motion.
 
 ## Test Functions
 Поддерживается работа со следующими многоэкстремальными тестовыми функциями:

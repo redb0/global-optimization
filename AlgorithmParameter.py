@@ -120,7 +120,7 @@ def get_NF():
 
 
 def get_EndNP():
-    p = AlgorithmParameter("EndNP", "Конечное количество точек", int, "$N{_end}$", default_value=10)
+    p = AlgorithmParameter("EndNP", "Конечное количество точек", int, "$N_{end}$", default_value=10)
     return p
 
 

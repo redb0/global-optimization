@@ -162,7 +162,6 @@ class Algorithm:
         script_path = script_path.replace('\\\\', '\\')
         name_file = self.get_identifier_name() + ".json"  # "s_gsa_MI=500_NP=100_KN=0.0_IG=1.json"
         abs_path_file = os.path.join(script_path, "..\\algorithms_exe\\result\\", name_file)  #
-        print(name_file)
 
         self.write_parameters()
 
@@ -179,7 +178,6 @@ class Algorithm:
 
         res = read_json(abs_path_result)
         print("Оценка вероятности ", res["probability"])
-        print(res["runs"])
 
         return res["probability"]
 

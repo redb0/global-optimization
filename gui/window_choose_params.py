@@ -28,6 +28,7 @@ class ParamsWindow(QtWidgets.QWidget):
 
     def add_to_list(self, widget, p):  # widget
         def f():
+            self.parent().selected_value.clear()
             values = []
             for i in range(widget.count()):
                 if widget.item(i).checkState():
@@ -41,4 +42,5 @@ class ParamsWindow(QtWidgets.QWidget):
         def f():
             for i in range(widget.count()):
                 widget.item(i).setCheckState(QtCore.Qt.Unchecked)
+            self.parent().selected_value.clear()
         return f

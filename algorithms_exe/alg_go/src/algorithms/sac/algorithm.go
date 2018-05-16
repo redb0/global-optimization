@@ -17,8 +17,8 @@ func initializationOperatingPointAndDelta(function testfunc.TestFunction) ([]flo
 	high := function.Up
 	for i := range operatingPoint {
 		delta[i] = make([]float64, 2)
-		operatingPoint[i] = 0
-		//operatingPoint[i] = rand.Float64() * (high[i] - low[i]) + low[i]
+		//operatingPoint[i] = 0
+		operatingPoint[i] = rand.Float64() * (high[i] - low[i]) + low[i]
 		delta[i][0] = operatingPoint[i] - low[i]
 		delta[i][1] = high[i] - operatingPoint[i]
 	}

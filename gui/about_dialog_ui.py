@@ -2,16 +2,15 @@ import os
 
 from PyQt5 import QtCore, QtWidgets, QtGui
 
-from PyQt5.QtCore import QRect
-from PyQt5.QtWidgets import QApplication, QDialogButtonBox, QLabel
+from PyQt5.QtWidgets import QApplication
 
 
 class UiAboutDialog(object):
     def setup_ui(self, about_dialog):
-        about_dialog.setObjectName(self.to_utf("AboutDialog"))
-        about_dialog.setWindowModality(QtCore.Qt.ApplicationModal)
-        about_dialog.resize(421, 288)  # 683, 443
-        about_dialog.setModal(True)
+        # about_dialog.setObjectName(self.to_utf("AboutDialog"))
+        # about_dialog.setWindowModality(QtCore.Qt.ApplicationModal)
+        # about_dialog.resize(421, 288)  # 683, 443
+        # about_dialog.setModal(True)
         about_dialog.setObjectName("AboutDialog")
         about_dialog.setWindowModality(QtCore.Qt.ApplicationModal)
         about_dialog.resize(683, 443)

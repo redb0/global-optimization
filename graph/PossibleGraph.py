@@ -13,15 +13,11 @@ class PossibleGraph:
     def get_type_graph(self) -> str:
         return self.type_graph
 
-    # def get_types_param(self):
-    #     return self.types_params
-
     def get_parameters_obj(self):
         return self.parameter
 
     def add_params(self, parameter, range_p):
         self.parameter.append(parameter)
-        # self.types_params.append(type_p)
         self.range.append(range_p)
 
     def add_param_range(self, range_p):

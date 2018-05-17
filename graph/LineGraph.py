@@ -7,8 +7,7 @@ import os
 
 from Settings import Settings
 from graph.Graph import Graph
-from support_func import generate_rand_int_list, get_delta
-
+from support_func import generate_rand_int_list, get_delta, make_report
 
 Num = Union[int, float]
 
@@ -102,9 +101,11 @@ class LineGraph(Graph):
             for i in range(len(x)):
                 alg.set_parameter(x_name, x[i])
                 if os.path.isfile(self._settings.abs_path_test_func):
-                    probability = alg.find_probability_estimate(self._settings.epsilon,
-                                                                self._settings.abs_path_test_func,
-                                                                number_runs=self._settings.number_of_runs)
+                    probability, data = alg.find_probability_estimate(self._settings.epsilon,
+                                                                      self._settings.abs_path_test_func,
+                                                                      number_runs=self._settings.number_of_runs)
+                    if self._settings.report:
+                        make_report(data, "report_" + alg.get_identifier_name() + '.json')
                 else:
                     return np.array([]), [], "Не выбрана тестовая функция."
                 print(probability)
@@ -231,9 +232,7 @@ def graph_convergence_coord(data, x, lbl=None, file_name=None, x_label="", y_lab
         markers_list = markers.append(markers[:(2 * len(data) - len(markers))])
     else:
         markers_list = markers
-    # marker = '' if (marker is None) and (len(data.shape[-2]) >= 15) else None
     markers_idx = generate_rand_int_list(2 * len(data))
-    # data = np.array([np.array(d) for d in data])
     if len(data.shape) == 2 and data.shape[-1] == dim:
         if len(lbl) != dim:
             raise ValueError("Ожидается параметр lbl длиной " + str(dim) +

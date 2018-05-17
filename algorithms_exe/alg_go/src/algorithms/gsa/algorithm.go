@@ -99,7 +99,8 @@ func accelerationCalculation (x [][]float64, mass []float64, g float64, t int, o
 	eps := math.Nextafter(1.0,2.0)-1.0
 	a := make([][]float64, options.NumberPoints)
 	if options.ElitistCheck == 1 {
-		temp := finalPer + float64(1 - t / options.MaxIterations) * (100 - finalPer)
+		var temp float64
+		temp = finalPer + float64(1 - float64(t) / float64(options.MaxIterations)) * float64(100 - finalPer)
 		temp = float64(options.NumberPoints) * temp / 100
 		kBest = int(temp)
 	} else {
@@ -111,12 +112,12 @@ func accelerationCalculation (x [][]float64, mass []float64, g float64, t int, o
 	//var e [][]float64
 	e := make([][]float64, options.NumberPoints)
 	for i := range e {
+		e[i] = make([]float64, len(x[i]))
 		for ii := 0; ii < kBest; ii++ {
 			j := s.Idx[ii]
 			if j != i {
 				r = support.Norm(x[i], x[j], options.RNorm)
 				for k := 0; k < len(x[i]); k++ {
-					e[i] = make([]float64, len(x[i]))
 					e[i][k] = e[i][k] + rand.Float64() * mass[j] *
 						((x[j][k] - x[i][k]) / (math.Pow(r, options.RPower) + eps))
 				}
@@ -207,7 +208,7 @@ func Move(x, a, v [][] float64) (xNew, vNew [][]float64) {
 }
 
 //TODO: добавить документацию
-func GSA(function testfunc.TestFunction, options Options) (fBest float64, xBest, bestChart, meanChart, dispersion []float64, coordinates [][]float64) {
+func GSA(function testfunc.TestFunction, options Options) (fBest float64, xBest, bestChart, meanChart, dispersion []float64, coordinates [][]float64, numberMeasurements int, stopIteration int) {
 	rand.Seed(time.Now().UTC().UnixNano())
 	//op := options.(Options)
 
@@ -223,6 +224,7 @@ func GSA(function testfunc.TestFunction, options Options) (fBest float64, xBest,
 	var iteration int
 	var best float64
 	var bestX int
+	numberMeasurements = 0
 
 	x = Initialization(function, options)
 	velocity = support.Zeros(len(x), len(x[0]))
@@ -232,6 +234,7 @@ func GSA(function testfunc.TestFunction, options Options) (fBest float64, xBest,
 
 		x = SpaceBound(x, function)
 		fitness = GetEvaluateFunction(x, function, options.KNoise)
+		numberMeasurements = numberMeasurements + len(fitness)
 
 		if options.MinFlag == 1 {
 			best, bestX = support.Min(fitness)
@@ -271,15 +274,20 @@ func GSA(function testfunc.TestFunction, options Options) (fBest float64, xBest,
 			fmt.Println(err)
 			os.Exit(1)
 		}
+		if g < math.Pow(10, -5) {
+			stopIteration = iteration
+			return
+		}
 		a = accelerationCalculation(x, mass, g, i, options) //
 		//a = AccelerationCalculationWithGoroutine(x, mass, g, i, options) //
 		x, velocity = Move(x, a, velocity)
 	}
+	stopIteration = options.MaxIterations
 	return
 }
 
 func RunGSA(function testfunc.TestFunction, options algorithms.OptionsAlgorithm) (float64, []float64, []float64, interface{}, [][]float64, int, int) {
 	op := options.(*Options)
-	fBest, xBest, bestChart, _, dispersion, coordinates := GSA(function, *op)
-	return fBest, xBest, bestChart, dispersion, coordinates, op.MaxIterations * op.NumberPoints, op.MaxIterations
+	fBest, xBest, bestChart, _, dispersion, coordinates, numberMeasurements, stopIteration := GSA(function, *op)
+	return fBest, xBest, bestChart, dispersion, coordinates, numberMeasurements, stopIteration
 }

@@ -3,6 +3,7 @@ import random
 from functools import wraps
 import warnings
 
+import numpy as np
 from PyQt5.QtWidgets import QComboBox, QFileDialog
 from typing import List, Union
 
@@ -24,9 +25,7 @@ def get_max_step(sb, w):
     """
     def f(x1):
         delta = abs(sb.value() - x1)
-        # print(delta)
         w.setMaximum(delta)
-        # return abs(x2 - x1)
 
     return f
 
@@ -281,3 +280,30 @@ def get_delta(min_z, max_z, delta=0.5, l=0.5):
         min_z = min_z + (delta * j)
         yield min_z
         j = j + l
+
+
+def json_to_slice(data, field: str):
+    res = []
+    for d in data:
+        res.append(d[field])
+    return res
+
+
+def make_report(data, file_name: str) -> None:
+    d = {"min_time": 0,
+         "max_time": 0,
+         "mean_time": 0,
+         "min_iter": 0,
+         "max_iter": 0,
+         "mean_iter": 0}
+
+    run_time = json_to_slice(data, 'run_time')
+    stop_iter = json_to_slice(data, 'stop_iteration')
+    d['min_time'] = min(run_time)
+    d['max_time'] = max(run_time)
+    d['mean_time'] = np.mean(run_time)
+    d['min_iter'] = min(stop_iter)
+    d['max_iter'] = max(stop_iter)
+    d['mean_iter'] = np.mean(stop_iter)
+
+    write_json(file_name, d)

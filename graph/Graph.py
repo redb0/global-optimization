@@ -16,8 +16,6 @@ class Graph:
                   "axes.labelsize": fontsize,
                   "xtick.labelsize": fontsize,
                   "ytick.labelsize": fontsize}
-        # rcParams['text.usetex'] = True
-        # rcParams['text.latex.unicode'] = True
         rcParams.update(params)
 
     def set_labels(self, xlabel="", ylabel="", title="", legend_title=""):

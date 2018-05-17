@@ -191,6 +191,14 @@ class Settings:
     def additional_graphics(self):
         return self.__class__._additional_graphics
 
+    @property
+    def report(self) -> bool:
+        return self.__class__._report
+
+    @report.setter
+    def report(self, value: bool) -> None:
+        self.__class__._report = value
+
 
 def set_all_default_values(cls):
     d = cls.__dict__

@@ -7,7 +7,7 @@ from graph.Graph import Graph
 
 import matplotlib.pyplot as plt
 
-from support_func import generate_rand_int_list
+from support_func import generate_rand_int_list, make_report
 
 
 class PointGraph(Graph):
@@ -59,9 +59,11 @@ class PointGraph(Graph):
             for i in range(len(x)):
                 alg.set_parameter(x_name, x[i])
                 if os.path.isfile(self._settings.abs_path_test_func):
-                    probability = alg.find_probability_estimate(self._settings.epsilon,
-                                                                self._settings.abs_path_test_func,
-                                                                number_runs=self._settings.number_of_runs)
+                    probability, data = alg.find_probability_estimate(self._settings.epsilon,
+                                                                      self._settings.abs_path_test_func,
+                                                                      number_runs=self._settings.number_of_runs)
+                    if self._settings.report:
+                        make_report(data, "report_" + alg.get_identifier_name() + '.json')
                 else:
                     return np.array([]), [], "Не выбрана тестовая функция."
                 print(probability)

@@ -33,6 +33,24 @@ class SettingsWindow(QWidget):
         self.ui.reset_btn.clicked.connect(self.reset)
         self.ui.open_file_btn.clicked.connect(self.open_file_dialog)
 
+        self.setup_settings()
+
+    def setup_settings(self):
+        self.ui.abs_path_test_func_te.setText(self.settings.abs_path_test_func)
+        self.ui.min_flag.setValue(self.settings.min_flag)
+        self.ui.number_runs.setValue(self.settings.number_of_runs)
+        self.ui.epsilon.setText(str(self.settings.epsilon))
+        self.ui.legend_position_top.setChecked(self.settings.legend_position == "top")
+        self.ui.legend_position_right.setChecked(self.settings.legend_position == "right")
+        self.ui.global_min.setText(str(self.settings.global_min))
+        self.ui.global_max.setText(str(self.settings.global_max))
+        self.ui.dimension.setText(str(self.settings.dimension))
+        self.ui.report_cb.setChecked(self.settings.report)
+        for i in range(self.ui.box_layout.count()):
+            wdg = self.ui.box_layout.itemAt(i).widget()
+            if type(wdg) == QCheckBox:
+                wdg.setChecked(self.settings.additional_graphics[i]['draw'])
+
     def save_settings(self):
         """Сохранение общих настроек. Действие по клику на кнопку "Сохранить"."""
         # TODO: возможно стоит перенести вывод ошибок прямо в Settings и отказаться от property
@@ -69,6 +87,7 @@ class SettingsWindow(QWidget):
             self.settings.global_max = json.loads(self.ui.global_max.text())
         if self.ui.dimension.text() != "0":
             self.settings.dimension = int(self.ui.dimension.text())
+        self.settings.report = self.ui.report_cb.isChecked()
 
         for i in range(self.ui.box_layout.count()):
             wdg = self.ui.box_layout.itemAt(i).widget()

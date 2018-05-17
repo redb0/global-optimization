@@ -9,6 +9,12 @@ from Settings import Settings
 
 from support_func import to_dict, write_json, read_json
 
+# def get_name_params(self) -> List[str]:
+#     return list(self.parameters.values())
+
+# def get_keys_params(self) -> List[str]:
+#     return list(self.parameters.keys())
+
 
 class Algorithm:
     def __init__(self):
@@ -153,7 +159,7 @@ class Algorithm:
             return return_code, run_time
 
     def find_probability_estimate(self, epsilon: Union[list, float, int],
-                                  file_test_func: str, number_runs=100, file_path="") -> float:
+                                  file_test_func: str, number_runs=100, file_path=""):
         # extremum - из тестовой функции
         # epsilon - из настроек
 
@@ -179,10 +185,4 @@ class Algorithm:
         res = read_json(abs_path_result)
         print("Оценка вероятности ", res["probability"])
 
-        return res["probability"]
-
-    # def get_name_params(self) -> List[str]:
-    #     return list(self.parameters.values())
-
-    # def get_keys_params(self) -> List[str]:
-    #     return list(self.parameters.keys())
+        return res["probability"], res['runs']

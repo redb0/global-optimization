@@ -10,6 +10,7 @@ import (
 	"algorithms/sac"
 	"algorithms/gsa"
 	"algorithms/sac_acsa"
+	"time"
 )
 
 //Result - структура для хранения данных, которые необходимо записать в json.
@@ -21,6 +22,7 @@ type Result struct {
 	Dispersion interface{} `json:"dispersion"`
 	NumberMeasurements int `json:"number_measurements"`
 	StopIteration int `json:"stop_iteration"`
+	RunTime float64 `json:"run_time"`
 }
 
 type RunGroup struct {
@@ -150,7 +152,10 @@ func findProbability(tf testfunc.TestFunction, function runAlgFunc, options algo
 
 	for i := 0; i < numberRuns; i++ {
 		var run Result
+		start := time.Now()
 		run.FBest, run.XBest, run.BestChart, run.Dispersion, run.Coordinates, run.NumberMeasurements, run.StopIteration  = function(tf, options)
+		end := time.Now()
+		run.RunTime = float64(end.Sub(start).Seconds())
 		res.Runs[i] = run
 		for i := range run.XBest {
 			flag := inInterval(run.XBest[i], realExtrema[i], epsilon[i])
@@ -162,6 +167,7 @@ func findProbability(tf testfunc.TestFunction, function runAlgFunc, options algo
 			}
 		}
 	}
+
 	res.Probability = float64(res.Probability) / float64(numberRuns)
 	fmt.Println(res.Probability)
 

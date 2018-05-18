@@ -1,1 +1,1 @@
-{"MI": 20, "NP": 200, "KN": 0.0, "IG": 1, "G0": 100.0, "AG": 20.0, "EC": 1, "RN": 1, "RP": 1, "GA": 1.0, "SF": 100.0, "NF": 1, "KQ": 1.0, "EndNP": 10, "ILCNP": 1, "min_flag": 1, "epsilon": [0.5, 0.5], "number_runs": 100}
+{"MI": 20, "NP": 200, "KN": 0.0, "IG": 1, "G0": 100.0, "AG": 20.0, "EC": 1, "RN": 2, "RP": 1, "GA": 1.0, "SF": 100.0, "NF": 1, "KQ": 1.0, "EndNP": 10, "ILCNP": 1, "min_flag": 1, "epsilon": [0.5, 0.5], "number_runs": 100}

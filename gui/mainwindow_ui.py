@@ -202,6 +202,8 @@ class UiMainWindow:
         cb.setText(self.translate("MainWindow", text))
         btn.setText(self.translate("MainWindow", text_btn))
         delete_btn.setText(self.translate("MainWindow", "Удалить"))
+        delete_btn.clicked.connect(lambda: cb.setChecked(False))
+        delete_btn.clicked.connect(cb_handler(self.get_index_active_checkbox(form)))
         delete_btn.clicked.connect(self.delete_row(window, form, cb))
         btn.setDisabled(True)
         btn.clicked.connect(self.open_settings_alg_window(settings_list, text, parent=window))
@@ -226,7 +228,6 @@ class UiMainWindow:
                     if item.checkState():
                         j = int((i - 1) / 2)
                         idx.append(j)
-            print(idx)
             return idx
         return f
 

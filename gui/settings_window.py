@@ -93,7 +93,6 @@ class SettingsWindow(QWidget):
             wdg = self.ui.box_layout.itemAt(i).widget()
             if type(wdg) == QCheckBox:
                 self.settings.additional_graphics[i]['draw'] = wdg.isChecked()
-        # print(self.settings.additional_graphics)
 
     def reset(self) -> None:
         """

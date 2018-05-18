@@ -31,17 +31,19 @@ class UiAlgorithmSetupWindow:
                 combobox = QtWidgets.QComboBox()
                 fill_combobox_list(combobox, s.get_allowable_values())
                 self.form.addRow(label, combobox)
+                index = combobox.findText(str(s.get_selected_values()))
+                if index != -1:
+                    combobox.setCurrentIndex(index)
             else:
                 if s.get_type() == int:
                     spin_box = QtWidgets.QSpinBox()
                     spin_box.setSingleStep(1)
-                    # spin_box.setValue(s.get_default_value())
                 elif s.get_type() == float:
                     spin_box = QtWidgets.QDoubleSpinBox()
                     spin_box.setSingleStep(0.01)
                 spin_box.setMinimum(0)
                 spin_box.setMaximum(2000)
-                spin_box.setValue(s.get_default_value())
+                spin_box.setValue(s.get_selected_values())
                 self.form.addRow(label, spin_box)
 
         self.apply_btn = QtWidgets.QPushButton()

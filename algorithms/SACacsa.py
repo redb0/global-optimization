@@ -12,7 +12,6 @@ class AcsaSAC(StandardSAC):
         super().__init__()
         self.name = "SAC-ACSA"
         self.full_name = "Метод селективного усреднения с ассиметричной областью"
-        # self._relative_path = "..\\algorithms_exe\\sac_acsa.exe"
         self.config_file = "..\\algorithms_exe\\sac_acsa_config.json"
         self.result_file_name = "..\\algorithms_exe\\result\\sac_acsa_res.json"
 

@@ -225,7 +225,7 @@ func evaluateFunc(testPoints [][][]float64, operatingPoint []float64, function t
 	return fitnessOperatingPointValue, fitnessTestPointValue, err
 }
 
-func moveCorrect(operatingPoint, nuclearFuncNormValue []float64, testPoints [][][]float64, delta [][]float64, options Options) ([]float64, [][]float64) {
+func move(operatingPoint, nuclearFuncNormValue []float64, testPoints [][][]float64, delta [][]float64, options Options) ([]float64, [][]float64) {
 	//N := options.NumberPoints
 	dimension := len(operatingPoint)
 	//u := make([][]float64, N)
@@ -263,13 +263,11 @@ func moveCorrect(operatingPoint, nuclearFuncNormValue []float64, testPoints [][]
 
 	for d := range newOperatingPoint {
 		newDelta[d] = make([]float64, len(delta[d]))
-		//newOperatingPoint[d] = operatingPoint[d] + (delta[d][1] + delta[d][0]) * uNorm[d]
 		if uNorm[d] >= 0 {
 			newOperatingPoint[d] = operatingPoint[d] + delta[d][1] * uNorm[d]
 		} else {
 			newOperatingPoint[d] = operatingPoint[d] + delta[d][0] * uNorm[d]
 		}
-		//newOperatingPoint[d] = operatingPoint[d] + (delta[d][1] + delta[d][0]) * uNorm[d]
 		for i := 0; i < 2; i++ {
 			var s []string
 			if i == 0 {
@@ -284,12 +282,10 @@ func moveCorrect(operatingPoint, nuclearFuncNormValue []float64, testPoints [][]
 			}
 			newDelta[d][i] = options.Gamma * delta[d][i] * math.Pow(sum, 1 / options.Q)
 		}
-		//newDelta[d][0] = options.Gamma * delta[d][0] * math.Pow(sumUP[i][d], 1 / options.Q)
-		//newDelta[d][1] = options.Gamma * delta[d][1] * math.Pow(sumUP[i][d], 1 / options.Q)
 	}
 	return newOperatingPoint, newDelta
 }
-
+/*
 func move(operatingPoint, nuclearFuncNormValue []float64, testPoints, delta [][]float64, options Options) ([]float64, [][]float64) {
 	N := options.NumberPoints
 	dimension := len(operatingPoint)
@@ -312,7 +308,7 @@ func move(operatingPoint, nuclearFuncNormValue []float64, testPoints, delta [][]
 		newDelta[i][0] = options.Gamma * delta[i][0] * math.Pow(sumUP[i], 1 / options.Q)
 	}
 	return newOperatingPoint, newDelta
-}
+}*/
 
 func findPNorm(g []float64, fitTestPointValue []float64, fitOperatingPointValue float64, options Options) (float64, error) {
 	nuclearFuncNormValue := make([]float64, len(g) + 1)
@@ -353,13 +349,12 @@ func findPNorm(g []float64, fitTestPointValue []float64, fitOperatingPointValue 
 	return nuclearFuncNormValue[0], ok
 }
 
-func NewSAC(function testfunc.TestFunction, options Options) (fBest float64, xBest, bestChart, meanChart, nuclearFunc []float64, dispersion, coordinates [][]float64, numberMeasurements, stopIter int) {
+func NewSAC(function testfunc.TestFunction, options Options) (fBest float64, xBest, bestChart, meanChart, nuclearFunc, dispersion []float64, coordinates [][]float64, numberMeasurements, stopIter int) {
 	rand.Seed(time.Now().UTC().UnixNano())
 	bestChart = make([]float64, options.MaxIterations)
 	meanChart = make([]float64, options.MaxIterations)
-	dispersion = make([][]float64, options.MaxIterations)
+	dispersion = make([]float64, options.MaxIterations)
 	coordinates = make([][]float64, options.MaxIterations)
-	//coord = make([][]float64, options.MaxIterations)
 	xBest = make([]float64, function.Dimension)
 	nuclearFunc = make([]float64, options.MaxIterations)
 	g := make([]float64, options.NumberPoints)
@@ -370,7 +365,6 @@ func NewSAC(function testfunc.TestFunction, options Options) (fBest float64, xBe
 	var iteration int
 	for i := 0; i < options.MaxIterations; i++ {
 		iteration = i + 1
-		//fmt.Println("Итерация № ", iteration)
 
 		testPoints := initializationTestPoints(function, options, delta, operatingPoint)
 		fitnessOperatingPointValue, fitnessTestPointValue, ok := evaluateFunc(testPoints, operatingPoint, function, options.KNoise, options.NumberPoints)
@@ -388,21 +382,21 @@ func NewSAC(function testfunc.TestFunction, options Options) (fBest float64, xBe
 		copy(coordinates[i], xBest)
 		meanChart[i] = support.Mean(fitnessTestPointValue)
 
-
-		dispersion[i] = make([]float64, function.Dimension)
-		for j := range dispersion[i] {
-			dispersion[i][j] = support.Sum(delta[j])
+		dispersion[i] = 0
+		for j := range delta {
+			var sum float64
+			for k := range delta[j] {
+				sum += delta[j][k]
+			}
+			dispersion[i] += math.Pow(sum, 2)
 		}
+		dispersion[i] = math.Pow(dispersion[i], 0.5)
 
 		if iteration > 2 {
 			if ((delta[0][0] + delta[0][1]) < math.Pow(10, -5)) || ((delta[1][0] + delta[1][1]) < math.Pow(10, -5)) {
 				stopIter = iteration
 				break
 			}
-			//if math.Abs(bestChart[i - 1] - bestChart[i]) < math.Pow(10, -6) {
-			//	stopIter = iteration
-			//	break
-			//}
 		}
 
 		g = findG(fitnessTestPointValue, options.MinFlag)
@@ -415,8 +409,7 @@ func NewSAC(function testfunc.TestFunction, options Options) (fBest float64, xBe
 
 		nuclearFunc[i], _ = findPNorm(g, fitnessTestPointValue, fitnessOperatingPointValue, options)
 
-		//operatingPoint, delta = move(operatingPoint, nuclearFuncValues, testPoints, delta, options)
-		operatingPoint, delta = moveCorrect(operatingPoint, nuclearFuncValues, testPoints, delta, options)
+		operatingPoint, delta = move(operatingPoint, nuclearFuncValues, testPoints, delta, options)
 		delta = checkDelta(delta, operatingPoint, function)
 	}
 	return

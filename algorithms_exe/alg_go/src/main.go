@@ -33,7 +33,6 @@ type RunGroup struct {
 //writeInFile запись результата работы алгоритма в json файл.
 func writeInFile(fileName string, data RunGroup) {
 	file, err := os.OpenFile(fileName, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
-	//fmt.Println(fileName)
 	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(1)
@@ -98,40 +97,29 @@ func main() {
 	testFuncFile = os.Args[3] // путь к файлу с тестовой функцией
 	outputName = os.Args[4]   // пусть к файлу с результатами
 
-	fmt.Println(algorithm)
-	fmt.Println(configFile)
-	fmt.Println(testFuncFile)
-	fmt.Println(outputName)
-
 	t := testfunc.TestFunction{}
 	t.ConfigureTestFunction(0, "", testFuncFile)
 	var res RunGroup
-
-	//var f func(testfunc.TestFunction, algorithms.OptionsAlgorithm, float64) (float64, []float64, []float64, interface{}, int, int)
 
 	switch algorithm {
 	case "StandardSAC" :
 		options := SAC.Options{}
 		options.LoadConfiguration(configFile)
-		//res.FBest, res.XBest, res.BestChart, res.Dispersion, res.NumberMeasurements, res.StopIteration = SAC.RunSAC(t, &options)
 		res = findProbability(t, SAC.RunSAC, &options, options.NumberRuns, options.MinFlag, options.Epsilon)
 
 	case "StandardGSA" :
 		options := GSA.Options{}
 		options.LoadConfiguration(configFile)
-		//res.FBest, res.XBest, res.BestChart, res.Dispersion, res.NumberMeasurements, res.StopIteration = GSA.RunGSA(t, &options)
 		res = findProbability(t, GSA.RunGSA, &options, options.NumberRuns, options.MinFlag, options.Epsilon)
 
 	case "NoiseResistanceGSA" :
 		options := nr_gsa.Options{}
 		options.LoadConfiguration(configFile)
-		//res.FBest, res.XBest, res.BestChart, res.Dispersion, res.NumberMeasurements, res.StopIteration = nr_gsa.RunNRGSA(t, &options)
 		res = findProbability(t, nr_gsa.RunNRGSA, &options, options.NumberRuns, options.MinFlag, options.Epsilon)
 
 	case "SAC-ACSA" :
 		options := sac_acsa.Options{}
 		options.LoadConfiguration(configFile)
-		//res.FBest, res.XBest, res.BestChart, res.Dispersion, res.NumberMeasurements, res.StopIteration  = sac_acsa.RunSACAcsa(t, &options)
 		res = findProbability(t, sac_acsa.RunSACAcsa, &options, options.NumberRuns, options.MinFlag, options.Epsilon)
 	}
 

@@ -289,6 +289,29 @@ def json_to_slice(data, field: str):
     return res
 
 
+def get_common_items(*args):
+    sets = [set(x) for x in args]
+    return list(sets[0].intersection(*sets[1:]))
+
+
+def get_common_params(*args):
+    l = [list(i.keys()) for i in args]
+    d = {}
+    if not l:
+        return d
+    common_params_arg = get_common_items(*l)
+    for x in common_params_arg:
+        d.update({x: args[0].get(x)})
+    return d
+
+
+def get_value_from_combobox(combobox):
+    text = combobox.currentText()
+    key = combobox.currentData()
+    d = {key: text}
+    return d
+
+
 def make_report(data, file_name: str) -> None:
     d = {"min_time": 0,
          "max_time": 0,

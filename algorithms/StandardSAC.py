@@ -12,7 +12,6 @@ class StandardSAC(SAC):
         super().__init__()
         self.name = "Standard SAC"
         self.full_name = "Метод селективного усреднения"
-        # self._relative_path = "..\\algorithms_exe\\standard_sac.exe"  # пусть до exe-шника с алгоритмом на golang
         self.config_file = "..\\algorithms_exe\\standard_sac_config.json"
         self.result_file_name = "..\\algorithms_exe\\result\\standard_sac_res.json"
 

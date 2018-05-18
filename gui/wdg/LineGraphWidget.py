@@ -47,7 +47,6 @@ class LineGraphWidget(PossibleGraphWidget):
         down = self.range_wdg.spin_box_1.value()
         high = self.range_wdg.spin_box_2.value()
         step = round(self.range_wdg.spin_box_3.value(), 2)
-        print(algorithms)
         if (down >= high) or (step <= 0) or (step >= (high - down)):
             error = "Параметры итерирования заданы некорректно"
             print_error(error)
@@ -59,6 +58,3 @@ class LineGraphWidget(PossibleGraphWidget):
             line_graph = LineGraph.LineGraph("title", algorithms, self.line_graph_obj.get_parameters_obj(),
                                              high, down, step)
             line_graph.plot(print_error=print_error)
-
-            print(self.line_graph_obj)
-            print(self.line_graph_obj.get_param_range())

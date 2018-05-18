@@ -112,8 +112,6 @@ class Algorithm:
             print("Некорректно указана epsilon-окрестность")
             return
 
-        print(to_dict(self.parameters, min_flag=self.settings.min_flag,
-                      epsilon=epsilon, number_runs=self.settings.number_of_runs))
         write_json(abs_path_config, to_dict(self.parameters, min_flag=self.settings.min_flag,
                                             epsilon=epsilon, number_runs=self.settings.number_of_runs))
 

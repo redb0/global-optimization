@@ -4,7 +4,6 @@ import os
 from typing import Union, List
 
 from Parameter import Parameter
-# from graph.LineGraph import motion_point_graph, line_graph, graph_convergence_coord
 
 
 class Settings:
@@ -21,17 +20,12 @@ class Settings:
                                  allowable_values=["top", "left", "bottom", "right"])
     _dimension = Parameter("Размерность задачи", int, 0)
 
-    _report = True  # отчет json, в настройках сделать галочку "составлять для всех прогонов" и "не составлять"
-    # [
-    #   "time": {"min": 0, "mean": 0, "max": 0},
-    #   "iteration": {"min": 0, "mean": 0, "max": 0}
-    # ]
+    _report = True
     # Дополнительные графики
     _additional_graphics = [{'name': "График сходимости по значениям функции", 'draw': True, 'name_field': 'best_chart'},
                             {'name': "График сходимости по координатам", 'draw': True, 'name_field': 'coordinates'},
                             {'name': "График движения лучшей точки", 'draw': True, 'name_field': 'coordinates', 'iter': 5},
                             {'name': "График дисперсии", 'draw': True, 'name_field': 'dispersion'}]
-                            # {'name': "График количества рабочих итераций", 'draw': False}]
 
     def __init__(self):
         pass

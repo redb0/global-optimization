@@ -7,10 +7,6 @@ from PyQt5.QtWidgets import QApplication
 
 class UiAboutDialog(object):
     def setup_ui(self, about_dialog):
-        # about_dialog.setObjectName(self.to_utf("AboutDialog"))
-        # about_dialog.setWindowModality(QtCore.Qt.ApplicationModal)
-        # about_dialog.resize(421, 288)  # 683, 443
-        # about_dialog.setModal(True)
         about_dialog.setObjectName("AboutDialog")
         about_dialog.setWindowModality(QtCore.Qt.ApplicationModal)
         about_dialog.resize(683, 443)
@@ -119,13 +115,6 @@ class UiAboutDialog(object):
         path_to_license = os.path.join(script_path, "../resource/license.html")
         with open(path_to_license, 'r') as f:
             license_html = f.read()
-
-        # self.textBrowser.setHtml(_translate("AboutDialog",
-        #                                     "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-        #                                     "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-        #                                     "p, li { white-space: pre-wrap; }\n"
-        #                                     "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-        #                                     "<p style=\" margin-top:0px; margin-bottom:25px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#fcfcfc;\"><span style=\" font-family:\'Open Sans,sans-serif\'; font-size:8pt; color:#2b2b2b; background-color:#fcfcfc;\">Copyright 2017 Ognjen Galić</span><span style=\" font-family:\'Open Sans,sans-serif\'; font-size:8pt; color:#2b2b2b;\"><br /><br /></span><span style=\" font-family:\'Open Sans,sans-serif\'; font-size:8pt; color:#2b2b2b; background-color:#fcfcfc;\">Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:<br /><br />1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.<br /><br />2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.<br /><br />THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span></p></body></html>"))
 
         self.textBrowser.setHtml(_translate("AboutDialog", license_html))
 

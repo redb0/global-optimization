@@ -70,5 +70,4 @@ class PointGraph(Graph):
                 y1.append(probability)
             alg.set_parameter(x_name, stock_value)
             y.append(y1)
-        print(y)
         return x, y, ""

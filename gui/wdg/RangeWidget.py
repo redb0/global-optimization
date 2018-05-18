@@ -12,10 +12,6 @@ class RangeWidget(QtWidgets.QWidget):
         self.top_limit = top_limit
         self.step_limit = step_limit
 
-        # self.min_val = 0
-        # self.max_val = 0
-        # self.step = 0
-
         self.spin_box_1 = None
         self.spin_box_2 = None
         self.spin_box_3 = None
@@ -91,31 +87,3 @@ def window_choose_params(self, parameters, parent=None):
 
     return f
     # TODO: переделать в pop up
-
-
-# def add_heat_map():
-#     w = QtWidgets.QWidget()
-#     grid = QtWidgets.QGridLayout()
-#     btn_delete = QtWidgets.QPushButton()
-#     btn_plot = QtWidgets.QPushButton()
-#     spin_box_1 = QtWidgets.QSpinBox()
-#     spin_box_2 = QtWidgets.QSpinBox()
-#     spin_box_3 = QtWidgets.QSpinBox()
-#     spin_box_4 = QtWidgets.QSpinBox()
-#     spin_box_5 = QtWidgets.QSpinBox()
-#     spin_box_6 = QtWidgets.QSpinBox()
-#     grid.addWidget(btn_plot, 0, 0)
-#     grid.addWidget(btn_delete, 1, 0)
-#     grid.addWidget(spin_box_1, 0, 1)
-#     grid.addWidget(spin_box_2, 0, 2)
-#     grid.addWidget(spin_box_3, 0, 3)
-#     grid.addWidget(spin_box_4, 1, 1)
-#     grid.addWidget(spin_box_5, 1, 2)
-#     grid.addWidget(spin_box_6, 1, 3)
-#     w.setLayout(grid)
-#     # self.list_graph.addWidget(w)
-#     btn_delete.setText(translate("MainWindow", "Удалить"))
-#     btn_plot.setText(translate("MainWindow", "Построить"))
-#
-#     btn_delete.clicked.connect(delete_graph(w))
-#     return w

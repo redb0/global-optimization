@@ -94,7 +94,6 @@ class LineGraph(Graph):
         x = np.arange(self.min_range, self.max_range, self.step)
         x_name = self._param.get_abbreviation()
         y = []
-        print(x)
         for alg in self._algorithms:
             y1 = []
             stock_value = alg.get_value_param_on_abbreviation(x_name)
@@ -108,11 +107,9 @@ class LineGraph(Graph):
                         make_report(data, "report_" + alg.get_identifier_name() + '.json')
                 else:
                     return np.array([]), [], "Не выбрана тестовая функция."
-                print(probability)
                 y1.append(probability)
             alg.set_parameter(x_name, stock_value)
             y.append(y1)
-        print(y)
         return x, y, ""
 
     # свойства
@@ -251,8 +248,6 @@ def graph_convergence_coord(data, x, lbl=None, file_name=None, x_label="", y_lab
                              ", текущая длина " + str(len(lbl)) +
                              ", с подмассивами длиной " + str(dim) +
                              ", текущая длина подмассивов" + str(lbl.shape[-1]))
-        print(data.shape)
-        print(data)
         marker = '' if (marker is None) and (data.shape[-2] >= 15) else None
         for i in range(len(data)):
             for j in range(dim):

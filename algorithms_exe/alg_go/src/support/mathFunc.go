@@ -27,6 +27,9 @@ func Min(x []float64) (float64, int) {
 	return m, idx
 }
 
+//Max - функция поиска максимума в одномерном слайсе, состоящем из float64.
+//Возвращает значение максимального элемента и его индекс в слайсе.
+//Max([]float64{4, 3, 1, 5, 8}) -> (8, 4)
 func Max(x []float64) (float64, int) {
 	var m float64
 	var idx int
@@ -190,6 +193,7 @@ func Dispersion(x [][]float64) (float64, error) {
 	return dispersion, nil
 }
 
+//Round - округление до ближайшего целого.
 func Round(x float64) float64 {
 	const (
 		mask     = 0x7FF

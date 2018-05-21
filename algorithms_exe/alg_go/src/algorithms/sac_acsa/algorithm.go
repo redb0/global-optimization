@@ -21,6 +21,12 @@ func getOctree(dim, lenSubArray int) [][][]float64 {
 	return x
 }
 
+//intToBitStr преобразует целое число в битовую строку.
+//Аргументы:
+//    n - число для преобразования
+//    l - длина битовой строки
+//Возвращаемые значения:
+//    битовая строка
 func intToBitStr(n, l int) string {
 	s := strconv.FormatInt(int64(n), 2)
 	var res string
@@ -32,11 +38,21 @@ func intToBitStr(n, l int) string {
 	return res
 }
 
+//bitStrToInt преобразует битовую строку в целое число
+//Аргументы:
+//    битовая строка
+//Возвращаемые значения:
+//    целое число
 func bitStrToInt(s string) int {
 	v, _ := strconv.ParseInt(s, 2, 64)
 	return int(v)
 }
 
+//bitStrArrayToIntArray преобразует список битовых строк в список целых чисел
+//Аргументы:
+//    список битовых строк
+//Возвращаемые значения:
+//    список целых чисел
 func bitStrArrayToIntArray(s []string) []int {
 	res := make([]int, len(s))
 	for i := range s {
@@ -45,6 +61,13 @@ func bitStrArrayToIntArray(s []string) []int {
 	return res
 }
 
+//getNumBitStr выбирает битовые строки, в которых на месте idx находится бит v
+//Аргументы:
+//    bitsStrNum - список битовых строк
+//    idx - номер бита
+//    v - бит
+//Возвращаемые значения:
+//    список битовых строк
 func getNumBitStr(bitsStrNum []string, idx, v int) []string {
 	var res []string
 	for i := range bitsStrNum {
@@ -55,6 +78,12 @@ func getNumBitStr(bitsStrNum []string, idx, v int) []string {
 	return res
 }
 
+//intsInBits преобразует список целых чисел в список битовых строк
+//Аргументы:
+//    number - список целых чисел
+//    l - длина битовой строки
+//Возвращаемые значения:
+//    список битовых строк
 func intsInBits(number []int, l int) []string {
 	res := make([]string, len(number))
 	for i := range res {
@@ -63,6 +92,18 @@ func intsInBits(number []int, l int) []string {
 	return res
 }
 
+/*
+initializationOperatingPointAndDelta инициализирует рабочую точку и расстояния области поиска.
+Аргументы:
+    function - структура тестовой функции
+Возвращаемые значения:
+    координаты рабочей точки
+    список расстояний области поиска.
+Рабочая точка инициализируется в (0, 0)
+Если имеется функция от двую переменных и наложены аграничения -6<=x1,x2<=6,
+то operatingPoint = [0, 0], а
+delta = [[6, 6], [6, 6]]
+ */
 func initializationOperatingPointAndDelta(function testfunc.TestFunction) ([]float64, [][]float64) {
 	operatingPoint := make([]float64, function.Dimension)
 	delta := make([][]float64, function.Dimension)
@@ -70,6 +111,7 @@ func initializationOperatingPointAndDelta(function testfunc.TestFunction) ([]flo
 	high := function.Up
 	for i := range operatingPoint {
 		delta[i] = make([]float64, 2)
+		//FIXME: сделать выбор инициализации operatingPoint: случайно либо вручную, передавая список координат
 		operatingPoint[i] = 0
 		//operatingPoint[i] = rand.Float64() * (high[i] - low[i]) + low[i]
 		delta[i][0] = operatingPoint[i] - low[i]
@@ -78,11 +120,21 @@ func initializationOperatingPointAndDelta(function testfunc.TestFunction) ([]flo
 	return operatingPoint, delta
 }
 
-// Производит "разброс" тестовых точек в области вокруг рабочей точки.
-// Примает:
-//    function testFunctions.TestFunction - хранит размерность задачи оптимизации
-//    options Options - хранит количество пробных точек
-//    delta [][]float64 - двумерный массив ограничений сужаемой области
+/*
+initializationTestPoints инициализирует пробные точки.
+Аргументы:
+    function - структура тестовой функции
+    options - структура настроек алгоритма
+    delta - список расстояний области поиска
+    operationPoint - координаты рабочей точки
+Возвращаемые значения:
+    список координат пробных точек
+Пробные точки инициализируются случайным образом, с помощью равномерного закона распределения в области:
+для x1: [x0-delta0_0, x0+delta0_1]
+для x2: [x1-delta1_0, x1+delta1_1]
+где, (x0, x1) - координаты рабочей точки;
+delta = [[delta0_0, delta0_1], [delta1_0, delta1_1]].
+ */
 func initializationTestPoints(function testfunc.TestFunction, options Options, delta [][]float64, operationPoint []float64) [][][]float64 {
 	numberQuadrants := math.Pow(2, float64(function.Dimension))
 	quadTree := make([][][]float64, int(numberQuadrants))
@@ -109,6 +161,15 @@ func initializationTestPoints(function testfunc.TestFunction, options Options, d
 	return quadTree
 }
 
+/*
+findNormNuclearFunc вычисляет нормированные значения ядерной функции
+Аргументы:
+    g - список нормированных значений функции
+    options - структура настроек алгоритма
+Возвращаемые значения:
+    список нормированных значений ядерной функции
+    ошибка
+ */
 func findNormNuclearFunc(g []float64, options Options) ([]float64, error) {
 	nuclearFuncNormValue := make([]float64, len(g))
 	var ok error
@@ -128,7 +189,12 @@ func findNormNuclearFunc(g []float64, options Options) ([]float64, error) {
 }
 
 /*
- * Расчет усредненного значения функции
+findG вычисляет нормированные значения целевой функции.
+Аргументы:
+    fitnessTestPointValue - список значений целевой функции
+    minFlag - флаг минимизации
+Возвращаемые значения:
+    список нормированных значений функции
  */
 func findG(fitnessTestPointValue []float64, minFlag int) []float64 {
 	maxFitTP, _ := support.Max(fitnessTestPointValue)
@@ -177,6 +243,15 @@ func findDelta(delta [][]float64, nuclearFuncNormValue []float64, options Option
 	return newDelta
 }
 
+/*
+checkDelta проверяет выходят ли граници области delta за допустимую область поиска, если да, то устанавливает новые.
+Аргументы:
+    delta - список расстояний области поиска
+    operationPoint - координаты рабочей точки
+    function - структура тестовой функции
+Возвращаемые значения:
+    скорректированная delta
+ */
 func checkDelta(delta [][]float64, operationPoint []float64, function testfunc.TestFunction) [][]float64 {
 	high := function.Up
 	low := function.Down
@@ -193,7 +268,23 @@ func checkDelta(delta [][]float64, operationPoint []float64, function testfunc.T
 	return delta
 }
 
+/*
+evaluateFunc вычисляет значения целевой функции.
+Дополнительно накладывает аддитивную центрированную помеху (если kNoise > 0),
+имеющую равномерный закон распределения.
+Аргументы:
+    testPoints - список координат пробных точек
+    operationPoint - координаты рабочей точки
+    function - структура тестовой функции
+    kNoise - коэффициент шум/сингал
+    np - количество пробных точек
+Возвращаемые значения:
+    значение целевой функции в рабочей точке
+    список значений целевой функции в рабочих точках
+    ошибка
+ */
 func evaluateFunc(testPoints [][][]float64, operatingPoint []float64, function testfunc.TestFunction, kNoise float64, np int) (float64, []float64, error) {
+	//FIXME: убрать аргумент np int, его можно узнать по len(testPoints)
 	var fitnessOperatingPointValue float64 = 0
 	fitnessTestPointValue := make([]float64, np)
 	var err error
@@ -225,6 +316,18 @@ func evaluateFunc(testPoints [][][]float64, operatingPoint []float64, function t
 	return fitnessOperatingPointValue, fitnessTestPointValue, err
 }
 
+/*
+move рассчитывает новые координаты рабочей точки и новые границы поиска.
+Аргументы:
+    testPoints - список координат пробных точек
+    operationPoint - координаты рабочей точки
+    nuclearFuncNormValue - список нормированных значений ядерной функции
+    delta - список расстояний области поиска
+    options - структура настроек алгоритма
+Возвращаемые значения:
+    новые координаты рабочей точки
+    новые границы delta
+ */
 func move(operatingPoint, nuclearFuncNormValue []float64, testPoints [][][]float64, delta [][]float64, options Options) ([]float64, [][]float64) {
 	//N := options.NumberPoints
 	dimension := len(operatingPoint)
@@ -310,6 +413,18 @@ func move(operatingPoint, nuclearFuncNormValue []float64, testPoints, delta [][]
 	return newOperatingPoint, newDelta
 }*/
 
+/*
+findPNorm рассчитывает значение ядерной функции в рабочей точке.
+Чисто для построения графика.
+Аргументы:
+    g - список значений ядерной функции
+    fitTestPointValue - список значений целевой функции в пробных точках
+    fitOperatingPointValue - значение целевой функции в рабочей точке
+    options - структура настроек алгоритма
+Возвращаемые значения:
+    значение ядерной функции в рабочей точке
+    ошибка
+ */
 func findPNorm(g []float64, fitTestPointValue []float64, fitOperatingPointValue float64, options Options) (float64, error) {
 	nuclearFuncNormValue := make([]float64, len(g) + 1)
 	maxFitTP, _ := support.Max(fitTestPointValue)
@@ -349,6 +464,22 @@ func findPNorm(g []float64, fitTestPointValue []float64, fitOperatingPointValue 
 	return nuclearFuncNormValue[0], ok
 }
 
+/*
+NewSAC основаная процедура алгоритма.
+Аргументы:
+    function - структура тестовой функции
+    options - структура настроек алгоритма
+Возвращаемые значения:
+    fBest - найденное значение целевой функции
+    xBest - найденные координаты экстремума
+    bestChart - список лучших значений функции (значений в рабочей точке) по итерациям
+    meanChart - список средних значений целевой функции (в тестовых точках) по итерациям
+    nuclearFunc - список значений ядерной функции в рабочей точке
+    dispersion - дисперсия, по итерациям
+    coordinates - список координат рабочей точки по итерациям
+    numberMeasurements - количество измерений целевой функции
+    stopIter - количество пройденных итераций
+ */
 func NewSAC(function testfunc.TestFunction, options Options) (fBest float64, xBest, bestChart, meanChart, nuclearFunc, dispersion []float64, coordinates [][]float64, numberMeasurements, stopIter int) {
 	rand.Seed(time.Now().UTC().UnixNano())
 	bestChart = make([]float64, options.MaxIterations)
@@ -415,6 +546,13 @@ func NewSAC(function testfunc.TestFunction, options Options) (fBest float64, xBe
 	return
 }
 
+/*
+RunSACAcsa - функция обертка для запуска алгоритма.
+Аргументы:
+    см. NewSAC
+Возвращаемые значения:
+    см. NewSAC
+ */
 func RunSACAcsa(function testfunc.TestFunction, options algorithms.OptionsAlgorithm) (float64, []float64, []float64, interface{}, [][]float64, int, int) {
 	op := options.(*Options)
 	fBest, xBest, bestChart, _, _, dispersion, coordinates, numberMeasurements, stopIteration := NewSAC(function, *op)

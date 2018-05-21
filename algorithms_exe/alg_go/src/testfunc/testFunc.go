@@ -27,9 +27,24 @@ import (
 //}
 
 /*
-
+TestFunction - структура описывающая тестовую функцию.
+	testFunc               : функция типа func([]float64) float64
+	Index                  : индекс тестовой функции
+	Dimension              : размерность задачи
+	NumExtrema             : количество экстремумов
+	Type                   : тип (feldbaum_function, hyperbolic_potential_abs, exponential_potential)
+	Coordinates            : координаты экстремумов
+	FuncValues             : значения функции в экстремумах
+	DegreeSmoothness       : степень гладкости функции в окрестности экстремума
+	CoefficientsAbruptness : коэффициенты крутости функции в окрестности экстремума
+	Up             : ограничения сверху по каждой оси
+	Down           : ограничения снизу по каждой оси
+	AmplitudeNoise : амплитуда шума
+	RealMin        : координаты глобального минимума
+    RealMax        : координаты глобального максимума
+	MinValue       : значение функции в точке глобального минимума
+	MaxValue       : значение функции в точке глобального максимума
  */
-//TODO: добавить документацию
 type TestFunction struct {
 	testFunc               func([]float64) float64
 	Index                  int           `json:"index"`
@@ -51,7 +66,17 @@ type TestFunction struct {
 	MaxValue       float64   `json:"max_value"`
 }
 
-//TODO: добавить документацию
+/*
+ConfigureTestFunction - конструирование тестовой функции.
+Аргументы:
+    idx     : индекс тестовой функции
+    pathDir : путь до директории с тестовыми функциями
+    file    : имя файла тестовой функции
+Возвращаемые значения:
+    ошибка
+Приоритет имеет аргумент file, если он равен пустой строке,
+происходит поиск в директории pathDir файла удовлетворяющего паттерну "func" + idx + ".json"
+*/
 func (f *TestFunction) ConfigureTestFunction(idx int, pathDir, file string) error {
 	var pattern = "func" + strconv.Itoa(idx) + ".json"
 	//re := regexp.MustCompile(`(func)(\d+)(\.json)`)
@@ -95,7 +120,7 @@ func (f *TestFunction) ConfigureTestFunction(idx int, pathDir, file string) erro
 	return nil
 }
 
-//TODO: добавить документацию
+//readFromJson - считывание json-файла.
 func (f *TestFunction) readFromJson(file string) error {
 	configFile, err := os.Open(file)
 	if err != nil {
@@ -112,7 +137,7 @@ func (f *TestFunction) readFromJson(file string) error {
 	return nil
 }
 
-//TODO: добавить документацию
+//constructionTestFunc - конструирует тестовую функцию в зависимостри от типа.
 func (f *TestFunction) constructionTestFunc() {
 	if f.Type == "feldbaum_function" {
 		//f.CoefficientsAbruptness = f.CoefficientsAbruptness.([]float64)

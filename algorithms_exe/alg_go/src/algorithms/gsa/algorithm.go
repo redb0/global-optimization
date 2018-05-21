@@ -13,8 +13,15 @@ import (
 	"algorithms"
 )
 
-//Initialization - инициализации системы из N точек.
-//Точки инициализируются случайным образом (по нормальному распределению) в области поиска.
+/*
+Initialization - инициализации системы из N точек.
+Точки инициализируются случайным образом (по равномерному закону распределению) в области поиска.
+Аргументы:
+    function - структура с описанием целевой функции
+    options - структура с параметрами алгоритма
+Возвращаемые значения:
+    список координат точек
+ */
 func Initialization(function testfunc.TestFunction, options Options) [][]float64 {
 	x := make([][]float64, options.NumberPoints)
 	for j := range x {
@@ -27,8 +34,16 @@ func Initialization(function testfunc.TestFunction, options Options) [][]float64
 	return x
 }
 
-// GetEvaluateFunction - измерение значений целевой функции.
-// Еси коэффициент помехи >= 0, то накладывается аддитивная равномерно распределенная помеха.
+/*
+GetEvaluateFunction - измерение значений целевой функции.
+Если коэффициент помехи >= 0, то накладывается аддитивная равномерно распределенная помеха.
+Аргументы:
+    x - список координат точек
+    function - структура с описанием целевой функции
+    kNoise - коэффициент шум/сигнал
+Возвращаемые значения:
+    список значений целевой функции
+ */
 func GetEvaluateFunction(x [][]float64, function testfunc.TestFunction, kNoise float64) []float64 {
 	var ok error
 	f := make([]float64, len(x))
@@ -45,8 +60,16 @@ func GetEvaluateFunction(x [][]float64, function testfunc.TestFunction, kNoise f
 	return f
 }
 
-// SpaceBound - функция проверки выхода точек за границы области поиска.
-// Если точка выходит за границы, то она заного инициализируется случайным образом.
+/*
+SpaceBound - функция проверки выхода точек за границы области поиска.
+Если точка выходит за границы, то она заного инициализируется случайным образом
+(по равномерному закону распределению).
+Аргументы:
+    x - список координат точек
+    function - структура с описанием целевой функции
+Возвращаемые значения:
+    список значений целевой функции
+ */
 func SpaceBound(x [][]float64, function testfunc.TestFunction) [][]float64 {
 	for i := range x {
 		for j := range x[i] {
@@ -60,8 +83,15 @@ func SpaceBound(x [][]float64, function testfunc.TestFunction) [][]float64 {
 	return x
 }
 
-// MassCalculation - функция рассчета масс (весов) точек.
-// веса нормированы на отрезке [0, 1]
+/*
+MassCalculation - функция рассчета масс (весов) точек.
+Веса нормированы на отрезке [0, 1].
+Аргументы:
+    f - список значений целевой функции
+    options - структура с параметрами алгоритма
+Возвращаемые значения:
+    список нормированных значений целевой функции
+ */
 func MassCalculation(f []float64, options Options) []float64 {
 	fitMin, _ := support.Min(f)
 	fitMax, _ := support.Max(f)
@@ -91,7 +121,17 @@ func MassCalculation(f []float64, options Options) []float64 {
 	return mass
 }
 
-//TODO: добавить документацию
+/*
+accelerationCalculation рассчитывает величину ускорения каждой точки.
+Аргументы:
+    x - список координат точек
+    mass - список нормированных значений целевой функции
+    g - значение гравитационной постоянной
+    t - номер итерации
+    options - структура с параметрами алгоритма
+Возвращаемые значения:
+    список ускорений по каждой координате
+ */
 func accelerationCalculation (x [][]float64, mass []float64, g float64, t int, options Options) [][]float64 {
 	var finalPer float64 = 2
 	var kBest int
@@ -179,7 +219,6 @@ func AccelerationCalculationWithGoroutine(x [][]float64, mass []float64, g float
 	return a
 }
 
-//TODO: добавить документацию
 func go1(i, j, rNorm int, x, e [][]float64, mass []float64, eps, rPower float64, wg *sync.WaitGroup) {
 	if j != i {
 		r := support.Norm(x[i], x[j], rNorm)
@@ -192,7 +231,16 @@ func go1(i, j, rNorm int, x, e [][]float64, mass []float64, eps, rPower float64,
 	wg.Done()
 }
 
-//TODO: добавить документацию
+/*
+Move - функция расчета новых координат точек и их скоростей.
+Аргументы:
+    x - список координат точек
+    a - список ускорений по каждой координате
+    v - список скоростей по каждой координате
+Возвращаемые значения:
+    xNew - список новых координат точек
+    vNew - список новых скоростей по каждой координате
+ */
 func Move(x, a, v [][] float64) (xNew, vNew [][]float64) {
 	vNew = make([][]float64, len(v))
 	xNew = make([][]float64, len(x))
@@ -207,7 +255,21 @@ func Move(x, a, v [][] float64) (xNew, vNew [][]float64) {
 	return
 }
 
-//TODO: добавить документацию
+/*
+GSA - основная процедура алгоритма.
+Аргументы:
+    function - структура с информацией о целевой функции
+    options - структура с параметрами алгоритма
+Возвращаемые значения:
+    fBest - найденное значение целевой функции
+    xBest - найденные координаты экстремума
+    bestChart - список лучших значений функции по итерациям
+    meanChart - список средних значений целевой функции по итерациям
+    dispersion - список значений дисперсии по итерациям
+    coordinates - список координат лучшей точки по итерациям
+    numberMeasurements - количество измерений целевой функции
+    stopIteration - количество пройденных итераций
+ */
 func GSA(function testfunc.TestFunction, options Options) (fBest float64, xBest, bestChart, meanChart, dispersion []float64, coordinates [][]float64, numberMeasurements int, stopIteration int) {
 	rand.Seed(time.Now().UTC().UnixNano())
 	//op := options.(Options)
@@ -286,6 +348,13 @@ func GSA(function testfunc.TestFunction, options Options) (fBest float64, xBest,
 	return
 }
 
+/*
+RunGSA - функция обертка для запуска алгоритма.
+Аргументы:
+    см. GSA
+Возвращаемые значения:
+    см. GSA
+ */
 func RunGSA(function testfunc.TestFunction, options algorithms.OptionsAlgorithm) (float64, []float64, []float64, interface{}, [][]float64, int, int) {
 	op := options.(*Options)
 	fBest, xBest, bestChart, _, dispersion, coordinates, numberMeasurements, stopIteration := GSA(function, *op)

@@ -19,7 +19,6 @@ class ParamsWindow(QtWidgets.QWidget):
         self.ui.reset_btn.clicked.connect(self.reset_widget(self.ui.list))
 
     def fill_list_widget(self, widget, parameters):
-        # TODO: добавить переменную название значения, для вывода "Функция 1" ... или недобавлять
         for p in parameters:
             item = QtWidgets.QListWidgetItem(str(p))
             # could be Qt.Unchecked; setting it makes the check appear

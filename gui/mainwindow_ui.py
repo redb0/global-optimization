@@ -182,7 +182,7 @@ class UiMainWindow:
 
     def add_row_in_form(self, form, settings_list, text, text_btn, cb_handler, window):
         """
-
+        Метод добавления алгоритма для исследования.
         :param cb_handler: 
         :param settings_list: 
         :param window: 
@@ -268,6 +268,7 @@ class UiMainWindow:
         return f
 
     def open_common_settings_window(self, parent=None):
+        """Метод открытия окна настроек"""
         def f():
             if parent.window_common_settings is None:
                 parent.window_common_settings = SettingsWindow(parent=parent)

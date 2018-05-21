@@ -4,6 +4,7 @@ from gui.about_dialog_ui import UiAboutDialog
 
 
 class AboutDialog(QDialog):
+    """Окно "О программе" """
     def __init__(self, flags, *args, **kwargs):
         super().__init__(flags, *args, **kwargs)
         self.ui = UiAboutDialog()

@@ -18,6 +18,7 @@ class AlgorithmSetupWindow(QtWidgets.QWidget):
         self.ui.apply_btn.clicked.connect(self.save_settings(settings_list))
 
     def save_settings(self, settings):
+        """Метод сохранения настроек"""
         def f():
             for i in range(self.ui.form.count()):
                 item = self.ui.form.itemAt(i).widget()

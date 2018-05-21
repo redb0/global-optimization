@@ -17,6 +17,28 @@ from support_func import to_dict, write_json, read_json
 
 
 class Algorithm:
+    """
+    Родительский класс для алгоритмов.
+    Описывает общие атрибуты. 
+    Реализует метод запуска, ожидания завершения выполнения процесса алгоритма и 
+    расчета оценки вероятности попадания в заданную область.
+    Атрибуты:
+        class_alg          : название класса алгоритма, наприме "GSA", "SAC", "PSO"
+        name               : сокращенное название алгоритма
+        full_name          : полное название алгоритма, используется при отображении в формах интерфейса
+        _exe_relative_path : путь до исполняемого файла, 
+                             если алгоритм реализован как отдельный exe-файл, 
+                             необходимо переопределить это поле у класса наследника. 
+                             Если алгоритм включен в существующую сборку алгоритмов, переопределять не нужно.
+                             По умолчанию exe-файл храниться в "..\\algorithms_exe\\algorithms.exe".
+        result_file_name   : файл куда будут сохраняться результаты работы. (к удалению)
+        config_file        : путь до json-файла конфигурации алгоритма
+        parameters         : параметры алгоритма, представляют собой список экземпляров класса AlgorithmParameter, 
+                             необходимо переопределить.
+        _start_time        : время запуска процесса.
+        _process           : ссылка на запущенный процесс выполения алгоритма
+        settings           : общие настройки программы.
+    """
     def __init__(self):
         self.class_alg = ""
         self.name = ""
@@ -43,7 +65,10 @@ class Algorithm:
         return self.parameters
 
     def get_identifier_name(self) -> str:
-        """Метод генерации уникального имени"""
+        """
+        Метод генерации уникального имени.
+        Необходимо переопределить в классе-наследнике.
+        """
         pass
 
     def get_abbreviation_params(self) -> List[str]:
@@ -66,22 +91,16 @@ class Algorithm:
     def set_parameter(self, key: str, value) -> None:
         """
         Метод для установки значения параметра по сокращенному обозначению.
-        :param key: сокращенное обозначение параметра в виде строки
-        :param value: значение
-        :return: -
+        :param key   : сокращенное обозначение параметра в виде строки
+        :param value : значение
+        :return: None
         """
         for p in self.parameters:
             if p.get_abbreviation() == key:
                 p.set_selected_values(value)
 
     def set_params_value(self, list_p, **kwargs):
-        # TODO: нигде не используется
-        """
-
-        :param list_p: 
-        :param kwargs: 
-        :return: 
-        """
+        # TODO: нигде не используется (к удалению)
         for k in kwargs.keys():
             obj = AlgorithmParameter.get_param_from_list(list_p, k)
             if obj is not None:
@@ -101,6 +120,10 @@ class Algorithm:
         return d
 
     def write_parameters(self):
+        """
+        Метод записи параместров алгоритма в файл конфигурации.
+        :return: None
+        """
         script_path = os.path.dirname(os.path.abspath(__file__)).replace('\\\\', '\\')
         abs_path_config = os.path.join(script_path, self.config_file)  # путь до конфиг файла
 
@@ -118,10 +141,9 @@ class Algorithm:
     def run(self, result_file_name: str, file_test_func: str) -> str:
         """
         Метод для запуска алгоритма.
-
-        :param file_test_func: json-файл с информацией о тестовой функции.
-        :param result_file_name: имя файла в виде строки (*.json), куда будет сохранен результат.
-        :return: 
+        :param file_test_func   : json-файл с информацией о тестовой функции.
+        :param result_file_name : имя файла в виде строки (*.json), куда будет сохранен результат.
+        :return: абсалютный путь до файла с результатами или пустую строку, если процесс запущен.
         """
         # os.path.dirname(__file__) - возвращает путь до папки, где лежит файл
         # os.path.realpath(__file__) - возвращает путь к файлу, вместе с его названием
@@ -158,6 +180,15 @@ class Algorithm:
 
     def find_probability_estimate(self, epsilon: Union[list, float, int],
                                   file_test_func: str, number_runs=100, file_path=""):
+        """
+        Метод расчета оценки вероятности попадания в заданную окрестность.
+        Записывает параметры алгоритма в файл конфигурации и запускает алгоритм на выполнение.
+        :param epsilon        : окрестность глобального экстремума (к удалению)
+        :param file_test_func : путь до файла с тестовой функцией
+        :param number_runs    : количество запусков (к удалению)
+        :param file_path      : (к удалению)
+        :return: оценку вероятности, список словарей с результатами прогонов.
+        """
         # extremum - из тестовой функции
         # epsilon - из настроек
 

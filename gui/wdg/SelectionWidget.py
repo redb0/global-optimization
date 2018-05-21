@@ -4,7 +4,12 @@ from gui.window_choose_params import ParamsWindow
 
 
 class SelectionWidget(QtWidgets.QWidget):
+    """Виджет для вызова окна выбора значений"""
     def __init__(self, param, parent=None):
+        """
+        :param param  : параметр значения которого нужно выбрать
+        :param parent : родительский объект
+        """
         super().__init__()
         self.param = param
         self.parent = parent
@@ -30,9 +35,9 @@ class SelectionWidget(QtWidgets.QWidget):
         return QtCore.QCoreApplication.translate(s, s_1)
 
     def window_choose_params(self, parameters, parent=None):
+        # TODO: переделать в pop up
         def f():
             if parent.active_window is None:
                 self.window_choose = ParamsWindow(parameters, parent=parent)
                 self.window_choose.show()
         return f
-        # TODO: переделать в pop up

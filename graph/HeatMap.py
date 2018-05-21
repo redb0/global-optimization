@@ -9,6 +9,9 @@ from support_func import combinations, make_report
 
 
 class HeatMap(Graph):
+    """
+    Класс для построения тепловой карты.
+    """
     def __init__(self, title, alg, param, axis_range):
         super().__init__(width=5, height=6, dpi=100, fontsize=12)
         self._title = title
@@ -43,9 +46,6 @@ class HeatMap(Graph):
             self.axes.yaxis.set_label_coords(-0.2, 0.5)
         plt.title(self._title, loc='center', y=1.1)
         plt.yticks(rotation=0)
-
-        # ax.set_xlabel(self._param[0].label_TeX)
-        # ax.set_ylabel(self._param[1].label_TeX)
 
         # self.set_labels(xlabel=self._param[0].label_TeX,
         #                 ylabel=self._param[1].label_TeX,

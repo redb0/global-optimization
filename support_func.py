@@ -2,10 +2,10 @@ import json
 import random
 from functools import wraps
 import warnings
+from typing import List, Union
 
 import numpy as np
 from PyQt5.QtWidgets import QComboBox, QFileDialog
-from typing import List, Union
 
 from AlgorithmParameter import AlgorithmParameter
 
@@ -74,6 +74,7 @@ def write_json(file_name: str, data: Union[list, dict]) -> None:
 
 
 def read_json(file_name: str):
+    """Функция чтения данных из json-файла"""
     with open(file_name, 'r', encoding='utf-8') as f:
         data = json.load(f)
     return data
@@ -283,6 +284,12 @@ def get_delta(min_z, max_z, delta=0.5, l=0.5):
 
 
 def json_to_slice(data, field: str):
+    """
+    Преобразует список словарей в список значений для конкретного поля.
+    :param data: список словарей
+    :param field: поле в словаре
+    :return: список значений для поля field
+    """
     res = []
     for d in data:
         res.append(d[field])
@@ -306,6 +313,7 @@ def get_common_params(*args):
 
 
 def get_value_from_combobox(combobox):
+    """Получение значения из комбобокса"""
     text = combobox.currentText()
     key = combobox.currentData()
     d = {key: text}
@@ -313,6 +321,12 @@ def get_value_from_combobox(combobox):
 
 
 def make_report(data, file_name: str) -> None:
+    """
+    Метод составления словаря с временем выполнения и итерациями алгоритма.
+    :param data: список словарей.
+    :param file_name: имя файла для схранения словаря.
+    :return: None
+    """
     d = {"min_time": 0,
          "max_time": 0,
          "mean_time": 0,

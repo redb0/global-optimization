@@ -1,9 +1,9 @@
 import json
+import os
+from typing import Union, List, Tuple
 
 import numpy as np
-from typing import Union, List, Tuple
 import matplotlib.pyplot as plt
-import os
 
 from Settings import Settings
 from graph.Graph import Graph
@@ -23,10 +23,8 @@ class LineGraph(Graph):
         _step       : шаг
         _settings   : общие настройки, экземпляр класса Settings
     """
-    # Ограничим возможный атрибуты класса с поомщью __slots__ (они наследуются),
-    # как-то можно с помощью nametuple, но я фиг знает как это сделать в классе с методами
-    # также если написать например x = [] сразу после класса будет общее поле для всех экземпляров
-    __slots__ = ("_title", "_algorithms", "_param", "_max_range", "_min_range", "_step", "_settings")  # "_type_p"
+    # Ограничим возможный атрибуты класса с поомщью __slots__ (они наследуются)
+    __slots__ = ("_title", "_algorithms", "_param", "_max_range", "_min_range", "_step", "_settings")
 
     def __init__(self, title, alg, param, max_range, min_range, step):
         super().__init__(width=5, height=6, dpi=100, fontsize=12)
@@ -146,6 +144,7 @@ class LineGraph(Graph):
         self._step = value
 
 
+# TODO: Переделать в классы.
 # для графика сходимости по значениям функции
 # для графика дисперсии
 def line_graph(data, x, lbl=None, file_name="", x_label="", y_label="", title="", marker=None):
@@ -348,36 +347,3 @@ def make_contour_data(func, constraints_x, constraints_y, h, delta, l):
         levels.append(i)
 
     return xgrid, ygrid, zgrid, levels
-
-
-def main():
-    x = [0, 1, 2, 3, 4, 5]
-    y = [[[4, 5], [3, 4], [2.1, 1.9], [0.5, 0.4], [0.1, 0.2], [0.01, 0.02]],
-         [[5, 4], [3, 3], [1.9, 2.2], [0.4, 0.3], [0.3, 0.1], [0.05, 0.05]]]
-    labels = [["${x}{_0}$", "${x}{_0}$"], ["${x}{_0}$", "${x}{_0}$"]]
-
-    # y = [[4, 5], [3, 4], [2.1, 1.9], [0.5, 0.4], [0.1, 0.2], [0.01, 0.02]]
-    # labels = ["${x}{_0}$", "${x}{_1}$"]
-
-    # graph_convergence_coord(y, x, lbl=labels,
-    #                         file_name="qwe.png", x_label="t", y_label="x", title="Сходимость по координатам",
-    #                         single_graph=False)
-
-    with open("../examples_tf/func5.json", 'r') as f:
-        data = json.load(f)
-    import test_func
-    func = test_func.get_test_function_method_min(10, data['coefficients_abruptness'],
-                                                  data['coordinates'],
-                                                  data['degree_smoothness'],
-                                                  data['func_values'])
-    motion_point_graph([[5, 5], [3, 4.7], [1, 4.5], [-1, 4.2], [-2.02, 3.99]],
-                       func, lbl="Лучшее решение",
-                       file_name="42.png",
-                       x_label="${x}{_0}$", y_label="${x}{_1}$", title="")
-
-    graph_convergence_coord(data, x, lbl=None, file_name=None, x_label="${t}$", y_label="${\sigma}^2$", title="", single_graph=False,
-                            marker=None)
-
-
-if __name__ == "__main__":
-    main()

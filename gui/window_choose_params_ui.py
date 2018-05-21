@@ -2,6 +2,7 @@ from PyQt5 import QtWidgets, QtCore
 
 
 class UiParamsWindow:
+    """Графический интерфейс окна выбора значений параметра"""
     def __init__(self):
         self.list = None
         self.add_params_to_list_btn = None

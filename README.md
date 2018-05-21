@@ -1,4 +1,4 @@
-# GlobalOptimization
+# GlOpPy
 
 Program for the study of global optimization algorithms.
 
@@ -17,7 +17,7 @@ The default output is saved as json files to a folder `algorithms_exe/result`.
 3) heat map;
 4) convergence in function values;
 5) convergence in coordinate values;
-6) dispersion (-);
+6) dispersion;
 7) best point motion.
 
 ## Test Functions
@@ -58,11 +58,6 @@ The default output is saved as json files to a folder `algorithms_exe/result`.
 
 ![alt text](https://github.com/redb0/global-optimization/blob/master/examples_tf/f5.png)
 ![alt text](https://github.com/redb0/global-optimization/blob/master/examples_tf/f5_x1=x2.png)
-
-При добавлении аддитивной равномерно распределенной помехи, превышающей по амплитуде полезный сигнал в 10 раз:
-
-![alt text](https://github.com/redb0/global-optimization/blob/master/examples_tf/f5_k_sn%3D10.png)
-![alt text](https://github.com/redb0/global-optimization/blob/master/examples_tf/f5_x1%3Dx2_k_sn%3D10.png)
 
 ## Usage
 

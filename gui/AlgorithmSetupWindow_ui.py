@@ -4,6 +4,7 @@ from support_func import fill_combobox_list
 
 
 class UiAlgorithmSetupWindow:
+    """Графический интерфейс окна настроек алгоритма"""
     def __init__(self):
         self.title_label = None
         self.form = None

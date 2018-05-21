@@ -1,4 +1,15 @@
 class AlgorithmParameter:
+    """
+    Класс для хранения информации о параметре алгоритма.
+    Атрибуты:
+        - название
+        - аббривиатура
+        - тип
+        - допустимые значения
+        - выбранные значения
+        - значения по умолчанию
+        - TeX обозначение
+    """
     def __init__(self, abbreviation: str, name: str, p_type: type, tex: str,
                  allowable_values=None, default_value=None):
         # TODO: возможно добавить проверку возможных значений на тип

@@ -2,19 +2,22 @@ from typing import Union, List
 
 
 class Parameter:
-
-    # название
-    # тип
-    # значение по умолчанию
-    # текущее значение
-    # допустимые значения - можно писать только если это отдельные значения [0, 1].
+    """
+    Класс для описания отдельной настройки программы
+    Атрибуты:
+        _name             : полное название настройки, для отображения в графическом интерфейсе
+        _parameter_type   : типа параметра
+        _present_value    : текущее значение
+        _default_value    : значение по умолчанию
+        _allowable_values : допустимые значения, если есть
+    """
 
     def __init__(self, name: str, parameter_type, default_value, allowable_values=None):
-        self._name = name                          # Название
-        self._parameter_type = parameter_type      # Тип параметра
-        self._present_value = default_value        # Текущее значение
-        self._default_value = default_value        # Значение по умолчанию
-        self._allowable_values = allowable_values  # Допустимые значения
+        self._name = name
+        self._parameter_type = parameter_type
+        self._present_value = default_value
+        self._default_value = default_value
+        self._allowable_values = allowable_values
 
     @property
     def name(self) -> str:

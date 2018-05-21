@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QApplication
 
 
 class UiAboutDialog(object):
+    """Графический интерфейс окна "О программе" """
     def setup_ui(self, about_dialog):
         about_dialog.setObjectName("AboutDialog")
         about_dialog.setWindowModality(QtCore.Qt.ApplicationModal)

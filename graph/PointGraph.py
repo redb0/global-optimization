@@ -11,6 +11,7 @@ from support_func import generate_rand_int_list, make_report
 
 
 class PointGraph(Graph):
+    """Класс для построения точечного графика"""
     def __init__(self, alg, param, selected_value):
         super().__init__()
         self._algorithms = alg

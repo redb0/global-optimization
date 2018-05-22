@@ -53,6 +53,7 @@ class MainWindow(QMainWindow):
         self.get_selected_algorithms = self.ui.get_index_active_checkbox(self.ui.alg_form)
 
         self.ui.actionAbout.triggered.connect(self.open_about_dialog)
+        self.ui.actionHelp.triggered.connect(self.open_help)
 
         self.ui.add_linear_graph_btn.clicked.connect(self.add_linear_graph)
         self.ui.add_heat_map_btn.clicked.connect(self.add_heat_map)
@@ -285,3 +286,9 @@ class MainWindow(QMainWindow):
         """Метод открытия окна "О программе" """
         self.about = AboutDialog(flags=Q_FLAGS())
         self.about.show()
+
+    def open_help(self):
+        script_path = os.path.dirname(os.path.abspath(__file__))
+        help_path = os.path.join(script_path, '../resource/help.chm')
+        # os.system("hh.exe d:/help.chm::/4_Userguide.htm#_Toc270510")
+        os.system("hh.exe " + help_path)

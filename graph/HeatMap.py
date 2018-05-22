@@ -75,11 +75,11 @@ class HeatMap(Graph):
         for c in combinations(self.axis_range):
             for j in range(len(c)):
                 self._algorithms.set_parameter(names[j], c[j])
-            p, data = self._algorithms.find_probability_estimate(self._settings.epsilon,
-                                                                 self._settings.abs_path_test_func,
-                                                                 number_runs=self._settings.number_of_runs)
+            p, res = self._algorithms.find_probability_estimate(self._settings.epsilon,
+                                                                self._settings.abs_path_test_func,
+                                                                number_runs=self._settings.number_of_runs)
             if self._settings.report:
-                make_report(data, "report_" + self._algorithms.get_identifier_name() + '.json')
+                make_report(res, "report_" + self._algorithms.get_identifier_name() + '.json')
 
             probability.append(p)
             if c[-1] == self.axis_range[-1][-1]:
